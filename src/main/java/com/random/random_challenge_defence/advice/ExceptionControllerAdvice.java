@@ -38,6 +38,13 @@ public class ExceptionControllerAdvice {
         return responseService.getFailResult("400", "회원 정보가 없습니다.");
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
+    public CommonResponse challengeNotFoundException(CChallengeNotFoundException e) {
+        System.out.println(e);
+        return responseService.getFailResult("400", "챌린지 정보가 없습니다.");
+    }
+
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler
     public CommonResponse AuthenticationException(CAuthenticationException e) {

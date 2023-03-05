@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="<http://www.thymeleaf.org>">
+<head>
+    <link rel="stylesheet" type="text/css" href="/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/css/challenge/challenges.css">
+    <title>게시글 목록</title>
+
+</head>
+<body>
+<div class="container">
+    <h1>챌린지 목록</h1>
+    <div>
+        <button type="button" th:onclick="window.location.href='/admin/challenges/create'">생성</button>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>최종 목표</th>
+            <th>인증 타입</th>
+            <th>난이도</th>
+            <th>부여 점수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="challenge : ${page.getContent()}">
+            <td th:text="${challenge.id}"></td>
+            <td><a th:href="@{/admin/challenges/{challengeId}(challengeId=${challenge.id})}" th:text="${challenge.title}"></a></td>
+            <td th:text="${challenge.finalGoal}"></td>
+            <td th:text="${challenge.evidenceType}"></td>
+            <td th:text="${challenge.difficulty}"></td>
+            <td th:text="${challenge.assignScore}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+    <!-- 페이지 선택 부분 코드 -->
+    <div class="pagination">
+        <ul>
+            <li th:class="${page.first}? 'disabled'">
+                <a th:if="${!page.first}"
+                   th:href="@{/admin/challenges(nowPage=${page.number - 1})}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <li th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}" th:class="${page.number}==${i}? 'active'">
+                <a th:href="@{/admin/challenges(nowPage=${i})}" th:text="${i + 1}"></a>
+            </li>
+
+            <li th:class="${page.last}? 'disabled'">
+                <a th:if="${!page.last}"
+                   th:href="@{/admin/challenges(nowPage=${page.number + 1})}"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

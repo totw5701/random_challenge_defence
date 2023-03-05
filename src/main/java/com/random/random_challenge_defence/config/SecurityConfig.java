@@ -36,9 +36,10 @@ public class SecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-                .antMatchers( "/auth/login", "/auth/all", "/auth/token-reissue", "/auth/login-fail", "/members/join", "/h2-console/**/*").permitAll()
+                //.antMatchers( "/auth/login", "/auth/all", "/auth/token-reissue", "/auth/login-fail", "/members/join", "/h2-console", "/h2-console/*", "/admin/**/*").permitAll()
                 .antMatchers("/auth/user").hasRole("USER")
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
+                //.anyRequest().authenticated()
             .and()
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling()
@@ -58,6 +59,7 @@ public class SecurityConfig {
         public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exception) throws IOException,
                 ServletException {
             // 권한 없음
+            System.out.println(exception.toString());
             response.sendRedirect("/auth/access-denied");
         }
     }
@@ -69,6 +71,7 @@ public class SecurityConfig {
         @Override
         public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException,
                 ServletException {
+            System.out.println(exception.toString());
             response.sendRedirect("/auth/login-fail");
         }
     }

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="<http://www.thymeleaf.org>">
+<head>
+  <link rel="stylesheet" type="text/css" href="/css/reset.css">
+  <link rel="stylesheet" type="text/css" href="/css/challenge/challenge-form.css">
+  <title>챌린지 생성/수정</title>
+</head>
+<body>
+<div class="container">
+  <form th:object="${challenge}" th:action="@{/admin/challenges}" th:method="post">
+
+    <div class="input-group">
+      <label for="id">번호</label>
+      <input type="text" id="id" th:field="*{id}" readonly>
+    </div>
+    <div class="input-group">
+      <label for="title">제목</label>
+      <input type="text" id="title" th:field="*{title}">
+    </div>
+    <div class="input-group">
+      <label for="description">설명</label>
+      <textarea id="description" th:field="*{description}"></textarea>
+    </div>
+    <div class="input-group">
+      <label for="finalGoal">최종 목표</label>
+      <textarea id="finalGoal" th:field="*{finalGoal}"></textarea>
+    </div>
+    <div class="input-group">
+      <label for="ChallengeSubGoal">중간 목표 (,로 구분)</label>
+      <textarea id="ChallengeSubGoal" th:field="*{ChallengeSubGoal}" th:text="${#lists.toString(myList)}"></textarea>
+<!--
+      <textarea id="ChallengeSubGoal" th:field="*{ChallengeSubGoal}"></textarea>
+      <textarea th:field="*{myList}" th:text="${#lists.toString(myList)}"></textarea>
+-->
+
+
+    </div>
+
+
+
+    <div class="input-group">
+      <label for="evidenceType">인증 타입</label>
+      <select id="evidenceType" th:field="*{evidenceType}">
+        <option value="사진">사진</option>
+        <option value="동영상">동영상</option>
+        <option value="글">글</option>
+      </select>
+    </div>
+    <div class="input-group input-radio">
+      <label for="difficulty">난이도 </label>
+      <div class="radio-group">
+        <input type="radio" id="difficulty1" name="difficulty" value="1" th:field="*{difficulty}">
+        <label for="difficulty1">1</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="difficulty2" name="difficulty" value="2" th:field="*{difficulty}">
+        <label for="difficulty2">2</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="difficulty3" name="difficulty" value="3" th:field="*{difficulty}">
+        <label for="difficulty3">3</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="difficulty4" name="difficulty" value="4" th:field="*{difficulty}">
+        <label for="difficulty4">4</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="difficulty5" name="difficulty" value="5" th:field="*{difficulty}">
+        <label for="difficulty5">5</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="difficulty6" name="difficulty" value="6" th:field="*{difficulty}">
+        <label for="difficulty6">6</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="difficulty7" name="difficulty" value="7" th:field="*{difficulty}">
+        <label for="difficulty7">7</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="difficulty8" name="difficulty" value="8" th:field="*{difficulty}">
+        <label for="difficulty8">8</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="difficulty9" name="difficulty" value="9" th:field="*{difficulty}">
+        <label for="difficulty9">9</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="difficulty10" name="difficulty" value="10" th:field="*{difficulty}">
+        <label for="difficulty10">10</label>
+      </div>
+    </div>
+    <div class="input-group input-radio">
+      <label for="assignScore">부여 점수</label>
+      <div class="radio-group">
+        <input type="radio" id="assignScore1" name="assignScore" value="1" th:field="*{assignScore}">
+        <label for="assignScore1">1</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="assignScore2" name="assignScore" value="2" th:field="*{assignScore}">
+        <label for="assignScore2">2</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="assignScore3" name="assignScore" value="3" th:field="*{assignScore}">
+        <label for="assignScore3">3</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="assignScore4" name="assignScore" value="4" th:field="*{assignScore}">
+        <label for="assignScore4">4</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="assignScore5" name="assignScore" value="5" th:field="*{assignScore}">
+        <label for="assignScore5">5</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="assignScore6" name="assignScore" value="6" th:field="*{assignScore}">
+        <label for="assignScore6">6</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="assignScore7" name="assignScore" value="7" th:field="*{assignScore}">
+        <label for="assignScore7">7</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="assignScore8" name="assignScore" value="8" th:field="*{assignScore}">
+        <label for="assignScore8">8</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="assignScore9" name="assignScore" value="9" th:field="*{assignScore}">
+        <label for="assignScore9">9</label>
+      </div>
+      <div class="radio-group">
+        <input type="radio" id="assignScore10" name="assignScore" value="10" th:field="*{assignScore}">
+        <label for="assignScore10">10</label>
+      </div>
+    </div>
+    <button type="submit">저장</button>
+  </form>
+</div>
+</body>
+</html>

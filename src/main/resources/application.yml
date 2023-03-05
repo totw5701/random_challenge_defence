@@ -1,7 +1,11 @@
+
 jwt:
   secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
 
 spring:
+#  sql:
+#    init:
+#      mode: embedded
   h2:
     console:
       enabled: true
@@ -13,6 +17,7 @@ spring:
     password:
 
   jpa:
+    defer-datasource-initialization: true # embededDB에 data.sql 사용하기 위함
     hibernate:
       ddl-auto: create-drop
     properties:
@@ -21,3 +26,6 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true #To beautify or pretty print the SQL
         show_sql: true #show sql
+  web:
+    resources:
+      static-locations: classpath:/static/
