@@ -1,6 +1,7 @@
 package com.random.random_challenge_defence.domain.member;
 
 import com.random.random_challenge_defence.api.dto.member.MemberDetailsDto;
+import com.random.random_challenge_defence.api.dto.member.MemberPutReqDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -38,5 +39,18 @@ public class Member {
                 .joinDate(this.joinDate)
                 .modifyDate(this.modifyDate)
                 .build();
+    }
+
+    public Member update(MemberPutReqDto form) {
+        if(form.getNickname() != null) {
+            this.nickname = form.getNickname();
+        }
+        if(form.getPicture() != null) {
+            this.picture = form.getPicture();
+        }
+        if(form.getPassword() != null) {
+            this.password = form.getPassword();
+        }
+        return this;
     }
 }

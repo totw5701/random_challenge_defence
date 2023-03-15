@@ -2,7 +2,7 @@ package com.random.random_challenge_defence.api.controller;
 
 import com.random.random_challenge_defence.api.dto.common.CommonResponse;
 import com.random.random_challenge_defence.api.dto.member.MemberDetailsDto;
-import com.random.random_challenge_defence.api.dto.member.MemberSignUpReqDto;
+import com.random.random_challenge_defence.api.dto.member.MemberPutReqDto;
 import com.random.random_challenge_defence.domain.member.Member;
 import com.random.random_challenge_defence.service.MemberService;
 import com.random.random_challenge_defence.service.ResponseService;
@@ -21,17 +21,20 @@ public class MemberController {
     private final MemberService memberService;
     private final ResponseService responseService;
 
-    @PostMapping("/join")
-    public CommonResponse<MemberDetailsDto> join(@Valid @RequestBody MemberSignUpReqDto form) {
-        if(!form.getPassword().equals(form.getPassword2())){
-
-        }
+    /**
+     * 사용자 생성 및 수정 api
+     * password1 password2 비교는 프론트 단에서
+     * @param form
+     * @return
+     */
+    @PostMapping
+    public CommonResponse<MemberDetailsDto> join(@Valid @RequestBody MemberPutReqDto form) {
         Member member = memberService.join(form);
         return responseService.getResult(member.toDetailDto());
     }
 
-    @GetMapping("/my-page/{id}")
-    public CommonResponse<MemberDetailsDto> myInfo(@PathVariable String email) {
+    @GetMapping("/{id}")
+    public CommonResponse<MemberDetailsDto> myInfo(@PathVariable("id") String email) {
         if(email == null) {
             email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         }
@@ -39,9 +42,15 @@ public class MemberController {
         return responseService.getResult(member.toDetailDto());
     }
 
-//    @PatchMapping("/my-page")
-//    public CommonResponse<Map> updateMyInfo(@Valid @RequestBody MemberUpdateReqDto form) {
-//        String memberId = memberService.update(form);
-//        return responseService.getStringResult("memberId", memberId);
-//    }
+    @PutMapping
+    public CommonResponse<Member> updateMyInfo(@Valid @RequestBody MemberPutReqDto form) {
+        Member member = memberService.update(form);
+        return responseService.getResult(member);
+    }
+
+    @DeleteMapping
+    public CommonResponse deleteMember(@RequestBody Long memberId){
+        memberService.delete(memberId);
+        return responseService.getSuccessResult();
+    }
 }
