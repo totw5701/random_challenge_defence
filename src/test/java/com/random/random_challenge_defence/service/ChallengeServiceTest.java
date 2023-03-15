@@ -173,7 +173,89 @@ class ChallengeServiceTest {
         verify(challengeRepository, times(1)).findById(challengeId);
     }
 
+    @Test
+    void testUpdate() {
+        // Given
+        Long id = 1L;
+        String title = "Title";
+        String description = "Description";
+        String finalGoal = "Final Goal";
+        String evidenceType = "Evidence Type";
+        Integer difficulty = 5;
+        Integer assignScore = 10;
 
+        ChallengePutReqDto form = ChallengePutReqDto.builder()
+                .id(id)
+                .title(title)
+                .description(description)
+                .finalGoal(finalGoal)
+                .evidenceType(evidenceType)
+                .difficulty(difficulty)
+                .assignScore(assignScore)
+                .build();
+
+        ChallengeSubGoal subGoal = ChallengeSubGoal.builder()
+                .id(1L)
+                .intermediateGoal("Intermediate Goal")
+                .build();
+
+        List<ChallengeSubGoal> subGoals = new ArrayList<>();
+        subGoals.add(subGoal);
+
+        Challenge challenge = Challenge.builder()
+                .id(id)
+                .title("Old Title")
+                .description("Old Description")
+                .finalGoal("Old Final Goal")
+                .evidenceType("Old Evidence Type")
+                .difficulty(1)
+                .assignScore(2)
+                .createDate(0L)
+                .challengeSubGoals(subGoals)
+                .build();
+
+        Challenge updatedChallenge = Challenge.builder()
+                .id(id)
+                .title(title)
+                .description(description)
+                .finalGoal(finalGoal)
+                .evidenceType(evidenceType)
+                .difficulty(difficulty)
+                .assignScore(assignScore)
+                .createDate(0L)
+                .challengeSubGoals(subGoals)
+                .build();
+
+        when(challengeRepository.findById(id)).thenReturn(Optional.of(challenge));
+
+        // When
+        Challenge result = challengeService.update(form);
+
+        // Then
+        assertEquals(id, result.getId());
+        assertEquals(title, result.getTitle());
+        assertEquals(description, result.getDescription());
+        assertEquals(finalGoal, result.getFinalGoal());
+        assertEquals(evidenceType, result.getEvidenceType());
+        assertEquals(difficulty, result.getDifficulty());
+        assertEquals(assignScore, result.getAssignScore());
+        assertEquals(subGoals, result.getChallengeSubGoals());
+    }
+
+    @Test
+    void testUpdateWhenChallengeNotFound() {
+        // Given
+        Long id = 1L;
+
+        ChallengePutReqDto form = ChallengePutReqDto.builder()
+                .id(id)
+                .build();
+
+        when(challengeRepository.findById(id)).thenReturn(Optional.empty());
+
+        // When and Then
+        assertThrows(CChallengeNotFoundException.class, () -> challengeService.update(form));
+    }
 
 
 }
