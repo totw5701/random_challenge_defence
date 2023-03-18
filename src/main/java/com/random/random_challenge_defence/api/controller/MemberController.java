@@ -6,6 +6,8 @@ import com.random.random_challenge_defence.api.dto.member.MemberPutReqDto;
 import com.random.random_challenge_defence.domain.member.Member;
 import com.random.random_challenge_defence.service.MemberService;
 import com.random.random_challenge_defence.service.ResponseService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -27,14 +29,16 @@ public class MemberController {
      * @param form
      * @return
      */
+    @ApiOperation(value = "회원가입", notes = "새로운 사용자를 등록합니다.")
     @PostMapping
     public CommonResponse<MemberDetailsDto> join(@Valid @RequestBody MemberPutReqDto form) {
         Member member = memberService.join(form);
         return responseService.getResult(member.toDetailDto());
     }
 
-    @GetMapping("/{id}")
-    public CommonResponse<MemberDetailsDto> myInfo(@PathVariable("id") String email) {
+    @ApiOperation(value = "myinfo 조회", notes = "사용자 정보를 조회합니다.")
+    @GetMapping("/{email}")
+    public CommonResponse<MemberDetailsDto> myInfo(@PathVariable("email") String email) {
         if(email == null) {
             email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         }
@@ -42,12 +46,14 @@ public class MemberController {
         return responseService.getResult(member.toDetailDto());
     }
 
+    @ApiOperation(value = "사용자 정보 수정", notes = "사용자 정보를 수정합니다.")
     @PutMapping
     public CommonResponse<Member> updateMyInfo(@Valid @RequestBody MemberPutReqDto form) {
         Member member = memberService.update(form);
         return responseService.getResult(member);
     }
 
+    @ApiOperation(value = "회원탈퇴", notes = "사용자를 삭제합니다.")
     @DeleteMapping
     public CommonResponse deleteMember(@RequestBody Long memberId){
         memberService.delete(memberId);

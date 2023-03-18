@@ -1,4 +1,4 @@
-package com.random.random_challenge_defence.config;
+package com.random.random_challenge_defence.config.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

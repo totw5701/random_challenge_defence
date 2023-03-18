@@ -12,6 +12,7 @@ import com.random.random_challenge_defence.domain.member.Member;
 import com.random.random_challenge_defence.service.AuthenticationService;
 import com.random.random_challenge_defence.service.MemberService;
 import com.random.random_challenge_defence.service.ResponseService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,7 @@ public class AuthenticationController {
     private final ResponseService responseService;
 
 
+    @ApiOperation(value = "토큰 재발급", notes = "만료되지 않은 토큰으로 사용가능한 토큰을 발급받습니다.")
     @GetMapping("/token-reissue")
     public CommonResponse<TokenInfo> tokenReissue(HttpServletRequest request) {
         String token = authenticationService.resolveToken(request);
@@ -37,6 +39,7 @@ public class AuthenticationController {
         return responseService.getResult(tokenInfo);
     }
 
+    @ApiOperation(value = "로그인", notes = "로그인 하여 토큰을 발급합니다.")
     @PostMapping("/login")
     public CommonResponse<TokenInfo> login(@Valid @RequestBody MemberLoginReqDto form) {
         TokenInfo tokenInfo = authenticationService.login(form.getEmail(), form.getPassword());

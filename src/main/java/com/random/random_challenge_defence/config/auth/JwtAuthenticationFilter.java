@@ -1,7 +1,6 @@
-package com.random.random_challenge_defence.config;
+package com.random.random_challenge_defence.config.auth;
 
 import com.random.random_challenge_defence.advice.ExceptionCode;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

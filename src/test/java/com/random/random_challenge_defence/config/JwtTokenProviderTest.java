@@ -1,6 +1,7 @@
 package com.random.random_challenge_defence.config;
 
 import com.random.random_challenge_defence.api.dto.TokenInfo;
+import com.random.random_challenge_defence.config.auth.JwtTokenProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

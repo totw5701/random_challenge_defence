@@ -1,7 +1,7 @@
 package com.random.random_challenge_defence.service;
 
 import com.random.random_challenge_defence.api.dto.TokenInfo;
-import com.random.random_challenge_defence.config.JwtTokenProvider;
+import com.random.random_challenge_defence.config.auth.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

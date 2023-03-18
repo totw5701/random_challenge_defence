@@ -1,4 +1,4 @@
-package com.random.random_challenge_defence.config;
+package com.random.random_challenge_defence.config.auth;
 
 import com.random.random_challenge_defence.domain.member.Member;
 import com.random.random_challenge_defence.domain.member.MemberRepository;
