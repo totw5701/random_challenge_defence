@@ -2,6 +2,9 @@
 jwt:
   secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
 
+file:
+  dir: "D:/NAS/rcd/evidence"
+
 spring:
   #  sql:
   #    init:
