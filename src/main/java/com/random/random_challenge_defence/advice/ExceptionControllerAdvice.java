@@ -27,42 +27,48 @@ public class ExceptionControllerAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler
     public CommonResponse exceptionHandler(Exception e) {
-        System.out.println(e.toString());
+        System.out.println(e.getMessage());
+        e.printStackTrace();
         return responseService.getFailResult("500", "알 수 없는 내부 에러가 발생했습니다.");
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler
     public CommonResponse memberNotFoundException(CMemberNotFoundException e) {
-        System.out.println(e);
+        System.out.println(e.getMessage());
+        e.printStackTrace();
         return responseService.getFailResult("400", "회원 정보가 없습니다.");
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler
     public CommonResponse challengeNotFoundException(CChallengeNotFoundException e) {
-        System.out.println(e);
+        System.out.println(e.getMessage());
+        e.printStackTrace();
         return responseService.getFailResult("400", "챌린지 정보가 없습니다.");
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler
     public CommonResponse AuthenticationException(CAuthenticationException e) {
-        System.out.println(e);
+        System.out.println(e.getMessage());
+        e.printStackTrace();
         return responseService.getFailResult("402", "로그인에 실패하였습니다.");
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler
     public CommonResponse accessDeniedException(CAccessDeniedException e) {
-        System.out.println(e);
+        System.out.println(e.getMessage());
+        e.printStackTrace();
         return responseService.getFailResult("403", "접근이 거부되었습니다.");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     public CommonResponse bindExHandler(BindException e) {
-        System.out.println(e);
+        System.out.println(e.getMessage());
+        e.printStackTrace();
         FieldError err = e.getFieldError();
         return responseService.getFailResult("404", String.valueOf( String.valueOf(err.getField()) + " " + err.getDefaultMessage()));
     }
@@ -70,21 +76,32 @@ public class ExceptionControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     public CommonResponse reqParamExHandler(MissingServletRequestParameterException e) {
-        System.out.println(e);
+        System.out.println(e.getMessage());
+        e.printStackTrace();
         return responseService.getFailResult("405", "파라미터 값이 없습니다.");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     public CommonResponse tokenNotFoundException(CTokenNotFoundException e) {
-        System.out.println(e);
+        System.out.println(e.getMessage());
+        e.printStackTrace();
         return responseService.getFailResult("406", "토큰 정보가 없습니다.");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     public CommonResponse tokenValidationFailException(CTokenValiationFailException e) {
-        System.out.println(e);
+        System.out.println(e.getMessage());
+        e.printStackTrace();
         return responseService.getFailResult("407", "사용할 수 없는 토큰입니다.");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    public CommonResponse notFoundException(CNotFoundException e) {
+        System.out.println(e.getMessage());
+        e.printStackTrace();
+        return responseService.getFailResult("408", "데이터를 찾을 수 없습니다.");
     }
 }

@@ -4,6 +4,7 @@ import com.random.random_challenge_defence.advice.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -29,7 +30,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             tokenException = ExceptionCode.TOKEN_VALIDATION_FAIL;
         } else {
             String tokenType = jwtTokenProvider.getClaimValue(token, "type");
-            System.out.println(tokenType);
             if ("ATK".equals(tokenType)) {
                 // access token인 경우에만 Authentication 객체를 가지고 와서 SecurityContext에 저장
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);

@@ -1,6 +1,7 @@
 package com.random.random_challenge_defence.testtool;
 
 
+import com.random.random_challenge_defence.domain.challenge.Challenge;
 import com.random.random_challenge_defence.domain.member.Member;
 import com.random.random_challenge_defence.domain.member.MemberRole;
 
@@ -18,4 +19,5 @@ public class TestTools {
                 .build();
         return member;
     }
+
 }

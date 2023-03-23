@@ -1,5 +1,7 @@
 package com.random.random_challenge_defence.domain.challenge;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeSubGoalDetailDto;
@@ -16,12 +18,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 @ToString
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id") // Challenge 객체를 JSON으로 바꿀때 다른 객체에게 참조 받는 경우 ID 만 넘긴다.
 public class Challenge {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "challenge_seq")
-    @SequenceGenerator(name = "challenge_seq", sequenceName = "challenge_seq", initialValue = 500)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "challenge_seq")
+    //@SequenceGenerator(name = "challenge_seq", sequenceName = "challenge_seq", initialValue = 500)
     private Long id;
 
     @Column(unique = true)
