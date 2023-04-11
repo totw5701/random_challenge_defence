@@ -9,5 +9,4 @@ public class ChallengeSubGoalDetailDto {
 
     private Long id;
     private String intermediateGoal;
-
 }

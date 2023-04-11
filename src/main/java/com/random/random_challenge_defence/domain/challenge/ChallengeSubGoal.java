@@ -1,6 +1,8 @@
 package com.random.random_challenge_defence.domain.challenge;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeSubGoalDetailDto;
 import lombok.*;
 
@@ -11,7 +13,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@ToString
 public class ChallengeSubGoal {
 
     @Id
@@ -23,7 +24,6 @@ public class ChallengeSubGoal {
     @ManyToOne
     private Challenge challenge;
     private String intermediateGoal;
-
 
     public ChallengeSubGoalDetailDto toDto() {
         return ChallengeSubGoalDetailDto.builder()

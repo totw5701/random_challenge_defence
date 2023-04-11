@@ -1,5 +1,7 @@
 package com.random.random_challenge_defence.domain.member;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.random.random_challenge_defence.api.dto.member.MemberDetailsDto;
 import com.random.random_challenge_defence.api.dto.member.MemberPutReqDto;
 import lombok.*;
@@ -11,7 +13,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@ToString
 public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

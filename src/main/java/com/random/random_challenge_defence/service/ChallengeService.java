@@ -12,7 +12,6 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +31,7 @@ public class ChallengeService {
 
         // dto 변환
         List<ChallengeDetailDto> challengeDtoList = challenges.stream()
-                .map(challenge -> challenge.toDto())
+                .map(challenge -> challenge.toDetailDto())
                 .collect(Collectors.toList());
 
         Page<ChallengeDetailDto> challengeDtoPage = new PageImpl<>(challengeDtoList, challenges.getPageable(), challenges.getTotalElements());
@@ -40,7 +39,7 @@ public class ChallengeService {
         return challengeDtoPage;
     }
 
-    public Challenge create(ChallengePutReqDto form) {
+    public ChallengeDetailDto create(ChallengePutReqDto form) {
 
         Challenge challenge = Challenge.builder()
                 .assignScore(form.getAssignScore())
@@ -59,7 +58,8 @@ public class ChallengeService {
                 .collect(Collectors.toList());
         challenge.assignSubGoals(subGoals);
 
-        return challengeRepository.save(challenge);
+        challengeRepository.save(challenge);
+        return challenge.toDetailDto();
     }
 
     public ChallengeDetailDto readOne(Long id){
@@ -67,7 +67,7 @@ public class ChallengeService {
         if(!opChallenge.isPresent()) {
             throw new CChallengeNotFoundException();
         }
-        return opChallenge.get().toDto();
+        return opChallenge.get().toDetailDto();
     }
 
     public Challenge update(ChallengePutReqDto form) {

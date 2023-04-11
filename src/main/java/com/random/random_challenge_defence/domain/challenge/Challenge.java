@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@ToString
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id") // Challenge 객체를 JSON으로 바꿀때 다른 객체에게 참조 받는 경우 ID 만 넘긴다.
 public class Challenge {
 
@@ -60,7 +59,7 @@ public class Challenge {
 
     }
 
-    public ChallengeDetailDto toDto() {
+    public ChallengeDetailDto toDetailDto() {
         List<ChallengeSubGoalDetailDto> subGoals = new ArrayList<>();
         if(this.challengeSubGoals != null) {
             subGoals = challengeSubGoals.stream().map((challengeSubGoal -> challengeSubGoal.toDto())).collect(Collectors.toList());

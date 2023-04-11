@@ -95,7 +95,6 @@ class MemberServiceTest {
         // given
         MemberPutReqDto updateForm = MemberPutReqDto.builder()
                 .id(1L)
-                .email("updated@test.com")
                 .nickname("updated")
                 .picture("picture")
                 .password("password")
@@ -114,7 +113,6 @@ class MemberServiceTest {
         Member updatedMember = memberService.update(updateForm);
 
         // then
-        Assertions.assertThat(updatedMember.getEmail()).isEqualTo(updateForm.getEmail());
         Assertions.assertThat(updatedMember.getNickname()).isEqualTo(updateForm.getNickname());
         Assertions.assertThat(updatedMember.getPicture()).isEqualTo(updateForm.getPicture());
         Assertions.assertThat(updatedMember.getPassword()).isEqualTo(updateForm.getPassword());

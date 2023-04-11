@@ -26,10 +26,9 @@ public class ChallengeController {
 
     @ApiOperation(value = "챌린지 생성", notes = "관리자 사용] 챌린지를 생성합니다.")
     @PostMapping("/challenges")
-    public CommonResponse<Challenge> create(@RequestBody ChallengePutReqDto form) {
-        System.out.println(form.toString());
-        Challenge challenge = challengeService.create(form);
-        return responseService.getResult(challenge);
+    public CommonResponse<ChallengeDetailDto> create(@RequestBody ChallengePutReqDto form) {
+        ChallengeDetailDto dto = challengeService.create(form);
+        return responseService.getResult(dto);
     }
 
     @ApiOperation(value = "챌린지 리스트 페이징 조회", notes = "챌린지 리스트를 15건씩 페이징하여 조회합니다.")

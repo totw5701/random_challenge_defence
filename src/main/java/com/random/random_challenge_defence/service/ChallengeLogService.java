@@ -3,16 +3,17 @@ package com.random.random_challenge_defence.service;
 import com.random.random_challenge_defence.advice.exception.CChallengeNotFoundException;
 import com.random.random_challenge_defence.advice.exception.CMemberNotFoundException;
 import com.random.random_challenge_defence.advice.exception.CNotFoundException;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeTryReqDto;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeTryUpdateDto;
+import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogDetailDto;
+import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogReqDto;
+import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogUpdateDto;
 import com.random.random_challenge_defence.domain.challenge.Challenge;
 import com.random.random_challenge_defence.domain.challenge.ChallengeRepository;
+import com.random.random_challenge_defence.domain.challenge.ChallengeSubGoalRepository;
 import com.random.random_challenge_defence.domain.member.Member;
 import com.random.random_challenge_defence.domain.member.MemberRepository;
-import com.random.random_challenge_defence.domain.memberchallenge.MemberChallenge;
-import com.random.random_challenge_defence.domain.memberchallenge.MemberChallengeRepository;
-import com.random.random_challenge_defence.domain.memberchallenge.MemberChallengeStatus;
-import javassist.NotFoundException;
+import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
+import com.random.random_challenge_defence.domain.challengelog.ChallengeLogRepository;
+import com.random.random_challenge_defence.domain.challengelog.ChallengeLogStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +23,14 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class MemberChallengeService {
+public class ChallengeLogService {
 
-    private final MemberChallengeRepository memberChallengeRepository;
+    private final ChallengeLogRepository challengeLogRepository;
     private final MemberRepository memberRepository;
     private final ChallengeRepository challengeRepository;
+    private final ChallengeSubGoalRepository challengeSubGoalRepository;
 
-    public MemberChallenge create(ChallengeTryReqDto form) {
+    public ChallengeLogDetailDto create(ChallengeLogReqDto form) {
 
         Optional<Challenge> challengeOp = challengeRepository.findById(form.getChallengeId());
         if(!challengeOp.isPresent()) {
@@ -40,38 +42,41 @@ public class MemberChallengeService {
             throw new CMemberNotFoundException();
         }
 
-        MemberChallenge challengeTry = MemberChallenge.builder()
+        ChallengeLog challengeLog = ChallengeLog.builder()
                 .member(memberOp.get())
                 .challenge(challengeOp.get())
-                .status(MemberChallengeStatus.READY)
+                .status(ChallengeLogStatus.READY)
                 .build();
-        return memberChallengeRepository.save(challengeTry);
+        challengeLogRepository.save(challengeLog);
+
+        return challengeLog.toDetailDto();
     }
 
-    public MemberChallenge readByMemberChallenge(Long memberId, Long challengeId) {
-        Optional<MemberChallenge> memberChallengeOp = memberChallengeRepository.findByMemberIdAndChallengeId(memberId, challengeId);
+    public ChallengeLog readByMemberChallenge(Long memberId, Long challengeId) {
+        Optional<ChallengeLog> memberChallengeOp = challengeLogRepository.findByMemberIdAndChallengeId(memberId, challengeId);
         if(!memberChallengeOp.isPresent()){
             throw new CNotFoundException("MemberChallenge가 존재하지 않습니다.");
         }
         return memberChallengeOp.get();
     }
 
-    public MemberChallenge read(Long id) {
-        Optional<MemberChallenge> challengeTryOp = memberChallengeRepository.findById(id);
+    public ChallengeLogDetailDto read(Long id) {
+        Optional<ChallengeLog> challengeTryOp = challengeLogRepository.findById(id);
         if(!challengeTryOp.isPresent()){
             throw new CNotFoundException("MemberChallenge가 존재하지 않습니다.");
         }
-        return challengeTryOp.get();
+        return challengeTryOp.get().toDetailDto();
     }
 
-    public MemberChallenge update(ChallengeTryUpdateDto form) {
+    public ChallengeLog update(ChallengeLogUpdateDto form) {
 
-        Optional<MemberChallenge> challengeTryOp = memberChallengeRepository.findById(form.getId());
+        Optional<ChallengeLog> challengeTryOp = challengeLogRepository.findById(form.getId());
         if(!challengeTryOp.isPresent()){
             throw new CChallengeNotFoundException();
         }
         challengeTryOp.get().update(form);
         return challengeTryOp.get();
     }
+
 
 }

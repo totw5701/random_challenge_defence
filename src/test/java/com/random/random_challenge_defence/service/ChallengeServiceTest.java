@@ -3,18 +3,15 @@ package com.random.random_challenge_defence.service;
 import com.random.random_challenge_defence.advice.exception.CChallengeNotFoundException;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeSubGoalDetailDto;
 import com.random.random_challenge_defence.domain.challenge.Challenge;
 import com.random.random_challenge_defence.domain.challenge.ChallengeRepository;
 import com.random.random_challenge_defence.domain.challenge.ChallengeSubGoal;
 import com.random.random_challenge_defence.domain.challenge.ChallengeSubGoalRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,8 +25,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class ChallengeServiceTest {
@@ -149,7 +144,7 @@ class ChallengeServiceTest {
                 .assignScore(100)
                 .build();
         when(challengeRepository.findById(challengeId)).thenReturn(Optional.of(testChallenge));
-        ChallengeDetailDto expected = testChallenge.toDto();
+        ChallengeDetailDto expected = testChallenge.toDetailDto();
 
         // Act
         ChallengeDetailDto actual = challengeService.readOne(challengeId);

@@ -1,11 +1,11 @@
-package com.random.random_challenge_defence.domain.memberchallenge;
+package com.random.random_challenge_defence.domain.challengelog;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum MemberChallengeStatus {
+public enum ChallengeLogStatus {
 
     READY("R"),
     SUCCESS("S"),
