@@ -1,5 +1,8 @@
 package com.random.random_challenge_defence.config.auth;
 
+import com.random.random_challenge_defence.config.auth.oauth2.CustomOAuth2FailureHandler;
+import com.random.random_challenge_defence.config.auth.oauth2.CustomOAuth2SuccessHandler;
+import com.random.random_challenge_defence.config.auth.oauth2.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +29,9 @@ import java.io.IOException;
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
+    private final CustomOAuth2FailureHandler customOAuth2FailureHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -35,17 +41,29 @@ public class SecurityConfig {
             .csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .authorizeRequests()
-                //.antMatchers( "/auth/login", "/auth/all", "/auth/token-reissue", "/auth/login-fail", "/members/join", "/h2-console", "/h2-console/*", "/admin/**/*").permitAll()
-                .antMatchers("/auth/user").hasRole("USER")
-                .anyRequest().permitAll()
-                //.anyRequest().authenticated()
+                .authorizeRequests()
+                    //.antMatchers( "/auth/login", "/auth/all", "/auth/token-reissue", "/auth/login-fail", "/members/join", "/h2-console", "/h2-console/*", "/admin/**/*").permitAll()
+                    .antMatchers("/auth/user").hasRole("USER")
+                    .antMatchers("/user-only").hasRole("USER")
+                    .antMatchers("/admin-only").hasRole("ADMIN")
+                    .anyRequest().permitAll()
+                    //.anyRequest().authenticated()
             .and()
-            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-            .exceptionHandling()
-                .accessDeniedHandler(new CustomAccessDeniedHandler())
-                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .oauth2Login()
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService)
+            .and()
+                .successHandler(customOAuth2SuccessHandler)
+                .failureHandler(customOAuth2FailureHandler)
+
+            .and()
+                //.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+//                .exceptionHandling()
+//                .accessDeniedHandler(new CustomAccessDeniedHandler())
+//                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+
         ;
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

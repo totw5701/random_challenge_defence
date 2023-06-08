@@ -3,10 +3,11 @@ package com.random.random_challenge_defence.service;
 import com.random.random_challenge_defence.advice.exception.CChallengeNotFoundException;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
-import com.random.random_challenge_defence.domain.challenge.Challenge;
-import com.random.random_challenge_defence.domain.challenge.ChallengeRepository;
-import com.random.random_challenge_defence.domain.challenge.ChallengeSubGoal;
-import com.random.random_challenge_defence.domain.challenge.ChallengeSubGoalRepository;
+import com.random.random_challenge_defence.api.service.ChallengeCardService;
+import com.random.random_challenge_defence.domain.challengeCard.ChallengeCard;
+import com.random.random_challenge_defence.domain.challengeCard.ChallengeCardRepository;
+import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
+import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoalRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,24 +28,24 @@ import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-class ChallengeServiceTest {
+class ChallengeCardServiceTest {
     @Mock
-    private ChallengeRepository challengeRepository;
+    private ChallengeCardRepository challengeCardRepository;
 
     @Mock
-    private ChallengeSubGoalRepository challengeSubGoalRepository;
+    private ChallengeCardSubGoalRepository challengeCardSubGoalRepository;
 
     @InjectMocks
-    private ChallengeService challengeService;
+    private ChallengeCardService challengeCardService;
 
     @Test
     @DisplayName("readPageList() 메서드 테스트")
     void testReadPageList() {
         // given
         int nowPage = 0;
-        List<Challenge> challengeList = new ArrayList<>();
+        List<ChallengeCard> challengeList = new ArrayList<>();
         challengeList.add(
-                Challenge.builder()
+                ChallengeCard.builder()
                         .id(1L)
                         .assignScore(3)
                         .title("titlt1")
@@ -55,7 +56,7 @@ class ChallengeServiceTest {
                         .build()
         );
         challengeList.add(
-                Challenge.builder()
+                ChallengeCard.builder()
                         .id(1L)
                         .assignScore(3)
                         .title("titlt2")
@@ -65,11 +66,11 @@ class ChallengeServiceTest {
                         .createDate(1333333L)
                         .build()
         );
-        Page<Challenge> challenges = new PageImpl<>(challengeList);
-        when(challengeRepository.findAll(any(Pageable.class))).thenReturn(challenges);
+        Page<ChallengeCard> challenges = new PageImpl<>(challengeList);
+        when(challengeCardRepository.findAll(any(Pageable.class))).thenReturn(challenges);
 
         // when
-        Page<ChallengeDetailDto> challengeDetailDtos = challengeService.readPageList(nowPage);
+        Page<ChallengeDetailDto> challengeDetailDtos = challengeCardService.readPageList(nowPage);
 
         // then
         assertEquals(challenges.getTotalElements(), challengeDetailDtos.getTotalElements());
@@ -81,60 +82,13 @@ class ChallengeServiceTest {
         assertEquals(challenges.getContent().get(1).getAssignScore(), challengeDetailDtos.getContent().get(1).getAssignScore());
     }
 
-    @Test
-    @DisplayName("create() 메서드")
-    void testCreateSuccess() {
-        // given
-        ChallengePutReqDto form = new ChallengePutReqDto();
-        form.setTitle("title1");
-        form.setDescription("desc1");
-        form.setAssignScore(3);
-        form.setEvidenceType("T");
-        form.setFinalGoal("final2");
-        form.setChallengeSubGoals(Arrays.asList("subgoal1"));
-
-        Challenge challengeEntity = Challenge.builder()
-                .id(1L)
-                .assignScore(3)
-                .title("title1")
-                .description("desc1")
-                .evidenceType("P")
-                .finalGoal("final2")
-                .createDate(1333333L)
-                .evidenceType("T")
-                .build();
-
-        List<ChallengeSubGoal> subGoalEntitys = new ArrayList<>();
-        subGoalEntitys.add(ChallengeSubGoal.builder()
-                .intermediateGoal("subgoal1")
-                .challenge(challengeEntity).build());
-        challengeEntity.assignSubGoals(subGoalEntitys);
-
-        when(challengeRepository.save(any(Challenge.class))).thenReturn(challengeEntity);
-
-        // when
-        Challenge challenge = challengeService.create(form);
-
-        // then
-        assertNotNull(challenge);
-        assertNotNull(challenge.getId());
-        assertEquals(form.getTitle(), challenge.getTitle());
-        assertEquals(form.getDescription(), challenge.getDescription());
-        assertEquals(form.getAssignScore(), challenge.getAssignScore());
-        assertEquals(form.getEvidenceType(), challenge.getEvidenceType());
-        assertEquals(form.getFinalGoal(), challenge.getFinalGoal());
-        assertEquals(form.getChallengeSubGoals().size(), challenge.getChallengeSubGoals().size());
-        assertEquals(form.getChallengeSubGoals().get(0), challenge.getChallengeSubGoals().get(0).getIntermediateGoal());
-        verify(challengeRepository, times(1)).save(any(Challenge.class));
-
-    }
 
     @Test
     @DisplayName("Should return challenge details when valid challenge ID is provided")
     public void testReadOneValidChallengeId() {
         // Arrange
         Long challengeId = 1L;
-        Challenge testChallenge = Challenge.builder()
+        ChallengeCard testChallenge = ChallengeCard.builder()
                 .id(challengeId)
                 .title("Test Challenge")
                 .description("Test Description")
@@ -143,15 +97,15 @@ class ChallengeServiceTest {
                 .difficulty(3)
                 .assignScore(100)
                 .build();
-        when(challengeRepository.findById(challengeId)).thenReturn(Optional.of(testChallenge));
+        when(challengeCardRepository.findById(challengeId)).thenReturn(Optional.of(testChallenge));
         ChallengeDetailDto expected = testChallenge.toDetailDto();
 
         // Act
-        ChallengeDetailDto actual = challengeService.readOne(challengeId);
+        ChallengeDetailDto actual = challengeCardService.readOne(challengeId);
 
         // Assert
         assertEquals(expected, actual);
-        verify(challengeRepository, times(1)).findById(challengeId);
+        verify(challengeCardRepository, times(1)).findById(challengeId);
     }
 
     @Test
@@ -159,13 +113,13 @@ class ChallengeServiceTest {
     public void testReadOneInvalidChallengeId() {
         // Arrange
         Long challengeId = 1L;
-        when(challengeRepository.findById(challengeId)).thenReturn(Optional.empty());
+        when(challengeCardRepository.findById(challengeId)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(CChallengeNotFoundException.class, () -> {
-            challengeService.readOne(challengeId);
+            challengeCardService.readOne(challengeId);
         });
-        verify(challengeRepository, times(1)).findById(challengeId);
+        verify(challengeCardRepository, times(1)).findById(challengeId);
     }
 
     @Test
@@ -189,15 +143,15 @@ class ChallengeServiceTest {
                 .assignScore(assignScore)
                 .build();
 
-        ChallengeSubGoal subGoal = ChallengeSubGoal.builder()
+        ChallengeCardSubGoal subGoal = ChallengeCardSubGoal.builder()
                 .id(1L)
                 .intermediateGoal("Intermediate Goal")
                 .build();
 
-        List<ChallengeSubGoal> subGoals = new ArrayList<>();
+        List<ChallengeCardSubGoal> subGoals = new ArrayList<>();
         subGoals.add(subGoal);
 
-        Challenge challenge = Challenge.builder()
+        ChallengeCard challenge = ChallengeCard.builder()
                 .id(id)
                 .title("Old Title")
                 .description("Old Description")
@@ -206,10 +160,10 @@ class ChallengeServiceTest {
                 .difficulty(1)
                 .assignScore(2)
                 .createDate(0L)
-                .challengeSubGoals(subGoals)
+                .challengeCardSubGoals(subGoals)
                 .build();
 
-        Challenge updatedChallenge = Challenge.builder()
+        ChallengeCard updatedChallenge = ChallengeCard.builder()
                 .id(id)
                 .title(title)
                 .description(description)
@@ -218,13 +172,13 @@ class ChallengeServiceTest {
                 .difficulty(difficulty)
                 .assignScore(assignScore)
                 .createDate(0L)
-                .challengeSubGoals(subGoals)
+                .challengeCardSubGoals(subGoals)
                 .build();
 
-        when(challengeRepository.findById(id)).thenReturn(Optional.of(challenge));
+        when(challengeCardRepository.findById(id)).thenReturn(Optional.of(challenge));
 
         // When
-        Challenge result = challengeService.update(form);
+        ChallengeCard result = challengeCardService.update(form);
 
         // Then
         assertEquals(id, result.getId());
@@ -234,7 +188,7 @@ class ChallengeServiceTest {
         assertEquals(evidenceType, result.getEvidenceType());
         assertEquals(difficulty, result.getDifficulty());
         assertEquals(assignScore, result.getAssignScore());
-        assertEquals(subGoals, result.getChallengeSubGoals());
+        assertEquals(subGoals, result.getChallengeCardSubGoals());
     }
 
     @Test
@@ -246,10 +200,10 @@ class ChallengeServiceTest {
                 .id(id)
                 .build();
 
-        when(challengeRepository.findById(id)).thenReturn(Optional.empty());
+        when(challengeCardRepository.findById(id)).thenReturn(Optional.empty());
 
         // When and Then
-        assertThrows(CChallengeNotFoundException.class, () -> challengeService.update(form));
+        assertThrows(CChallengeNotFoundException.class, () -> challengeCardService.update(form));
     }
 
 

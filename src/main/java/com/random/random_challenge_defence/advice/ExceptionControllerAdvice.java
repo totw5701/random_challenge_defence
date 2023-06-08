@@ -2,7 +2,7 @@ package com.random.random_challenge_defence.advice;
 
 import com.random.random_challenge_defence.advice.exception.*;
 import com.random.random_challenge_defence.api.dto.common.CommonResponse;
-import com.random.random_challenge_defence.service.ResponseService;
+import com.random.random_challenge_defence.api.service.ResponseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;

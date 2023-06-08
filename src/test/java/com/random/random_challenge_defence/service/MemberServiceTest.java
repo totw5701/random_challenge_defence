@@ -2,6 +2,7 @@ package com.random.random_challenge_defence.service;
 
 import com.random.random_challenge_defence.advice.exception.CMemberNotFoundException;
 import com.random.random_challenge_defence.api.dto.member.MemberPutReqDto;
+import com.random.random_challenge_defence.api.service.MemberService;
 import com.random.random_challenge_defence.domain.member.Member;
 import com.random.random_challenge_defence.domain.member.MemberRepository;
 import com.random.random_challenge_defence.domain.member.MemberRole;

@@ -1,8 +1,8 @@
-package com.random.random_challenge_defence.domain.challengelog;
+package com.random.random_challenge_defence.domain.challengelogsubgoal;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.random.random_challenge_defence.domain.challenge.ChallengeSubGoal;
+import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
+import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
+import com.random.random_challenge_defence.domain.challengelog.ChallengeLogStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,7 +18,7 @@ public class ChallengeLogSubGoal {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private ChallengeSubGoal challengeSubGoal;
+    private ChallengeCardSubGoal challengeCardSubGoal;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private ChallengeLog challengeLog;

@@ -1,10 +1,11 @@
-package com.random.random_challenge_defence.domain.challenge;
+package com.random.random_challenge_defence.domain.challengeCard;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeSubGoalDetailDto;
+import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id") // Challenge 객체를 JSON으로 바꿀때 다른 객체에게 참조 받는 경우 ID 만 넘긴다.
-public class Challenge {
+public class ChallengeCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +39,7 @@ public class Challenge {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "challenge_id")
-    private List<ChallengeSubGoal> challengeSubGoals;
+    private List<ChallengeCardSubGoal> challengeCardSubGoals;
 
     public void update(ChallengePutReqDto form) {
         this.title = (form.getTitle() != null) ? form.getTitle() : this.title;
@@ -48,21 +49,21 @@ public class Challenge {
         this.difficulty = (form.getDifficulty() != null) ? form.getDifficulty() : this.difficulty;
         this.assignScore = (form.getAssignScore() != null) ? form.getAssignScore() : this.assignScore;
 
-        this.challengeSubGoals = (form.getChallengeSubGoals() != null) ?
+        this.challengeCardSubGoals = (form.getChallengeSubGoals() != null) ?
                     form.getChallengeSubGoals().stream()
-                    .map(subGoalDto -> ChallengeSubGoal.builder()
+                    .map(subGoalDto -> ChallengeCardSubGoal.builder()
                             .challenge(this)
                             .intermediateGoal(subGoalDto)
                             .build())
                     .collect(Collectors.toList())
-                : this.challengeSubGoals;
+                : this.challengeCardSubGoals;
 
     }
 
     public ChallengeDetailDto toDetailDto() {
         List<ChallengeSubGoalDetailDto> subGoals = new ArrayList<>();
-        if(this.challengeSubGoals != null) {
-            subGoals = challengeSubGoals.stream().map((challengeSubGoal -> challengeSubGoal.toDto())).collect(Collectors.toList());
+        if(this.challengeCardSubGoals != null) {
+            subGoals = challengeCardSubGoals.stream().map((challengeSubGoal -> challengeSubGoal.toDto())).collect(Collectors.toList());
         }
         return ChallengeDetailDto.builder()
                 .id(this.id)
@@ -77,7 +78,7 @@ public class Challenge {
                 .build();
     }
 
-    public void assignSubGoals(List<ChallengeSubGoal> subGoals){
-        this.challengeSubGoals = subGoals;
+    public void assignSubGoals(List<ChallengeCardSubGoal> subGoals){
+        this.challengeCardSubGoals = subGoals;
     }
 }

@@ -24,12 +24,15 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
         ExceptionCode tokenException = null;
 
+        System.out.println(token);
+
         if (token == null) {
             tokenException = ExceptionCode.TOKEN_IS_NULL;
         } else if (!jwtTokenProvider.validateToken(token)) {
             tokenException = ExceptionCode.TOKEN_VALIDATION_FAIL;
         } else {
             String tokenType = jwtTokenProvider.getClaimValue(token, "type");
+            System.out.println("tokenType : " + tokenType);
             if ("ATK".equals(tokenType)) {
                 // access token인 경우에만 Authentication 객체를 가지고 와서 SecurityContext에 저장
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);

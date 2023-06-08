@@ -1,7 +1,7 @@
 package com.random.random_challenge_defence.domain.challengelog;
 
-import com.random.random_challenge_defence.domain.challenge.Challenge;
-import com.random.random_challenge_defence.domain.challenge.ChallengeRepository;
+import com.random.random_challenge_defence.domain.challengeCard.ChallengeCard;
+import com.random.random_challenge_defence.domain.challengeCard.ChallengeCardRepository;
 import com.random.random_challenge_defence.domain.member.Member;
 import com.random.random_challenge_defence.domain.member.MemberRepository;
 import com.random.random_challenge_defence.domain.member.MemberRole;
@@ -17,14 +17,14 @@ import java.util.Optional;
 
 @Transactional
 @SpringBootTest
-class MemberChallengeRepositoryTest {
+class MemberChallengeCardRepositoryTest {
 
     @Autowired
     ChallengeLogRepository memberChallengeRepository;
     @Autowired
     MemberRepository memberRepository;
     @Autowired
-    ChallengeRepository challengeRepository;
+    ChallengeCardRepository challengeCardRepository;
 
     private TestTools testTools = new TestTools();
 
@@ -37,7 +37,7 @@ class MemberChallengeRepositoryTest {
     public void findByMemberIdAndChallengeId() {
         // Given
         Member member = testTools.createDummyMember(MemberRole.USER, 1L, "email@email.com");
-        Challenge challenge = Challenge.builder()
+        ChallengeCard challenge = ChallengeCard.builder()
                 .id(1L)
                 .build();
         memberRepository.save(member);
@@ -50,7 +50,7 @@ class MemberChallengeRepositoryTest {
                 .review("review")
                 .status(ChallengeLogStatus.READY)
                 .build();
-        challengeRepository.save(challenge);
+        challengeCardRepository.save(challenge);
 
         memberChallengeRepository.save(memberChallenge);
 

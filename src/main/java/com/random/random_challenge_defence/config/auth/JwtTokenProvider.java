@@ -1,6 +1,8 @@
 package com.random.random_challenge_defence.config.auth;
 
 import com.random.random_challenge_defence.api.dto.TokenInfo;
+import com.random.random_challenge_defence.config.auth.oauth2.CustomOAuth2User;
+import com.random.random_challenge_defence.domain.member.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -32,18 +34,15 @@ public class JwtTokenProvider {
     }
 
     // 유저 정보를 가지고 AccessToken, RefreshToken 을 생성하는 메서드
-    public TokenInfo generateToken(Authentication authentication) {
-        // 권한 가져오기
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+    public TokenInfo generateTokenWithAuthAndEmail(String authorities, String email) {
 
         long now = (new Date()).getTime();
         // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + 86400000);
+        Date accessTokenExpiresIn = new Date(now + 3600000);
         String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())
+                //.setSubject((String) att.get("email"))
                 .claim("auth", authorities)
+                .claim("email", email)
                 .claim("type", "ATK")
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -51,7 +50,51 @@ public class JwtTokenProvider {
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
-                .setSubject(authentication.getName())
+                //.setSubject((String) att.get("email"))
+                .claim("email", email)
+                .claim("type", "RTK")
+                .setExpiration(new Date(now + 86400000))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        return TokenInfo.builder()
+                .grantType("Bearer")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    public TokenInfo generateToken(Authentication authentication) {
+        // 권한 가져오기
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        String email = "";
+        if(authentication.getPrincipal() instanceof CustomOAuth2User) {
+            CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
+            Member member = principal.getMember();
+            email = member.getEmail();
+        } else {
+            System.out.println("authentication type : " + authentication.getClass().getName());
+        }
+
+        long now = (new Date()).getTime();
+        // Access Token 생성
+        Date accessTokenExpiresIn = new Date(now + 3600000);
+        String accessToken = Jwts.builder()
+                //.setSubject(authentication.getName())
+                .claim("auth", authorities)
+                .claim("email", email)
+                .claim("type", "ATK")
+                .setExpiration(accessTokenExpiresIn)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        // Refresh Token 생성
+        String refreshToken = Jwts.builder()
+                //.setSubject(authentication.getName())
+                .claim("email", email)
                 .claim("type", "RTK")
                 .setExpiration(new Date(now + 86400000))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -80,7 +123,7 @@ public class JwtTokenProvider {
                         .collect(Collectors.toList());
 
         // UserDetails 객체를 만들어서 Authentication 리턴
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
+        UserDetails principal = new User((String) claims.get("email"), "", authorities);
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 

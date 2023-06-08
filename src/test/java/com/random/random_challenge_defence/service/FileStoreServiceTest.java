@@ -1,6 +1,7 @@
 package com.random.random_challenge_defence.service;
 
 import com.random.random_challenge_defence.api.dto.file.UploadFile;
+import com.random.random_challenge_defence.api.service.FileStoreService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,11 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 class FileStoreServiceTest {
 
-    @Autowired FileStoreService fileStoreService;
+    @Autowired
+    FileStoreService fileStoreService;
 
     @Test
     void fileStore() throws IOException {

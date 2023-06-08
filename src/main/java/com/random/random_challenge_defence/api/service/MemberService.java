@@ -1,4 +1,4 @@
-package com.random.random_challenge_defence.service;
+package com.random.random_challenge_defence.api.service;
 
 import com.random.random_challenge_defence.advice.exception.CMemberNotFoundException;
 import com.random.random_challenge_defence.api.dto.member.MemberPutReqDto;

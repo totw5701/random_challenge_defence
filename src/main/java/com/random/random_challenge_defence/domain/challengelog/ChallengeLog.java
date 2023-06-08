@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogDetailDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogUpdateDto;
-import com.random.random_challenge_defence.domain.challenge.Challenge;
+import com.random.random_challenge_defence.domain.challengeCard.ChallengeCard;
 import com.random.random_challenge_defence.domain.member.Member;
 import lombok.*;
 
@@ -31,7 +31,7 @@ public class ChallengeLog {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Challenge challenge;
+    private ChallengeCard challenge;
 
 //    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    @JoinColumn(name = "challenge_log_id")

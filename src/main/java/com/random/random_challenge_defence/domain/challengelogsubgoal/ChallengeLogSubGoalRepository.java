@@ -1,4 +1,4 @@
-package com.random.random_challenge_defence.domain.challengelog;
+package com.random.random_challenge_defence.domain.challengelogsubgoal;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

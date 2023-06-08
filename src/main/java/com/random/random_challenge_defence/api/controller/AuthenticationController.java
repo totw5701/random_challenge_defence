@@ -8,12 +8,15 @@ import com.random.random_challenge_defence.advice.exception.CTokenValiationFailE
 import com.random.random_challenge_defence.api.dto.TokenInfo;
 import com.random.random_challenge_defence.api.dto.common.CommonResponse;
 import com.random.random_challenge_defence.api.dto.member.MemberLoginReqDto;
+import com.random.random_challenge_defence.config.auth.JwtTokenProvider;
 import com.random.random_challenge_defence.domain.member.Member;
-import com.random.random_challenge_defence.service.AuthenticationService;
-import com.random.random_challenge_defence.service.MemberService;
-import com.random.random_challenge_defence.service.ResponseService;
+import com.random.random_challenge_defence.api.service.AuthenticationService;
+import com.random.random_challenge_defence.api.service.MemberService;
+import com.random.random_challenge_defence.api.service.ResponseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,15 +30,25 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final MemberService memberService;
+    private final JwtTokenProvider jwtTokenProvider;
     private final ResponseService responseService;
 
+    @GetMapping("/success")
+    public String authSuccess(@RequestParam(value = "atk") String atk, @RequestParam(value = "rtk", required = false) String rtk) {
+        System.out.println("authSuccess controller");
+        System.out.println("atk : " + atk);
+        System.out.println("rtk : " + rtk);
+        return "google login success";
+    }
 
     @ApiOperation(value = "토큰 재발급", notes = "만료되지 않은 토큰으로 사용가능한 토큰을 발급받습니다.")
     @GetMapping("/token-reissue")
     public CommonResponse<TokenInfo> tokenReissue(HttpServletRequest request) {
         String token = authenticationService.resolveToken(request);
-        Member member = memberService.findByEmail(authenticationService.resolveSubject(token));
-        TokenInfo tokenInfo = authenticationService.login(member.getEmail(), member.getPassword());
+        String email = jwtTokenProvider.getClaimValue(token, "email");
+        Member member = memberService.findByEmail(email);
+
+        TokenInfo tokenInfo = jwtTokenProvider.generateTokenWithAuthAndEmail(new SimpleGrantedAuthority(member.getMemberRole().getKey()).toString(), member.getEmail());
         return responseService.getResult(tokenInfo);
     }
 
@@ -66,19 +79,4 @@ public class AuthenticationController {
         throw new CAccessDeniedException();
     }
 
-    // TEST 코드
-    @GetMapping("all")
-    public CommonResponse<Object> all() {
-        return responseService.getStringResult("permitAll", "permitAll");
-    }
-
-    @GetMapping("user")
-    public CommonResponse<Object> user() {
-        return responseService.getStringResult("userOnly", "userOnly");
-    }
-
-    @GetMapping("user/suc")
-    public CommonResponse sdfdf() {
-        return responseService.getSuccessResult();
-    }
 }

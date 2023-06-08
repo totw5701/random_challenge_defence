@@ -4,16 +4,14 @@ import com.random.random_challenge_defence.api.dto.common.CommonResponse;
 import com.random.random_challenge_defence.api.dto.member.MemberDetailsDto;
 import com.random.random_challenge_defence.api.dto.member.MemberPutReqDto;
 import com.random.random_challenge_defence.domain.member.Member;
-import com.random.random_challenge_defence.service.MemberService;
-import com.random.random_challenge_defence.service.ResponseService;
+import com.random.random_challenge_defence.api.service.MemberService;
+import com.random.random_challenge_defence.api.service.ResponseService;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/members")

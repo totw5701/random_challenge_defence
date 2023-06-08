@@ -6,6 +6,8 @@ file:
   dir: "D:/NAS/rcd/evidence"
 
 spring:
+  config:
+    import: application-oauth.yml
 #  sql:
 #    init:
 #      mode: embedded

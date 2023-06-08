@@ -2,8 +2,8 @@ package com.random.random_challenge_defence.service;
 
 import com.random.random_challenge_defence.advice.exception.CChallengeNotFoundException;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogReqDto;
-import com.random.random_challenge_defence.domain.challenge.Challenge;
-import com.random.random_challenge_defence.domain.challenge.ChallengeRepository;
+import com.random.random_challenge_defence.domain.challengeCard.ChallengeCard;
+import com.random.random_challenge_defence.domain.challengeCard.ChallengeCardRepository;
 import com.random.random_challenge_defence.domain.member.Member;
 import com.random.random_challenge_defence.domain.member.MemberRepository;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-class MemberChallengeServiceTest {
+class MemberChallengeCardServiceTest {
 
     @Mock
     private ChallengeLogRepository memberChallengeRepository;
@@ -36,7 +36,7 @@ class MemberChallengeServiceTest {
     private MemberRepository memberRepository;
 
     @Mock
-    private ChallengeRepository challengeRepository;
+    private ChallengeCardRepository challengeCardRepository;
 
     @InjectMocks
     private ChallengeLogService challengeLogService;
@@ -48,14 +48,14 @@ class MemberChallengeServiceTest {
         Long challengeId = 2L;
 
         Member member = Member.builder().id(memberId).build();
-        Challenge challenge = Challenge.builder().id(challengeId).build();
+        ChallengeCard challenge = ChallengeCard.builder().id(challengeId).build();
 
         ChallengeLogReqDto dto = new ChallengeLogReqDto();
         dto.setMemberId(memberId);
         dto.setChallengeId(challengeId);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-        when(challengeRepository.findById(challengeId)).thenReturn(Optional.of(challenge));
+        when(challengeCardRepository.findById(challengeId)).thenReturn(Optional.of(challenge));
         when(memberChallengeRepository.save(any(ChallengeLog.class))).thenAnswer(i -> i.getArguments()[0]);
 
         // when
@@ -77,7 +77,7 @@ class MemberChallengeServiceTest {
         dto.setMemberId(memberId);
         dto.setChallengeId(challengeId);
 
-        when(challengeRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(challengeCardRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // then
         assertThrows(CChallengeNotFoundException.class, () -> challengeLogService.create(dto));
@@ -90,14 +90,14 @@ class MemberChallengeServiceTest {
         Long challengeId = 2L;
 
         Member member = Member.builder().id(memberId).build();
-        Challenge challenge = Challenge.builder().id(challengeId).build();
+        ChallengeCard challenge = ChallengeCard.builder().id(challengeId).build();
 
         ChallengeLogReqDto dto = new ChallengeLogReqDto();
         dto.setMemberId(memberId);
         dto.setChallengeId(challengeId);
 
         when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
-        when(challengeRepository.findById(challengeId)).thenReturn(Optional.of(challenge));
+        when(challengeCardRepository.findById(challengeId)).thenReturn(Optional.of(challenge));
         when(memberChallengeRepository.save(any(ChallengeLog.class))).thenThrow(DataIntegrityViolationException.class);
 
         // then

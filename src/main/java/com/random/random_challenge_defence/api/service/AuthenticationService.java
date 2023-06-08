@@ -1,4 +1,4 @@
-package com.random.random_challenge_defence.service;
+package com.random.random_challenge_defence.api.service;
 
 import com.random.random_challenge_defence.api.dto.TokenInfo;
 import com.random.random_challenge_defence.config.auth.JwtTokenProvider;
@@ -36,6 +36,10 @@ public class AuthenticationService {
         return tokenInfo;
     }
 
+    public TokenInfo generateToken(Authentication authentication) {
+        return jwtTokenProvider.generateToken(authentication);
+    }
+
     public String resolveToken(HttpServletRequest request) {
         return jwtTokenProvider.resolveToken(request);
     }
@@ -43,5 +47,4 @@ public class AuthenticationService {
     public String resolveSubject(String token){
         return jwtTokenProvider.getClaimValue(token, "sub");
     }
-
 }

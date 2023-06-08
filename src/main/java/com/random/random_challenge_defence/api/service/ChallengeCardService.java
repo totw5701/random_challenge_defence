@@ -1,12 +1,12 @@
-package com.random.random_challenge_defence.service;
+package com.random.random_challenge_defence.api.service;
 
 import com.random.random_challenge_defence.advice.exception.CChallengeNotFoundException;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
-import com.random.random_challenge_defence.domain.challenge.Challenge;
-import com.random.random_challenge_defence.domain.challenge.ChallengeRepository;
+import com.random.random_challenge_defence.domain.challengeCard.ChallengeCard;
+import com.random.random_challenge_defence.domain.challengeCard.ChallengeCardRepository;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
-import com.random.random_challenge_defence.domain.challenge.ChallengeSubGoal;
-import com.random.random_challenge_defence.domain.challenge.ChallengeSubGoalRepository;
+import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
+import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -20,14 +20,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ChallengeService {
+public class ChallengeCardService {
 
-    private final ChallengeRepository challengeRepository;
-    private final ChallengeSubGoalRepository challengeSubGoalRepository;
+    private final ChallengeCardRepository challengeCardRepository;
+    private final ChallengeCardSubGoalRepository challengeCardSubGoalRepository;
 
     public Page<ChallengeDetailDto> readPageList(Integer nowPage) {
         Pageable pageable = PageRequest.of(nowPage, 15, Sort.by("id").descending()); // 한 페이지에 15개씩 출력
-        Page<Challenge> challenges = challengeRepository.findAll(pageable);
+        Page<ChallengeCard> challenges = challengeCardRepository.findAll(pageable);
 
         // dto 변환
         List<ChallengeDetailDto> challengeDtoList = challenges.stream()
@@ -41,7 +41,7 @@ public class ChallengeService {
 
     public ChallengeDetailDto create(ChallengePutReqDto form) {
 
-        Challenge challenge = Challenge.builder()
+        ChallengeCard challenge = ChallengeCard.builder()
                 .assignScore(form.getAssignScore())
                 .title(form.getTitle())
                 .description(form.getDescription())
@@ -50,42 +50,42 @@ public class ChallengeService {
                 .createDate(new Date().getTime())
                 .build();
 
-        List<ChallengeSubGoal> subGoals = form.getChallengeSubGoals().stream()
-                .map(subGoalDto -> ChallengeSubGoal.builder()
+        List<ChallengeCardSubGoal> subGoals = form.getChallengeSubGoals().stream()
+                .map(subGoalDto -> ChallengeCardSubGoal.builder()
                         .challenge(challenge)
                         .intermediateGoal(subGoalDto)
                         .build())
                 .collect(Collectors.toList());
         challenge.assignSubGoals(subGoals);
 
-        challengeRepository.save(challenge);
+        challengeCardRepository.save(challenge);
         return challenge.toDetailDto();
     }
 
     public ChallengeDetailDto readOne(Long id){
-        Optional<Challenge> opChallenge = challengeRepository.findById(id);
+        Optional<ChallengeCard> opChallenge = challengeCardRepository.findById(id);
         if(!opChallenge.isPresent()) {
             throw new CChallengeNotFoundException();
         }
         return opChallenge.get().toDetailDto();
     }
 
-    public Challenge update(ChallengePutReqDto form) {
-        Optional<Challenge> opChallenge = challengeRepository.findById(form.getId());
+    public ChallengeCard update(ChallengePutReqDto form) {
+        Optional<ChallengeCard> opChallenge = challengeCardRepository.findById(form.getId());
         if(!opChallenge.isPresent()) {
             throw new CChallengeNotFoundException();
         }
-        Challenge challenge = opChallenge.get();
+        ChallengeCard challenge = opChallenge.get();
         challenge.update(form);
         return challenge;
     }
 
     public void delete(Long id) {
-        Optional<Challenge> opChallenge = challengeRepository.findById(id);
+        Optional<ChallengeCard> opChallenge = challengeCardRepository.findById(id);
         if(!opChallenge.isPresent()) {
             throw new CChallengeNotFoundException();
         }
-        challengeRepository.delete(opChallenge.get());
+        challengeCardRepository.delete(opChallenge.get());
     }
 
 

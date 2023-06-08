@@ -1,9 +1,7 @@
-package com.random.random_challenge_defence.domain.challenge;
+package com.random.random_challenge_defence.domain.challengecardsubgoal;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeSubGoalDetailDto;
+import com.random.random_challenge_defence.domain.challengeCard.ChallengeCard;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class ChallengeSubGoal {
+public class ChallengeCardSubGoal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +20,7 @@ public class ChallengeSubGoal {
     private Long id;
 
     @ManyToOne
-    private Challenge challenge;
+    private ChallengeCard challenge;
     private String intermediateGoal;
 
     public ChallengeSubGoalDetailDto toDto() {

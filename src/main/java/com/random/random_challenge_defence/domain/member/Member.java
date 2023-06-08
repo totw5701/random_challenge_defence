@@ -30,6 +30,11 @@ public class Member {
     private String modifyDate;
 
 
+    public Member entityUpdate(String picture) {
+        this.picture = picture;
+        return this;
+    }
+
     public MemberDetailsDto toDetailDto() {
         return MemberDetailsDto.builder()
                 .id(this.id)
