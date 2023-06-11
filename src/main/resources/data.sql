@@ -1,12 +1,12 @@
 
-insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (1L, 30, 'desc', 2, 'P', '사진 인증', 'ti2tle');
+insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (1L, 30, 'desc', 1, 'P', '사진 인증', 'ti2tle');
 insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (2L, 30, 'desc', 2, 'P', '사진 인증', 'title2');
 insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (3L, 30, 'desc', 2, 'P', '사진 인증', 'title3');
 insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (4L, 30, 'desc', 2, 'P', '사진 인증', 'title4');
 insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (5L, 30, 'desc', 2, 'P', '사진 인증', 'title5');
 insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (6L, 30, 'desc', 2, 'P', '사진 인증', 'title6');
-insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (7L, 30, 'desc', 2, 'P', '사진 인증', 'title7');
-insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (8L, 30, 'desc', 2, 'P', '사진 인증', 'title8');
+insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (7L, 30, 'desc', 1, 'P', '사진 인증', 'title7');
+insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (8L, 30, 'desc', 1, 'P', '사진 인증', 'title8');
 insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (9L, 30, 'desc', 2, 'P', '사진 인증', 'title9');
 insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (10L, 30, 'desc', 2, 'P', '사진 인증', 'titleq');
 insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (11L, 30, 'desc', 2, 'P', '사진 인증', 'titlew');

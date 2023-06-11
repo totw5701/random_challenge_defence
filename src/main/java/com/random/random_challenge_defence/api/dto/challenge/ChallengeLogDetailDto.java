@@ -20,6 +20,6 @@ public class ChallengeLogDetailDto {
     private ChallengeLogStatus status;
     private String review;
     private Long memberId;
-    private Long challengeId;
+    private ChallengeDetailDto challengeDetailDto;
     private List<ChallengeLogSubGoalDetailDto> challengeLogSubGoalDetailDtos;
 }

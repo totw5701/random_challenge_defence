@@ -38,7 +38,6 @@ public class ChallengeLogController {
     @GetMapping("/detail/{id}")
     public CommonResponse<ChallengeLogDetailDto> challengeLogDetail(@PathVariable("id") Long id) {
         ChallengeLog challengeLogDetail = challengeLogService.getChallengeLogDetail(id);
-        System.out.println("안녕? :  " + challengeLogDetail.toDetailDto());
         return responseService.getResult(challengeLogDetail.toDetailDto());
     }
 
