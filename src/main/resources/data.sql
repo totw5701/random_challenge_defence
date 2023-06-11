@@ -35,6 +35,6 @@ insert into challenge_card (id, assign_score, description, difficulty, evidence_
 insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (34L, 30, 'desc', 2, 'P', '사진 인증', 'titleb');
 insert into challenge_card (id, assign_score, description, difficulty, evidence_type, final_goal, title) values (35L, 30, 'desc', 2, 'P', '사진 인증', 'titlse');
 
-insert into challenge_card_sub_goal (id, challenge_id, intermediate_goal) values (1L, 35L, '중간 목표1');
-insert into challenge_card_sub_goal (id, challenge_id, intermediate_goal) values (2L, 35L, '중간 목표2');
-insert into challenge_card_sub_goal (id, challenge_id, intermediate_goal) values (3L, 35L, '중간 목표3');
+insert into challenge_card_sub_goal (id, challenge_id, sub_goal) values (1L, 35L, '중간 목표1');
+insert into challenge_card_sub_goal (id, challenge_id, sub_goal) values (2L, 35L, '중간 목표2');
+insert into challenge_card_sub_goal (id, challenge_id, sub_goal) values (3L, 35L, '중간 목표3');

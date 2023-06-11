@@ -52,8 +52,8 @@ public class ChallengeCardService {
 
         List<ChallengeCardSubGoal> subGoals = form.getChallengeSubGoals().stream()
                 .map(subGoalDto -> ChallengeCardSubGoal.builder()
-                        .challenge(challenge)
-                        .intermediateGoal(subGoalDto)
+                        .challengeCard(challenge)
+                        .subGoal(subGoalDto)
                         .build())
                 .collect(Collectors.toList());
         challenge.assignSubGoals(subGoals);
@@ -86,6 +86,14 @@ public class ChallengeCardService {
             throw new CChallengeNotFoundException();
         }
         challengeCardRepository.delete(opChallenge.get());
+    }
+
+    public ChallengeCard findById(Long id) {
+        Optional<ChallengeCard> opChallenge = challengeCardRepository.findById(id);
+        if(!opChallenge.isPresent()) {
+            throw new CChallengeNotFoundException();
+        }
+        return opChallenge.get();
     }
 
 

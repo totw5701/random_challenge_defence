@@ -20,13 +20,13 @@ public class ChallengeCardSubGoal {
     private Long id;
 
     @ManyToOne
-    private ChallengeCard challenge;
-    private String intermediateGoal;
+    private ChallengeCard challengeCard;
+    private String subGoal;
 
     public ChallengeSubGoalDetailDto toDto() {
         return ChallengeSubGoalDetailDto.builder()
                 .id(this.id)
-                .intermediateGoal(this.intermediateGoal)
+                .subGoal(this.subGoal)
                 .build();
     }
 

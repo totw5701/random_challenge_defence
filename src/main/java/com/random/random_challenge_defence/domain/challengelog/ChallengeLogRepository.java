@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface ChallengeLogRepository extends JpaRepository<ChallengeLog, Long> {
 
-    @Query("select cl from ChallengeLog cl where cl.member.id = :memberId and cl.challenge.id = :challengeId")
+    @Query("select cl from ChallengeLog cl where cl.member.id = :memberId and cl.challengeCard.id = :challengeId")
     Optional<ChallengeLog> findByMemberIdAndChallengeId (@Param("memberId") Long memberId, @Param("challengeId") Long challengeId);
 }

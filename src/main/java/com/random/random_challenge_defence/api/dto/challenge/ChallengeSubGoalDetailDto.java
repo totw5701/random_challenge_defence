@@ -8,5 +8,5 @@ import lombok.Data;
 public class ChallengeSubGoalDetailDto {
 
     private Long id;
-    private String intermediateGoal;
+    private String subGoal;
 }

@@ -3,12 +3,16 @@ package com.random.random_challenge_defence.domain.challengelog;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogDetailDto;
+import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogSubGoalDetailDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogUpdateDto;
 import com.random.random_challenge_defence.domain.challengeCard.ChallengeCard;
+import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoal;
 import com.random.random_challenge_defence.domain.member.Member;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Builder
@@ -25,26 +29,34 @@ public class ChallengeLog {
 
     @Enumerated(EnumType.STRING)
     private ChallengeLogStatus status;
+
     private String review;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private ChallengeCard challenge;
+    private ChallengeCard challengeCard;
 
-//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "challenge_log_id")
-//    private List<ChallengeLogSubGoal> challengeLogSubGoals;
+    private String startDtm;
+    private String endDtm;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "challenge_log_id")
+    private List<ChallengeLogSubGoal> challengeLogSubGoals;
 
     public ChallengeLogDetailDto toDetailDto() {
+
+        List<ChallengeLogSubGoalDetailDto> collect = challengeLogSubGoals.stream().map((s) -> s.toDetail()).collect(Collectors.toList());
+
         return ChallengeLogDetailDto.builder()
                 .id(this.id)
                 .evidence(this.evidence)
                 .status(this.status)
                 .review(this.review)
                 .memberId(this.member.getId())
-                .challengeId(this.challenge.getId())
+                .challengeId(this.challengeCard.getId())
+                .challengeLogSubGoalDetailDtos(collect)
                 .build();
     }
 
@@ -59,6 +71,4 @@ public class ChallengeLog {
             this.review = form.getReview();
         }
     }
-
-
 }

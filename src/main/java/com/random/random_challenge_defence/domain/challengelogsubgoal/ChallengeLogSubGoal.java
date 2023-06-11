@@ -1,5 +1,6 @@
 package com.random.random_challenge_defence.domain.challengelogsubgoal;
 
+import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogSubGoalDetailDto;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLogStatus;
@@ -24,5 +25,14 @@ public class ChallengeLogSubGoal {
     private ChallengeLog challengeLog;
 
     @Enumerated(EnumType.STRING)
-    private ChallengeLogStatus memberChallengeStatus;
+    private ChallengeLogStatus challengeLogSubGoalStatus;
+
+
+    public ChallengeLogSubGoalDetailDto toDetail() {
+        return ChallengeLogSubGoalDetailDto.builder()
+                .id(id)
+                .subGoal(challengeCardSubGoal.getSubGoal())
+                .status(challengeLogSubGoalStatus.getCode())
+                .build();
+    }
 }

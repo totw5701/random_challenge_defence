@@ -19,7 +19,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id") // Challenge 객체를 JSON으로 바꿀때 다른 객체에게 참조 받는 경우 ID 만 넘긴다.
-public class ChallengeCard {
+public class
+ChallengeCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,8 +53,8 @@ public class ChallengeCard {
         this.challengeCardSubGoals = (form.getChallengeSubGoals() != null) ?
                     form.getChallengeSubGoals().stream()
                     .map(subGoalDto -> ChallengeCardSubGoal.builder()
-                            .challenge(this)
-                            .intermediateGoal(subGoalDto)
+                            .challengeCard(this)
+                            .subGoal(subGoalDto)
                             .build())
                     .collect(Collectors.toList())
                 : this.challengeCardSubGoals;

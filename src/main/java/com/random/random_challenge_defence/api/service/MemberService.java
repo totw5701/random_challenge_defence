@@ -57,4 +57,11 @@ public class MemberService {
         memberRepository.delete(opMember.get());
     }
 
+    public Member findById(Long memberId) {
+        Optional<Member> opMember = memberRepository.findById(memberId);
+        if(!opMember.isPresent()) {
+            throw new CMemberNotFoundException();
+        }
+        return opMember.get();
+    }
 }
