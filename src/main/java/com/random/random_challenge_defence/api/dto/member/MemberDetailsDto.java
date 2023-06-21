@@ -13,7 +13,7 @@ public class MemberDetailsDto {
     private String nickname;
     private MemberRole memberRole;
     private String picture;
-    private String joinDate;
-    private String modifyDate;
+    private String joinDtm;
+    private String modifyDtm;
 
 }

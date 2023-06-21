@@ -21,12 +21,6 @@ public class MemberController {
     private final MemberService memberService;
     private final ResponseService responseService;
 
-    /**
-     * 사용자 생성 및 수정 api
-     * password1 password2 비교는 프론트 단에서
-     * @param form
-     * @return
-     */
     @ApiOperation(value = "회원가입", notes = "새로운 사용자를 등록합니다.")
     @PostMapping
     public CommonResponse<MemberDetailsDto> join(@Valid @RequestBody MemberPutReqDto form) {

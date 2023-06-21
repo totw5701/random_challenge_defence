@@ -77,8 +77,8 @@ public class OAuthAttributes {
                 .picture(picture)
                 .nickname(nickname)
                 .memberRole(MemberRole.USER)
-                .joinDate(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()))
-                .modifyDate(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()))
+                .joinDtm(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()))
+                .modifyDtm(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date()))
                 .build();
     }
 }

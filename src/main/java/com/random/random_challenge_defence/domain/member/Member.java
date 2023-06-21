@@ -26,8 +26,8 @@ public class Member {
     private String password;
     private String nickname;
     private String picture;
-    private String joinDate;
-    private String modifyDate;
+    private String joinDtm;
+    private String modifyDtm;
 
 
     public Member entityUpdate(String picture) {
@@ -41,8 +41,8 @@ public class Member {
                 .email(this.email)
                 .nickname(this.nickname)
                 .memberRole(this.memberRole)
-                .joinDate(this.joinDate)
-                .modifyDate(this.modifyDate)
+                .joinDtm(this.joinDtm)
+                .modifyDtm(this.modifyDtm)
                 .build();
     }
 

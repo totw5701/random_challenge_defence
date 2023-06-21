@@ -36,7 +36,7 @@ ChallengeCard {
     private Integer difficulty;
     private Integer assignScore;
 
-    private Long createDate;
+    private String createDtm;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "challenge_id")
@@ -74,7 +74,7 @@ ChallengeCard {
                 .evidenceType(this.evidenceType)
                 .difficulty(this.difficulty)
                 .assignScore(this.assignScore)
-                .createDate(this.createDate)
+                .createDtm(this.createDtm)
                 .challengeSubGoals(subGoals)
                 .build();
     }

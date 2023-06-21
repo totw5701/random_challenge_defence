@@ -23,8 +23,8 @@ public class MemberService {
     public Member join(MemberPutReqDto form) {
         return memberRepository.save(
                 Member.builder()
-                        .joinDate(new SimpleDateFormat("yyyyMMdd").format(new Date()))
-                        .modifyDate(new SimpleDateFormat("yyyyMMdd").format(new Date()))
+                        .joinDtm(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()))
+                        .modifyDtm(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()))
                         .email(form.getEmail())
                         .memberRole(MemberRole.USER)
                         .nickname(form.getNickname())

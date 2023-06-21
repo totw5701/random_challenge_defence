@@ -16,6 +16,6 @@ public class ChallengeDetailDto {
     private String evidenceType;
     private Integer difficulty;
     private Integer assignScore;
-    private Long createDate;
+    private String createDtm;
     private List<ChallengeSubGoalDetailDto> challengeSubGoals;
 }

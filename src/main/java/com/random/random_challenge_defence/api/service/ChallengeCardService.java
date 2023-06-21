@@ -12,6 +12,8 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +50,7 @@ public class ChallengeCardService {
                 .description(form.getDescription())
                 .evidenceType(form.getEvidenceType())
                 .finalGoal(form.getFinalGoal())
-                .createDate(new Date().getTime())
+                .createDtm(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
                 .build();
 
         List<ChallengeCardSubGoal> subGoals = form.getChallengeSubGoals().stream()
