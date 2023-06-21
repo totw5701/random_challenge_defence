@@ -44,6 +44,7 @@ public class ChallengeCardService {
         ChallengeCard challenge = ChallengeCard.builder()
                 .assignScore(form.getAssignScore())
                 .title(form.getTitle())
+                .difficulty(form.getDifficulty())
                 .description(form.getDescription())
                 .evidenceType(form.getEvidenceType())
                 .finalGoal(form.getFinalGoal())
