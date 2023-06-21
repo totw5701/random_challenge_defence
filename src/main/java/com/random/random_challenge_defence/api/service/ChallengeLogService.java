@@ -1,5 +1,6 @@
 package com.random.random_challenge_defence.api.service;
 
+import com.random.random_challenge_defence.advice.exception.CChallengeNotFoundException;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogReqDto;
 import com.random.random_challenge_defence.domain.challengeCard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
@@ -56,6 +57,12 @@ public class ChallengeLogService {
     }
 
     public ChallengeLog getChallengeLogDetail(Long id) {
-        return challengeLogRepository.getById(id);
+        ChallengeLog byId = challengeLogRepository.getById(id);
+        System.out.println("byId : " + byId);
+        System.out.println(byId.getChallengeCard());
+        if(byId == null) {
+            throw new CChallengeNotFoundException("도전 이력이 없습니다.");
+        }
+        return byId;
     }
 }
