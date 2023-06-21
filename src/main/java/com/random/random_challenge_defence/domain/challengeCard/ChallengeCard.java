@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeSubGoalDetailDto;
+import com.random.random_challenge_defence.domain.challengeCardCategory.ChallengeCardCategory;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import lombok.*;
 
@@ -35,8 +36,10 @@ ChallengeCard {
     private String evidenceType;
     private Integer difficulty;
     private Integer assignScore;
-
     private Long createDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ChallengeCardCategory challengeCardCategory;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "challenge_id")

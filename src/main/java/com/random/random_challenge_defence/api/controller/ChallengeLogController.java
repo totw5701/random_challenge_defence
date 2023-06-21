@@ -27,7 +27,7 @@ public class ChallengeLogController {
     private final ResponseService responseService;
 
 
-    @PostMapping("/try")
+    @PostMapping("/create")
     public CommonResponse tryChallenge(@RequestBody ChallengeLogReqDto form) {
         Member member = memberService.findById(form.getMemberId());
         ChallengeCard challengeCard = challengeCardService.findById(form.getChallengeId());
