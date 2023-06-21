@@ -35,4 +35,8 @@ public class ChallengeLogSubGoal {
                 .status(challengeLogSubGoalStatus.getCode())
                 .build();
     }
+
+    public void statusChange(ChallengeLogStatus status) {
+        this.challengeLogSubGoalStatus = status;
+    }
 }
