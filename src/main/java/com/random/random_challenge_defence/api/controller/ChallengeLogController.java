@@ -4,14 +4,12 @@ import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogDetailD
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogReqDto;
 import com.random.random_challenge_defence.api.dto.common.CommonResponse;
 import com.random.random_challenge_defence.api.service.*;
-import com.random.random_challenge_defence.domain.challengeCard.ChallengeCard;
-import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
+import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
 import com.random.random_challenge_defence.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor

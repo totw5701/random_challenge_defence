@@ -4,8 +4,8 @@ import com.random.random_challenge_defence.advice.exception.CChallengeNotFoundEx
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
 import com.random.random_challenge_defence.api.service.ChallengeCardService;
-import com.random.random_challenge_defence.domain.challengeCard.ChallengeCard;
-import com.random.random_challenge_defence.domain.challengeCard.ChallengeCardRepository;
+import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
+import com.random.random_challenge_defence.domain.challengecard.ChallengeCardRepository;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoalRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +23,6 @@ import static org.mockito.BDDMockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 

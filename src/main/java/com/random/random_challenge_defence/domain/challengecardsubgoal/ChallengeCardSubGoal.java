@@ -1,7 +1,7 @@
 package com.random.random_challenge_defence.domain.challengecardsubgoal;
 
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeSubGoalDetailDto;
-import com.random.random_challenge_defence.domain.challengeCard.ChallengeCard;
+import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import lombok.*;
 
 import javax.persistence.*;

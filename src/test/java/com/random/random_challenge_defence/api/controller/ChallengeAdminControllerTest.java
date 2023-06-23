@@ -1,9 +1,7 @@
 package com.random.random_challenge_defence.api.controller;
 
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
 import com.random.random_challenge_defence.api.dto.common.CommonResponse;
-import com.random.random_challenge_defence.domain.challengeCard.ChallengeCard;
 import com.random.random_challenge_defence.api.service.ChallengeCardService;
 import com.random.random_challenge_defence.api.service.ResponseService;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +13,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import static org.mockito.ArgumentMatchers.*;
+
 import static org.mockito.BDDMockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 

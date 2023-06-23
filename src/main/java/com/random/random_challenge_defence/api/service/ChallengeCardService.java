@@ -2,8 +2,8 @@ package com.random.random_challenge_defence.api.service;
 
 import com.random.random_challenge_defence.advice.exception.CChallengeNotFoundException;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
-import com.random.random_challenge_defence.domain.challengeCard.ChallengeCard;
-import com.random.random_challenge_defence.domain.challengeCard.ChallengeCardRepository;
+import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
+import com.random.random_challenge_defence.domain.challengecard.ChallengeCardRepository;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoalRepository;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package com.random.random_challenge_defence.domain.challengeCard;
+package com.random.random_challenge_defence.domain.challengecard;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -19,8 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id") // Challenge 객체를 JSON으로 바꿀때 다른 객체에게 참조 받는 경우 ID 만 넘긴다.
-public class
-ChallengeCard {
+public class ChallengeCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

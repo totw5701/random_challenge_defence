@@ -1,6 +1,6 @@
 package com.random.random_challenge_defence.api.service;
 
-import com.random.random_challenge_defence.domain.challengeCard.ChallengeCardRepository;
+import com.random.random_challenge_defence.domain.challengecard.ChallengeCardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

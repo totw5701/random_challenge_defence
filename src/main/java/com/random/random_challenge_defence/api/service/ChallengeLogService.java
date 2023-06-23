@@ -1,7 +1,6 @@
 package com.random.random_challenge_defence.api.service;
 
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogReqDto;
-import com.random.random_challenge_defence.domain.challengeCard.ChallengeCard;
+import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLogRepository;
@@ -38,7 +37,6 @@ public class ChallengeLogService {
 
         return saved;
     }
-
 
     public List<ChallengeLogSubGoal> createChallengeLogSubGoals(ChallengeCard challengeCard, ChallengeLog challengeLog) {
         List<ChallengeCardSubGoal> subGoals = challengeCard.getChallengeCardSubGoals();

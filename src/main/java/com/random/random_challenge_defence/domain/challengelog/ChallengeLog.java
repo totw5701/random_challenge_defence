@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogDetailDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogSubGoalDetailDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogUpdateDto;
-import com.random.random_challenge_defence.domain.challengeCard.ChallengeCard;
+import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoal;
 import com.random.random_challenge_defence.domain.member.Member;
 import lombok.*;
