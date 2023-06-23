@@ -1,5 +1,6 @@
 package com.random.random_challenge_defence.api.service;
 
+import com.random.random_challenge_defence.advice.exception.CNotFoundException;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
@@ -10,11 +11,13 @@ import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeL
 import com.random.random_challenge_defence.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -55,5 +58,40 @@ public class ChallengeLogService {
 
     public ChallengeLog getChallengeLogDetail(Long id) {
         return challengeLogRepository.getById(id);
+    }
+
+    /**
+     * 성공 가능 유효성 체크.
+     * 1. 중간 목표 완료.
+     * 2. 인증 완료.
+     * @param challengeLogId
+     */
+    public boolean successValidate(Long challengeLogId) {
+        boolean isPass = true;
+
+        // 중간 목표 완료.
+        List<ChallengeLogSubGoal> subGoals = challengeLogSubGoalRepository.getListByChallengeLogId(challengeLogId);
+        for(ChallengeLogSubGoal subGoal: subGoals) {
+            if(ChallengeLogStatus.SUCCESS != subGoal.getChallengeLogSubGoalStatus()){
+                isPass = false;
+                break;
+            };
+        }
+
+        // 인증 완료
+        ChallengeLog challengeLog = challengeLogRepository.findById(challengeLogId).get();
+        if(challengeLog.getEvidence() == null) {
+            isPass = false;
+        }
+        return isPass;
+    }
+
+    @Transactional
+    public void successChallengeLog(Long challengeLogId) {
+        Optional<ChallengeLog> challengeLogOp = challengeLogRepository.findById(challengeLogId);
+        if(!challengeLogOp.isPresent()) {
+            throw new CNotFoundException("챌린지 도전 이력이 없습니다.");
+        }
+        challengeLogOp.get().challengeSuccess();
     }
 }

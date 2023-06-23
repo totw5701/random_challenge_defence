@@ -2,6 +2,7 @@ package com.random.random_challenge_defence.service;
 
 import com.random.random_challenge_defence.advice.exception.CChallengeNotFoundException;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogReqDto;
+import com.random.random_challenge_defence.api.service.ChallengeLogService;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCardRepository;
 import com.random.random_challenge_defence.domain.member.Member;

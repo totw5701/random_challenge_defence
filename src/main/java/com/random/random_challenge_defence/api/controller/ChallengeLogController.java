@@ -44,4 +44,15 @@ public class ChallengeLogController {
         return responseService.getSuccessResult();
     }
 
+    @PostMapping("/success")
+    public CommonResponse successChallenge(@RequestBody Map<String, Long> map) {
+        Long challengeLogId = map.get("id");
+        boolean isPass = challengeLogService.successValidate(challengeLogId);
+        if(!isPass) {
+            return responseService.getStringResult("result", "성공 요구조건을 만족하지 못하였습니다.");
+        }
+        challengeLogService.successChallengeLog(challengeLogId);
+        return responseService.getSuccessResult();
+    }
+
 }

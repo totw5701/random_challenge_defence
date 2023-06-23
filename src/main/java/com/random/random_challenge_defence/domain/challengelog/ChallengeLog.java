@@ -11,6 +11,8 @@ import com.random.random_challenge_defence.domain.member.Member;
 import lombok.*;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,4 +73,10 @@ public class ChallengeLog {
             this.review = form.getReview();
         }
     }
+
+    public void challengeSuccess(){
+        this.status = ChallengeLogStatus.SUCCESS;
+        this.endDtm = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+    }
+
 }
