@@ -1,5 +1,6 @@
 package com.random.random_challenge_defence.api.dto.challenge;
 
+import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategory;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,4 +19,5 @@ public class ChallengeDetailDto {
     private Integer assignScore;
     private String createDtm;
     private List<ChallengeSubGoalDetailDto> challengeSubGoals;
+    private ChallengeCardCategory challengeCardCategory;
 }

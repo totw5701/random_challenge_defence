@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeSubGoalDetailDto;
+import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategory;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import lombok.*;
 
@@ -26,6 +27,9 @@ public class ChallengeCard {
     //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "challenge_seq")
     //@SequenceGenerator(name = "challenge_seq", sequenceName = "challenge_seq", initialValue = 500)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ChallengeCardCategory challengeCardCategory;
 
     @Column(unique = true)
     private String title;
@@ -60,6 +64,10 @@ public class ChallengeCard {
 
     }
 
+    public void updateChallengeCardCategory(ChallengeCardCategory challengeCardCategory) {
+        this.challengeCardCategory = challengeCardCategory;
+    }
+
     public ChallengeDetailDto toDetailDto() {
         List<ChallengeSubGoalDetailDto> subGoals = new ArrayList<>();
         if(this.challengeCardSubGoals != null) {
@@ -75,6 +83,7 @@ public class ChallengeCard {
                 .assignScore(this.assignScore)
                 .createDtm(this.createDtm)
                 .challengeSubGoals(subGoals)
+                .challengeCardCategory(this.challengeCardCategory)
                 .build();
     }
 

@@ -20,5 +20,6 @@ public class ChallengePutReqDto {
     private Integer difficulty;
     private Integer assignScore;
     private List<String> challengeSubGoals;
+    private Long challengeCardCategoryId;
     
 }

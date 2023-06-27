@@ -1,5 +1,6 @@
 package com.random.random_challenge_defence.domain.challengecardcategory;
 
+import com.random.random_challenge_defence.api.dto.challenge.ChallengeCardCategoryUpdateDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,4 +24,10 @@ public class ChallengeCardCategory {
 
     private String title;
     private String description;
+
+
+    public void update(ChallengeCardCategoryUpdateDto form) {
+        this.title = form.getTitle();
+        this.description = form.getDescription();
+    }
 }

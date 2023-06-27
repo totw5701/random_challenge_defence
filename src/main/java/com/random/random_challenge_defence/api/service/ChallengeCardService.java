@@ -5,6 +5,8 @@ import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCardRepository;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
+import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategory;
+import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategoryRepository;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoalRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class ChallengeCardService {
 
     private final ChallengeCardRepository challengeCardRepository;
     private final ChallengeCardSubGoalRepository challengeCardSubGoalRepository;
+    private final ChallengeCardCategoryRepository challengeCardCategoryRepository;
 
     public Page<ChallengeDetailDto> readPageList(Integer nowPage) {
         Pageable pageable = PageRequest.of(nowPage, 15, Sort.by("id").descending()); // 한 페이지에 15개씩 출력
@@ -42,6 +45,8 @@ public class ChallengeCardService {
 
     public ChallengeDetailDto create(ChallengePutReqDto form) {
 
+        ChallengeCardCategory challengeCardCategory = challengeCardCategoryRepository.findById(form.getChallengeCardCategoryId()).get();
+
         ChallengeCard challenge = ChallengeCard.builder()
                 .assignScore(form.getAssignScore())
                 .title(form.getTitle())
@@ -50,6 +55,7 @@ public class ChallengeCardService {
                 .evidenceType(form.getEvidenceType())
                 .finalGoal(form.getFinalGoal())
                 .createDtm(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
+                .challengeCardCategory(challengeCardCategory)
                 .build();
 
         List<ChallengeCardSubGoal> subGoals = form.getChallengeSubGoals().stream()
@@ -59,6 +65,7 @@ public class ChallengeCardService {
                         .build())
                 .collect(Collectors.toList());
         challenge.assignSubGoals(subGoals);
+
 
         challengeCardRepository.save(challenge);
         return challenge.toDetailDto();
@@ -80,6 +87,13 @@ public class ChallengeCardService {
         ChallengeCard challenge = opChallenge.get();
         challenge.update(form);
         return challenge;
+    }
+
+    public void updateCategory(Long cardId, Long categoryId) {
+        ChallengeCardCategory challengeCardCategory = challengeCardCategoryRepository.findById(categoryId).get();
+        ChallengeCard challengeCard = challengeCardRepository.findById(cardId).get();
+        challengeCard.updateChallengeCardCategory(challengeCardCategory);
+
     }
 
     public void delete(Long id) {
