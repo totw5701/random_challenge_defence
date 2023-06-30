@@ -1,13 +1,15 @@
 package com.random.random_challenge_defence.api.controller;
 
+import com.random.random_challenge_defence.api.dto.challenge.ChallengeCardCategoryDetailDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeCardCategoryReqDto;
+import com.random.random_challenge_defence.api.dto.challenge.ChallengeCardCategoryUpdateDto;
 import com.random.random_challenge_defence.api.dto.common.CommonResponse;
 import com.random.random_challenge_defence.api.service.ChallengeCardCategoryService;
+import com.random.random_challenge_defence.api.service.ResponseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,14 +17,30 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChallengeCardCategoryController {
 
     private final ChallengeCardCategoryService challengeCardCategoryService;
+    private final ResponseService responseService;
 
-    @GetMapping("/create")
-    public CommonResponse create(ChallengeCardCategoryReqDto form) {
-
+    @PostMapping("/create")
+    public CommonResponse create(@RequestBody ChallengeCardCategoryReqDto form) {
         challengeCardCategoryService.createCategory(form);
-        return null;
+        return responseService.getSuccessResult();
     }
 
+    @GetMapping("/list")
+    public CommonResponse list(@RequestParam(name = "nowPage", defaultValue = "0") Integer nowPage) {
+        Page<ChallengeCardCategoryDetailDto> challengeCardCategoryDetailDtos = challengeCardCategoryService.readPageList(nowPage);
+        return responseService.getResult(challengeCardCategoryDetailDtos);
+    }
 
+    @PostMapping("/update")
+    public CommonResponse update(@RequestBody ChallengeCardCategoryUpdateDto form) {
+        challengeCardCategoryService.updateCategory(form);
+        return responseService.getSuccessResult();
+    }
+
+    @GetMapping("/{id}")
+    public CommonResponse getOne(@PathVariable String id) {
+        ChallengeCardCategoryDetailDto challengeCardCategoryDetailDto = challengeCardCategoryService.readOne(id);
+        return responseService.getResult(challengeCardCategoryDetailDto);
+    }
 
 }

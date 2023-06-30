@@ -34,11 +34,11 @@ public class ChallengeCardService {
         Page<ChallengeCard> challenges = challengeCardRepository.findAll(pageable);
 
         // dto 변환
-        List<ChallengeDetailDto> challengeDtoList = challenges.stream()
+        List<ChallengeDetailDto> challengeCardDtoList = challenges.stream()
                 .map(challenge -> challenge.toDetailDto())
                 .collect(Collectors.toList());
 
-        Page<ChallengeDetailDto> challengeDtoPage = new PageImpl<>(challengeDtoList, challenges.getPageable(), challenges.getTotalElements());
+        Page<ChallengeDetailDto> challengeDtoPage = new PageImpl<>(challengeCardDtoList, challenges.getPageable(), challenges.getTotalElements());
 
         return challengeDtoPage;
     }
