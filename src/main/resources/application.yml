@@ -7,7 +7,7 @@ file:
 
 spring:
   config:
-    import: application-oauth.yml
+    import: application-oauth.yml, application-s3.yml
 #  sql:
 #    init:
 #      mode: embedded
