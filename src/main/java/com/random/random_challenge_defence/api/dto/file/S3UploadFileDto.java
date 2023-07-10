@@ -8,6 +8,7 @@ import lombok.Getter;
 @Builder
 public class S3UploadFileDto {
 
+    private Long id;
     private String key;
     private String url;
     private String createDtm;

@@ -2,15 +2,13 @@ package com.random.random_challenge_defence.domain.challengecardcategory;
 
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeCardCategoryDetailDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeCardCategoryUpdateDto;
+import com.random.random_challenge_defence.domain.file.S3File;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Builder
@@ -25,7 +23,6 @@ public class ChallengeCardCategory {
 
     private String title;
     private String description;
-
 
     public void update(ChallengeCardCategoryUpdateDto form) {
         this.title = form.getTitle();

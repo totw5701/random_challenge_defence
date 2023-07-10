@@ -27,6 +27,7 @@ public class S3File {
 
     public S3UploadFileDto toDto() {
         return S3UploadFileDto.builder()
+                .id(this.id)
                 .createDtm(this.createDtm)
                 .key(this.key)
                 .url(this.url).build();

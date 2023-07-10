@@ -7,6 +7,7 @@ import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeSubGoalDetailDto;
 import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategory;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
+import com.random.random_challenge_defence.domain.file.S3File;
 import lombok.*;
 
 import javax.persistence.*;
@@ -39,6 +40,8 @@ public class ChallengeCard {
     private Integer difficulty;
     private Integer assignScore;
 
+    @OneToOne
+    private S3File image;
     private String createDtm;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -62,6 +65,10 @@ public class ChallengeCard {
                     .collect(Collectors.toList())
                 : this.challengeCardSubGoals;
 
+    }
+
+    public void imageUpdate(S3File newImage) {
+        this.image = newImage;
     }
 
     public void updateChallengeCardCategory(ChallengeCardCategory challengeCardCategory) {

@@ -21,5 +21,4 @@ public class ChallengePutReqDto {
     private Integer assignScore;
     private List<String> challengeSubGoals;
     private Long challengeCardCategoryId;
-    
 }

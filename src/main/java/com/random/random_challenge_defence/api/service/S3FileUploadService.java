@@ -7,6 +7,7 @@ import com.random.random_challenge_defence.domain.file.S3File;
 import com.random.random_challenge_defence.domain.file.S3FileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,8 +15,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+@Service
 @RequiredArgsConstructor
-public class S3FileStoreService {
+public class S3FileUploadService {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -43,6 +45,11 @@ public class S3FileStoreService {
 
         s3FileRepository.save(fileInfo);
         return fileInfo.toDto();
+    }
+
+    @Transactional
+    public S3UploadFileDto uploadFile(MultipartFile file, String dir) throws Exception {
+        return uploadFile(bucket, file, dir);
     }
 
 }
