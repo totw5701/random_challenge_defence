@@ -48,8 +48,6 @@ class MemberServiceTest {
                 .password("password")
                 .picture("test.jpg")
                 .memberRole(MemberRole.USER)
-                .joinDate(new SimpleDateFormat("yyyyMMdd").format(new Date()))
-                .modifyDate(new SimpleDateFormat("yyyyMMdd").format(new Date()))
                 .build();
 
         when(memberRepository.save(any(Member.class))).thenReturn(member);
@@ -63,8 +61,6 @@ class MemberServiceTest {
         Assertions.assertThat(result.getPassword()).isEqualTo(form.getPassword());
         Assertions.assertThat(result.getPicture()).isEqualTo(form.getPicture());
         Assertions.assertThat(result.getMemberRole()).isEqualTo(MemberRole.USER);
-        Assertions.assertThat(result.getJoinDate()).isEqualTo(new SimpleDateFormat("yyyyMMdd").format(new Date()));
-        Assertions.assertThat(result.getModifyDate()).isEqualTo(new SimpleDateFormat("yyyyMMdd").format(new Date()));
     }
 
 

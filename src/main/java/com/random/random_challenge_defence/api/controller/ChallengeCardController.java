@@ -48,12 +48,13 @@ public class ChallengeCardController {
     @ApiOperation(value = "챌린지 수정", notes = "챌린지를 수정합니다.")
     @PutMapping("/update")
     public CommonResponse put(@RequestBody ChallengePutReqDto form) {
-        if(form.getId() != null){               // 수정하는 경우
-            challengeCardService.update(form);
-        } else {                                // 생성하는 경우
-            challengeCardService.create(form);
-        }
+        challengeCardService.update(form);
         return responseService.getSuccessResult();
     }
+
+//    @PutMapping("/update/image")
+//    public CommonResponse putImage(@RequestBody ) {
+//
+//    }
 
 }

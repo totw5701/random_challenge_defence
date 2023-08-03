@@ -45,7 +45,7 @@ public class ChallengeCard {
     private String createDtm;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "challenge_id")
+    @JoinColumn(name = "challenge_card_id")
     private List<ChallengeCardSubGoal> challengeCardSubGoals;
 
     public void update(ChallengePutReqDto form) {
@@ -91,6 +91,7 @@ public class ChallengeCard {
                 .createDtm(this.createDtm)
                 .challengeSubGoals(subGoals)
                 .challengeCardCategory(this.challengeCardCategory)
+                .image(this.image.toDto())
                 .build();
     }
 

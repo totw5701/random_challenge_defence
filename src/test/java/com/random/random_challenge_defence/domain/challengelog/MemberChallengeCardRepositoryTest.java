@@ -45,7 +45,6 @@ class MemberChallengeCardRepositoryTest {
         ChallengeLog memberChallenge = ChallengeLog.builder()
                 .id(1L)
                 .member(member)
-                .challenge(challenge)
                 .evidence("evidence")
                 .review("review")
                 .status(ChallengeLogStatus.READY)

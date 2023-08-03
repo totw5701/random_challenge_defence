@@ -43,6 +43,7 @@ public class SecurityConfig {
             .and()
                 .authorizeRequests()
                     //.antMatchers( "/auth/login", "/auth/all", "/auth/token-reissue", "/auth/login-fail", "/members/join", "/h2-console", "/h2-console/*", "/admin/**/*").permitAll()
+                    .antMatchers("/swagger-ui.html").permitAll()
                     .antMatchers("/auth/user").hasRole("USER")
                     .antMatchers("/user-only").hasRole("USER")
                     .antMatchers("/admin-only").hasRole("ADMIN")

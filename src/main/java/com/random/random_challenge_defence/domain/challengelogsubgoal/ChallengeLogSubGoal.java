@@ -1,7 +1,8 @@
 package com.random.random_challenge_defence.domain.challengelogsubgoal;
 
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogSubGoalDetailDto;
+import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogSubGoalDetailDto;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
+import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeLogSubGoalStatus;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLogStatus;
 import lombok.*;
@@ -25,7 +26,7 @@ public class ChallengeLogSubGoal {
     private ChallengeLog challengeLog;
 
     @Enumerated(EnumType.STRING)
-    private ChallengeLogStatus challengeLogSubGoalStatus;
+    private ChallengeLogSubGoalStatus challengeLogSubGoalStatus;
 
 
     public ChallengeLogSubGoalDetailDto toDetail() {
@@ -36,7 +37,7 @@ public class ChallengeLogSubGoal {
                 .build();
     }
 
-    public void statusChange(ChallengeLogStatus status) {
+    public void statusChange(ChallengeLogSubGoalStatus status) {
         this.challengeLogSubGoalStatus = status;
     }
 }

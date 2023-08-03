@@ -28,12 +28,9 @@ public class MemberController {
         return responseService.getResult(member.toDetailDto());
     }
 
-    @ApiOperation(value = "myinfo 조회", notes = "사용자 정보를 조회합니다.")
+    @ApiOperation(value = "user info 조회", notes = "사용자 정보를 조회합니다.")
     @GetMapping("/{email}")
-    public CommonResponse<MemberDetailsDto> myInfo(@PathVariable("email") String email) {
-        if(email == null) {
-            email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        }
+    public CommonResponse<MemberDetailsDto> userInfo(@PathVariable("email") String email) {
         Member member = memberService.findByEmail(email);
         return responseService.getResult(member.toDetailDto());
     }
@@ -51,4 +48,14 @@ public class MemberController {
         memberService.delete(memberId);
         return responseService.getSuccessResult();
     }
+
+    @GetMapping("/my-info")
+    public CommonResponse<MemberDetailsDto> myInfo() {
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberService.findByEmail(email);
+        return responseService.getResult(member.toDetailDto());
+
+    }
+
+
 }

@@ -6,6 +6,7 @@ import com.random.random_challenge_defence.domain.member.Member;
 import com.random.random_challenge_defence.domain.member.MemberRepository;
 import com.random.random_challenge_defence.domain.member.MemberRole;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,10 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+
+    public String getLoginUserEmail() {
+        return (String) SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 
     public Member join(MemberPutReqDto form) {
         return memberRepository.save(
@@ -64,4 +69,5 @@ public class MemberService {
         }
         return opMember.get();
     }
+
 }

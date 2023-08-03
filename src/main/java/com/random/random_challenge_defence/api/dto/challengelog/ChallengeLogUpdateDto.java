@@ -1,4 +1,4 @@
-package com.random.random_challenge_defence.api.dto.challenge;
+package com.random.random_challenge_defence.api.dto.challengelog;
 
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLogStatus;
 import lombok.Builder;
@@ -16,4 +16,5 @@ public class ChallengeLogUpdateDto {
     private String evidence;
     private ChallengeLogStatus status;
     private String review;
+    private Long image;
 }

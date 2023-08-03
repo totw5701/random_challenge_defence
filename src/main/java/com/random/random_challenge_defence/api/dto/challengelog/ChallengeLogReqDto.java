@@ -1,4 +1,4 @@
-package com.random.random_challenge_defence.api.dto.challenge;
+package com.random.random_challenge_defence.api.dto.challengelog;
 
 import lombok.*;
 
@@ -10,6 +10,5 @@ import lombok.*;
 @NoArgsConstructor
 public class ChallengeLogReqDto {
 
-    private Long memberId;
     private Long challengeId;
 }

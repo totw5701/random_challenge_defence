@@ -1,5 +1,6 @@
 package com.random.random_challenge_defence.domain.file;
 
+import com.random.random_challenge_defence.api.dto.file.S3DetailFileDto;
 import com.random.random_challenge_defence.api.dto.file.S3UploadFileDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,11 +26,12 @@ public class S3File {
     private String url;
     private String createDtm;
 
-    public S3UploadFileDto toDto() {
-        return S3UploadFileDto.builder()
+    public S3DetailFileDto toDto() {
+        return S3DetailFileDto.builder()
                 .id(this.id)
-                .createDtm(this.createDtm)
                 .key(this.key)
+                .createDtm(this.createDtm)
                 .url(this.url).build();
     }
+
 }

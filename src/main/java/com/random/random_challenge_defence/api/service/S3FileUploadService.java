@@ -2,6 +2,7 @@ package com.random.random_challenge_defence.api.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.random.random_challenge_defence.api.dto.file.S3DetailFileDto;
 import com.random.random_challenge_defence.api.dto.file.S3UploadFileDto;
 import com.random.random_challenge_defence.domain.file.S3File;
 import com.random.random_challenge_defence.domain.file.S3FileRepository;
@@ -26,7 +27,7 @@ public class S3FileUploadService {
     private final S3FileRepository s3FileRepository;
 
     @Transactional
-    public S3UploadFileDto uploadFile(String bucket, MultipartFile file, String dir) throws Exception {
+    public S3DetailFileDto uploadFile(String bucket, MultipartFile file, String dir) throws Exception {
         String uuid = UUID.randomUUID().toString();
         ObjectMetadata metadata= new ObjectMetadata();
         metadata.setContentType(file.getContentType());
@@ -48,7 +49,7 @@ public class S3FileUploadService {
     }
 
     @Transactional
-    public S3UploadFileDto uploadFile(MultipartFile file, String dir) throws Exception {
+    public S3DetailFileDto uploadFile(MultipartFile file, String dir) throws Exception {
         return uploadFile(bucket, file, dir);
     }
 

@@ -3,6 +3,7 @@ package com.random.random_challenge_defence.api.service;
 import com.random.random_challenge_defence.advice.exception.CNotFoundException;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
+import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeLogSubGoalStatus;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLogRepository;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLogStatus;
@@ -49,10 +50,11 @@ public class ChallengeLogService {
             ChallengeLogSubGoal challengeLogSubGoal = ChallengeLogSubGoal.builder()
                     .challengeLog(challengeLog)
                     .challengeCardSubGoal(subGoal)
-                    .challengeLogSubGoalStatus(ChallengeLogStatus.READY)
+                    .challengeLogSubGoalStatus(ChallengeLogSubGoalStatus.READY)
                     .build();
             logSubGoals.add(challengeLogSubGoalRepository.save(challengeLogSubGoal));
         }
+        challengeLog.setChallengeLogSubGoals(logSubGoals);
         return logSubGoals;
     }
 
@@ -72,7 +74,7 @@ public class ChallengeLogService {
         // 중간 목표 완료.
         List<ChallengeLogSubGoal> subGoals = challengeLogSubGoalRepository.getListByChallengeLogId(challengeLogId);
         for(ChallengeLogSubGoal subGoal: subGoals) {
-            if(ChallengeLogStatus.SUCCESS != subGoal.getChallengeLogSubGoalStatus()){
+            if(ChallengeLogSubGoalStatus.SUCCESS != subGoal.getChallengeLogSubGoalStatus()){
                 isPass = false;
                 break;
             };

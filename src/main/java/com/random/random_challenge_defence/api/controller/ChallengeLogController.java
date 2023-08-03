@@ -1,12 +1,16 @@
 package com.random.random_challenge_defence.api.controller;
 
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogDetailDto;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogReqDto;
+import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogDetailDto;
+import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogReqDto;
+import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogSubGoalDetailDto;
+import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogSubGoalUpdateDto;
 import com.random.random_challenge_defence.api.dto.common.CommonResponse;
 import com.random.random_challenge_defence.api.service.*;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
+import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoal;
 import com.random.random_challenge_defence.domain.member.Member;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,12 +28,14 @@ public class ChallengeLogController {
     private final ChallengeLogSubGoalService challengeLogSubGoalService;
 
 
+    @ApiOperation(value = "챌린지 도전하기", notes = "챌린지에 도전합니다.")
     @PostMapping("/try")
-    public CommonResponse tryChallenge(@RequestBody ChallengeLogReqDto form) {
-        Member member = memberService.findById(form.getMemberId());
+    public CommonResponse<ChallengeLogDetailDto> tryChallenge(@RequestBody ChallengeLogReqDto form) {
+        String memberEmail = memberService.getLoginUserEmail();
         ChallengeCard challengeCard = challengeCardService.findById(form.getChallengeId());
-        challengeLogService.createChallengeLog(member, challengeCard);
-        return responseService.getSuccessResult();
+        Member member = memberService.findByEmail(memberEmail);
+        ChallengeLog challengeLog = challengeLogService.createChallengeLog(member, challengeCard);
+        return responseService.getResult(challengeLog.toDetailDto());
     }
 
     @GetMapping("/detail/{id}")
@@ -38,10 +44,10 @@ public class ChallengeLogController {
         return responseService.getResult(challengeLogDetail.toDetailDto());
     }
 
-    @PostMapping("/sub-goal/success")
-    public CommonResponse subGoalClear(@RequestBody Map<String, Long> map) {
-        challengeLogSubGoalService.successSubGoal(map.get("id"));
-        return responseService.getSuccessResult();
+    @PostMapping("/sub-goal/update")
+    public CommonResponse<ChallengeLogSubGoalDetailDto> subGoalClear(@RequestBody ChallengeLogSubGoalUpdateDto reqDto) {
+        ChallengeLogSubGoal challengeLogSubGoal = challengeLogSubGoalService.updateSubGoal(reqDto);
+        return responseService.getResult(challengeLogSubGoal.toDetail());
     }
 
     @PostMapping("/success")

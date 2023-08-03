@@ -2,11 +2,12 @@ package com.random.random_challenge_defence.domain.challengelog;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogDetailDto;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogSubGoalDetailDto;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeLogUpdateDto;
+import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogDetailDto;
+import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogSubGoalDetailDto;
+import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogUpdateDto;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoal;
+import com.random.random_challenge_defence.domain.file.S3File;
 import com.random.random_challenge_defence.domain.member.Member;
 import lombok.*;
 
@@ -40,12 +41,19 @@ public class ChallengeLog {
     @ManyToOne(fetch = FetchType.LAZY)
     private ChallengeCard challengeCard;
 
+    @OneToOne
+    private S3File evidenceImage;
+
     private String startDtm;
     private String endDtm;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_log_id")
     private List<ChallengeLogSubGoal> challengeLogSubGoals;
+
+    public void setChallengeLogSubGoals(List<ChallengeLogSubGoal> subGoals) {
+        this.challengeLogSubGoals = subGoals;
+    }
 
     public ChallengeLogDetailDto toDetailDto() {
 
@@ -59,6 +67,7 @@ public class ChallengeLog {
                 .memberId(this.member.getId())
                 .challengeDetailDto(this.challengeCard.toDetailDto())
                 .challengeLogSubGoalDetailDtos(collect)
+                .image(this.evidenceImage != null ? this.evidenceImage.toDto() : null)
                 .build();
     }
 
@@ -72,6 +81,10 @@ public class ChallengeLog {
         if(form.getReview() != null) {
             this.review = form.getReview();
         }
+    }
+
+    public void updateImage(S3File image) {
+        this.evidenceImage = image;
     }
 
     public void challengeSuccess(){

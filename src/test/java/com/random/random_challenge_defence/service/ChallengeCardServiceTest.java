@@ -51,7 +51,6 @@ class ChallengeCardServiceTest {
                         .description("desc1")
                         .evidenceType("P")
                         .finalGoal("final1")
-                        .createDate(13333L)
                         .build()
         );
         challengeList.add(
@@ -62,7 +61,6 @@ class ChallengeCardServiceTest {
                         .description("desc2")
                         .evidenceType("P")
                         .finalGoal("final2")
-                        .createDate(1333333L)
                         .build()
         );
         Page<ChallengeCard> challenges = new PageImpl<>(challengeList);
@@ -144,7 +142,6 @@ class ChallengeCardServiceTest {
 
         ChallengeCardSubGoal subGoal = ChallengeCardSubGoal.builder()
                 .id(1L)
-                .intermediateGoal("Intermediate Goal")
                 .build();
 
         List<ChallengeCardSubGoal> subGoals = new ArrayList<>();
@@ -158,7 +155,6 @@ class ChallengeCardServiceTest {
                 .evidenceType("Old Evidence Type")
                 .difficulty(1)
                 .assignScore(2)
-                .createDate(0L)
                 .challengeCardSubGoals(subGoals)
                 .build();
 
@@ -170,7 +166,6 @@ class ChallengeCardServiceTest {
                 .evidenceType(evidenceType)
                 .difficulty(difficulty)
                 .assignScore(assignScore)
-                .createDate(0L)
                 .challengeCardSubGoals(subGoals)
                 .build();
 
