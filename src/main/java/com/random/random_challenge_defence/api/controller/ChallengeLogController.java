@@ -1,5 +1,6 @@
 package com.random.random_challenge_defence.api.controller;
 
+import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
 import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogDetailDto;
 import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogReqDto;
 import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogSubGoalDetailDto;
@@ -12,9 +13,13 @@ import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeL
 import com.random.random_challenge_defence.domain.member.Member;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -42,6 +47,21 @@ public class ChallengeLogController {
     public CommonResponse<ChallengeLogDetailDto> challengeLogDetail(@PathVariable("id") Long id) {
         ChallengeLog challengeLogDetail = challengeLogService.getChallengeLogDetail(id);
         return responseService.getResult(challengeLogDetail.toDetailDto());
+    }
+
+    @GetMapping("/list/my-logs/{nowPage}")
+    public CommonResponse<Page<ChallengeLogDetailDto>> challengeLogDetailList(@PathVariable(name = "nowPage") Integer nowPage) {
+        String memberEmail = memberService.getLoginUserEmail();
+        Page<ChallengeLog> challengeLogs = challengeLogService.readPageList(nowPage, memberEmail);
+
+        List<ChallengeLogDetailDto> logDtos = challengeLogs.stream()
+                .map(log -> log.toDetailDto())
+                .collect(Collectors.toList());
+
+
+        Page<ChallengeLogDetailDto> challengeDtoPage = new PageImpl<>(logDtos, challengeLogs.getPageable(), challengeLogs.getTotalElements());
+
+        return responseService.getResult(challengeDtoPage);
     }
 
     @PostMapping("/sub-goal/update")

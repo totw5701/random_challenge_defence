@@ -21,8 +21,8 @@ public class ChallengeLogDetailDto {
     private ChallengeLogStatus status;
     private String review;
     private Long memberId;
-    private ChallengeDetailDto challengeDetailDto;
     private List<ChallengeLogSubGoalDetailDto> challengeLogSubGoalDetailDtos;
     private S3DetailFileDto image;
+    private ChallengeDetailDto challengeCardDetailDto;
 
 }

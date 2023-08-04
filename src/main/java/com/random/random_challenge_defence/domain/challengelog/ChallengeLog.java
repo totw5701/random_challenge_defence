@@ -65,7 +65,7 @@ public class ChallengeLog {
                 .status(this.status)
                 .review(this.review)
                 .memberId(this.member.getId())
-                .challengeDetailDto(this.challengeCard.toDetailDto())
+                .challengeCardDetailDto(this.challengeCard.toDetailDto())
                 .challengeLogSubGoalDetailDtos(collect)
                 .image(this.evidenceImage != null ? this.evidenceImage.toDto() : null)
                 .build();

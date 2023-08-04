@@ -11,6 +11,10 @@ import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeL
 import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoalRepository;
 import com.random.random_challenge_defence.domain.member.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +30,12 @@ public class ChallengeLogService {
 
     private final ChallengeLogRepository challengeLogRepository;
     private final ChallengeLogSubGoalRepository challengeLogSubGoalRepository;
+
+    public Page<ChallengeLog> readPageList(Integer nowPage, String memberEmail) {
+        Pageable pageable = PageRequest.of(nowPage, 15, Sort.by("id").descending()); // 한 페이지에 15개씩 출력
+        Page<ChallengeLog> challengeLogs = challengeLogRepository.findAllByEmail(memberEmail, pageable);
+        return challengeLogs;
+    }
 
     public ChallengeLog createChallengeLog(Member member, ChallengeCard challengeCard) {
         ChallengeLog challengeLog = ChallengeLog.builder()
