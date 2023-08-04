@@ -31,6 +31,11 @@ public class ChallengeLogService {
     private final ChallengeLogRepository challengeLogRepository;
     private final ChallengeLogSubGoalRepository challengeLogSubGoalRepository;
 
+    public List<ChallengeLog> readPageListTrying(String memberEmail) {
+        List<ChallengeLog> challengeLogs = challengeLogRepository.findAllByEmailTrying(memberEmail);
+        return challengeLogs;
+    }
+
     public Page<ChallengeLog> readPageList(Integer nowPage, String memberEmail) {
         Pageable pageable = PageRequest.of(nowPage, 15, Sort.by("id").descending()); // 한 페이지에 15개씩 출력
         Page<ChallengeLog> challengeLogs = challengeLogRepository.findAllByEmail(memberEmail, pageable);
@@ -106,4 +111,6 @@ public class ChallengeLogService {
         }
         challengeLogOp.get().challengeSuccess();
     }
+
+
 }

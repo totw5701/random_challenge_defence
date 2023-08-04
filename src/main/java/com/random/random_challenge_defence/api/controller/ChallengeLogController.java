@@ -49,6 +49,18 @@ public class ChallengeLogController {
         return responseService.getResult(challengeLogDetail.toDetailDto());
     }
 
+    @GetMapping("/list/my-logs/trying")
+    public CommonResponse<List<ChallengeLogDetailDto>> challengeLogDetailListTrying() {
+        String memberEmail = memberService.getLoginUserEmail();
+        List<ChallengeLog> challengeLogs = challengeLogService.readPageListTrying(memberEmail);
+
+        List<ChallengeLogDetailDto> logDtos = challengeLogs.stream()
+                .map(log -> log.toDetailDto())
+                .collect(Collectors.toList());
+
+        return responseService.getResult(logDtos);
+    }
+
     @GetMapping("/list/my-logs/{nowPage}")
     public CommonResponse<Page<ChallengeLogDetailDto>> challengeLogDetailList(@PathVariable(name = "nowPage") Integer nowPage) {
         String memberEmail = memberService.getLoginUserEmail();
@@ -57,7 +69,6 @@ public class ChallengeLogController {
         List<ChallengeLogDetailDto> logDtos = challengeLogs.stream()
                 .map(log -> log.toDetailDto())
                 .collect(Collectors.toList());
-
 
         Page<ChallengeLogDetailDto> challengeDtoPage = new PageImpl<>(logDtos, challengeLogs.getPageable(), challengeLogs.getTotalElements());
 

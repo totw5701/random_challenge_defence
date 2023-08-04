@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ChallengeLogRepository extends JpaRepository<ChallengeLog, Long> {
@@ -15,4 +16,7 @@ public interface ChallengeLogRepository extends JpaRepository<ChallengeLog, Long
 
     @Query("select cl from ChallengeLog cl where cl.member.email = :memberEmail")
     Page<ChallengeLog> findAllByEmail(@Param("memberEmail") String memberEmail, Pageable pageable);
+
+    @Query("select cl from ChallengeLog cl where cl.member.email = :memberEmail and cl.status = 'READY'")
+    List<ChallengeLog> findAllByEmailTrying(@Param("memberEmail") String memberEmail);
 }
