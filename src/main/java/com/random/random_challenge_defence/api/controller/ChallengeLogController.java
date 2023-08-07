@@ -1,5 +1,6 @@
 package com.random.random_challenge_defence.api.controller;
 
+import com.random.random_challenge_defence.advice.exception.CChallengeLogTringFailureException;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
 import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogDetailDto;
 import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogReqDto;
@@ -37,6 +38,13 @@ public class ChallengeLogController {
     @PostMapping("/try")
     public CommonResponse<ChallengeLogDetailDto> tryChallenge(@RequestBody ChallengeLogReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
+
+        Long numOfTrying = challengeLogService.getNumOfTrying(memberEmail);
+
+        if(numOfTrying >= 5) {
+            throw new CChallengeLogTringFailureException("최대 도전 갯수를 초과하였습니다.");
+        }
+
         ChallengeCard challengeCard = challengeCardService.findById(form.getChallengeId());
         Member member = memberService.findByEmail(memberEmail);
         ChallengeLog challengeLog = challengeLogService.createChallengeLog(member, challengeCard);

@@ -19,4 +19,7 @@ public interface ChallengeLogRepository extends JpaRepository<ChallengeLog, Long
 
     @Query("select cl from ChallengeLog cl where cl.member.email = :memberEmail and cl.status = 'READY'")
     List<ChallengeLog> findAllByEmailTrying(@Param("memberEmail") String memberEmail);
+
+    @Query("select COUNT(cl) from ChallengeLog cl where cl.member.email = :memberEmail and cl.status in ('READY', 'ACTION')")
+    Long getNumOfTrying(@Param("memberEmail") String memberEmail);
 }

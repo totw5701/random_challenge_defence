@@ -113,4 +113,7 @@ public class ChallengeLogService {
     }
 
 
+    public Long getNumOfTrying(String memberEmail) {
+        return challengeLogRepository.getNumOfTrying(memberEmail);
+    }
 }

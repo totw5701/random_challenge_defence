@@ -45,7 +45,7 @@ public class ExceptionControllerAdvice {
     public CommonResponse challengeNotFoundException(CChallengeNotFoundException e) {
         System.out.println(e.getMessage());
         e.printStackTrace();
-        return responseService.getFailResult("400", "챌린지 정보가 없습니다.");
+        return responseService.getFailResult("401", "챌린지 정보가 없습니다.");
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -104,4 +104,13 @@ public class ExceptionControllerAdvice {
         e.printStackTrace();
         return responseService.getFailResult("408", "데이터를 찾을 수 없습니다.");
     }
+
+    @ResponseStatus
+    @ExceptionHandler
+    public CommonResponse failToTryingChallenge(CChallengeLogTringFailureException e) {
+        System.out.println(e.getMessage());
+        e.printStackTrace();
+        return responseService.getFailResult("409", e.getMessage());
+    }
+
 }
