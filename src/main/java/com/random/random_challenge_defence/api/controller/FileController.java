@@ -41,7 +41,7 @@ public class FileController {
     public CommonResponse challengeLogFileUpload(@RequestParam("file")MultipartFile file) {
         try {
             String today = new SimpleDateFormat("yyyyMMdd").format(new Date());
-            S3DetailFileDto s3UploadFileDto = s3FileUploadService.uploadFile(file, "challenge-log/today/");
+            S3DetailFileDto s3UploadFileDto = s3FileUploadService.uploadFile(file, "challenge-log/" + today + "/");
             return responseService.getResult(s3UploadFileDto);
         } catch (Exception e) {
             e.printStackTrace();
