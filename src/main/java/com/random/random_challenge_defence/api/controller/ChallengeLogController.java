@@ -1,5 +1,6 @@
 package com.random.random_challenge_defence.api.controller;
 
+import com.random.random_challenge_defence.advice.exception.CAccessDeniedException;
 import com.random.random_challenge_defence.advice.exception.CChallengeLogTringFailureException;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
 import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogDetailDto;
@@ -33,6 +34,17 @@ public class ChallengeLogController {
     private final ResponseService responseService;
     private final ChallengeLogSubGoalService challengeLogSubGoalService;
 
+    @ApiOperation(value = "챌린지 스킵하기", notes = "도전 중인 챌린지를 스킵합니다.")
+    @PostMapping("/skip")
+    public CommonResponse<ChallengeLogDetailDto> skipChallenge(@RequestBody Map<String, String> map) {
+        String memberEmail = memberService.getLoginUserEmail();
+        ChallengeLog challengeLog = challengeLogService.getChallengeLogById(Long.valueOf(map.get("id")));
+        if(!challengeLog.getMember().getEmail().equals(memberEmail)) {
+            throw new CAccessDeniedException();
+        }
+        challengeLogService.skipChallengeLog(challengeLog);
+        return responseService.getResult(challengeLog.toDetailDto());
+    }
 
     @ApiOperation(value = "챌린지 도전하기", notes = "챌린지에 도전합니다.")
     @PostMapping("/try")

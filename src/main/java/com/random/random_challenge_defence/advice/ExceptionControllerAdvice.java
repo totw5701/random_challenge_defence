@@ -113,4 +113,11 @@ public class ExceptionControllerAdvice {
         return responseService.getFailResult("409", e.getMessage());
     }
 
+    @ResponseStatus
+    @ExceptionHandler
+    public CommonResponse challengeLogNotFound(CChallengeLogNotFoundException e) {
+        System.out.println(e.getMessage());
+        e.printStackTrace();
+        return responseService.getFailResult("410", e.getMessage());
+    }
 }

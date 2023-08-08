@@ -92,4 +92,8 @@ public class ChallengeLog {
         this.endDtm = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
     }
 
+    public void challengeSkip() {
+        this.status = ChallengeLogStatus.PASS;
+    }
+
 }

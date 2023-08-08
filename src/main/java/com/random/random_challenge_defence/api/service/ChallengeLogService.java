@@ -1,5 +1,7 @@
 package com.random.random_challenge_defence.api.service;
 
+import com.random.random_challenge_defence.advice.exception.CChallengeLogNotFoundException;
+import com.random.random_challenge_defence.advice.exception.CChallengeNotFoundException;
 import com.random.random_challenge_defence.advice.exception.CNotFoundException;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
@@ -115,5 +117,18 @@ public class ChallengeLogService {
 
     public Long getNumOfTrying(String memberEmail) {
         return challengeLogRepository.getNumOfTrying(memberEmail);
+    }
+
+    public ChallengeLog getChallengeLogById(Long id) {
+        Optional<ChallengeLog> byId = challengeLogRepository.findById(id);
+        if(!byId.isPresent()) {
+            throw new CChallengeLogNotFoundException("도전 이력이 없습니다.");
+        }
+        return byId.get();
+    }
+
+    @Transactional
+    public void skipChallengeLog(ChallengeLog challengeLog) {
+        challengeLog.challengeSkip();
     }
 }
