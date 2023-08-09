@@ -97,8 +97,15 @@ public class ChallengeLogController {
 
     @PostMapping("/sub-goal/update")
     public CommonResponse<ChallengeLogSubGoalDetailDto> subGoalClear(@RequestBody ChallengeLogSubGoalUpdateDto reqDto) {
-        ChallengeLogSubGoal challengeLogSubGoal = challengeLogSubGoalService.updateSubGoal(reqDto);
-        return responseService.getResult(challengeLogSubGoal.toDetail());
+        String memberEmail = memberService.getLoginUserEmail();
+        ChallengeLogSubGoal challengeLogSubGoal = challengeLogSubGoalService.getChallengeLogSubGoal(reqDto.getId());
+
+        if(!challengeLogSubGoal.getChallengeLog().getMember().getEmail().equals(memberEmail)) {
+            throw new CAccessDeniedException("권한 없는 요청입니다.");
+        }
+
+        ChallengeLogSubGoal result = challengeLogSubGoalService.updateSubGoal(challengeLogSubGoal, reqDto.getStatus());
+        return responseService.getResult(result.toDetail());
     }
 
     @PostMapping("/success")

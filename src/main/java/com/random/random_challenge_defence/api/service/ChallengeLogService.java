@@ -88,6 +88,7 @@ public class ChallengeLogService {
     public boolean successValidate(ChallengeLog challengeLog) {
         boolean isPass = true;
 
+
         // 중간 목표 완료.
         List<ChallengeLogSubGoal> subGoals = challengeLogSubGoalRepository.getListByChallengeLogId(challengeLog.getId());
         for(ChallengeLogSubGoal subGoal: subGoals) {
