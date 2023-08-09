@@ -103,12 +103,19 @@ public class ChallengeLogController {
 
     @PostMapping("/success")
     public CommonResponse successChallenge(@RequestBody Map<String, Long> map) {
+        String memberEmail = memberService.getLoginUserEmail();
         Long challengeLogId = map.get("id");
-        boolean isPass = challengeLogService.successValidate(challengeLogId);
+        ChallengeLog challengeLog = challengeLogService.findById(challengeLogId);
+
+        if(!challengeLog.getMember().getEmail().equals(memberEmail)){
+            throw new CAccessDeniedException("권한 없는 접근입니다.");
+        }
+
+        boolean isPass = challengeLogService.successValidate(challengeLog);
         if(!isPass) {
             return responseService.getStringResult("result", "성공 요구조건을 만족하지 못하였습니다.");
         }
-        challengeLogService.successChallengeLog(challengeLogId);
+        challengeLogService.successChallengeLog(challengeLog);
         return responseService.getSuccessResult();
     }
 

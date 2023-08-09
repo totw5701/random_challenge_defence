@@ -83,13 +83,13 @@ public class ChallengeLogService {
      * 성공 가능 유효성 체크.
      * 1. 중간 목표 완료.
      * 2. 인증 완료.
-     * @param challengeLogId
+     * @param challengeLog
      */
-    public boolean successValidate(Long challengeLogId) {
+    public boolean successValidate(ChallengeLog challengeLog) {
         boolean isPass = true;
 
         // 중간 목표 완료.
-        List<ChallengeLogSubGoal> subGoals = challengeLogSubGoalRepository.getListByChallengeLogId(challengeLogId);
+        List<ChallengeLogSubGoal> subGoals = challengeLogSubGoalRepository.getListByChallengeLogId(challengeLog.getId());
         for(ChallengeLogSubGoal subGoal: subGoals) {
             if(ChallengeLogSubGoalStatus.SUCCESS != subGoal.getChallengeLogSubGoalStatus()){
                 isPass = false;
@@ -98,7 +98,6 @@ public class ChallengeLogService {
         }
 
         // 인증 완료
-        ChallengeLog challengeLog = challengeLogRepository.findById(challengeLogId).get();
         if(challengeLog.getEvidence() == null) {
             isPass = false;
         }
@@ -106,12 +105,8 @@ public class ChallengeLogService {
     }
 
     @Transactional
-    public void successChallengeLog(Long challengeLogId) {
-        Optional<ChallengeLog> challengeLogOp = challengeLogRepository.findById(challengeLogId);
-        if(!challengeLogOp.isPresent()) {
-            throw new CNotFoundException("챌린지 도전 이력이 없습니다.");
-        }
-        challengeLogOp.get().challengeSuccess();
+    public void successChallengeLog(ChallengeLog challengeLog) {
+        challengeLog.challengeSuccess();
     }
 
 
@@ -130,5 +125,13 @@ public class ChallengeLogService {
     @Transactional
     public void skipChallengeLog(ChallengeLog challengeLog) {
         challengeLog.challengeSkip();
+    }
+
+    public ChallengeLog findById(Long challengeLogId) {
+        Optional<ChallengeLog> byId = challengeLogRepository.findById(challengeLogId);
+        if(!byId.isPresent()) {
+            throw new CChallengeLogNotFoundException("챌린지 이력이 존재하지 않습니다.");
+        }
+        return byId.get();
     }
 }
