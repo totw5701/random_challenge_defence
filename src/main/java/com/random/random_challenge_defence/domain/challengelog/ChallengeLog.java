@@ -4,15 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogDetailDto;
 import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogSubGoalDetailDto;
-import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogUpdateDto;
+import com.random.random_challenge_defence.api.dto.file.EvidenceDetailDto;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoal;
-import com.random.random_challenge_defence.domain.file.S3File;
+import com.random.random_challenge_defence.domain.file.File;
 import com.random.random_challenge_defence.domain.member.Member;
 import lombok.*;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +29,6 @@ public class ChallengeLog {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String evidence;
 
     @Enumerated(EnumType.STRING)
     private ChallengeLogStatus status;
@@ -41,14 +41,14 @@ public class ChallengeLog {
     @ManyToOne(fetch = FetchType.LAZY)
     private ChallengeCard challengeCard;
 
-    @OneToOne
-    private S3File evidenceImage;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "challenge_log_id")
+    private List<File> evidenceImages = new ArrayList<>();
 
     private String startDtm;
     private String endDtm;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "challenge_log_id")
     private List<ChallengeLogSubGoal> challengeLogSubGoals;
 
     public void setChallengeLogSubGoals(List<ChallengeLogSubGoal> subGoals) {
@@ -57,34 +57,20 @@ public class ChallengeLog {
 
     public ChallengeLogDetailDto toDetailDto() {
 
-        List<ChallengeLogSubGoalDetailDto> collect = challengeLogSubGoals.stream().map((s) -> s.toDetail()).collect(Collectors.toList());
-
+        List<ChallengeLogSubGoalDetailDto> collect = this.challengeLogSubGoals.stream().map((s) -> s.toDetail()).collect(Collectors.toList());
+        List<EvidenceDetailDto> evidences = new ArrayList<>();
+        if (this.evidenceImages != null) {
+            evidences = this.evidenceImages.stream().map(s -> s.toDto()).collect(Collectors.toList());
+        }
         return ChallengeLogDetailDto.builder()
                 .id(this.id)
-                .evidence(this.evidence)
+                .evidenceDetailDto(evidences)
                 .status(this.status)
                 .review(this.review)
                 .memberId(this.member.getId())
                 .challengeCardDetailDto(this.challengeCard.toDetailDto())
                 .challengeLogSubGoalDetailDtos(collect)
-                .image(this.evidenceImage != null ? this.evidenceImage.toDto() : null)
                 .build();
-    }
-
-    public void update(ChallengeLogUpdateDto form) {
-        if(form.getEvidence() != null) {
-            this.evidence = form.getEvidence();
-        }
-        if(form.getStatus() != null) {
-            this.status = form.getStatus();
-        }
-        if(form.getReview() != null) {
-            this.review = form.getReview();
-        }
-    }
-
-    public void updateImage(S3File image) {
-        this.evidenceImage = image;
     }
 
     public void challengeSuccess(){

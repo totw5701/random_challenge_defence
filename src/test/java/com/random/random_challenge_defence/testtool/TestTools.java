@@ -6,7 +6,7 @@ import com.random.random_challenge_defence.domain.challengecardcategory.Challeng
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLogStatus;
-import com.random.random_challenge_defence.domain.file.S3File;
+import com.random.random_challenge_defence.domain.file.File;
 import com.random.random_challenge_defence.domain.member.Member;
 import com.random.random_challenge_defence.domain.member.MemberRole;
 
@@ -30,8 +30,8 @@ public class TestTools {
         return member;
     }
 
-    public S3File createDummyS3File() {
-        return S3File.builder()
+    public File createDummyS3File() {
+        return File.builder()
                 .key("test_key")
                 .createDtm(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()))
                 .url("https://velog.velcdn.com/images/totw5701/post/79e1f118-7ff2-44be-ba05-01c7c693245f/image.png")
@@ -48,11 +48,11 @@ public class TestTools {
 
 
 
-    public ChallengeCard createDummyChallengeCard(S3File s3File, ChallengeCardCategory challengeCardCategory ) {
+    public ChallengeCard createDummyChallengeCard(File file, ChallengeCardCategory challengeCardCategory ) {
 
         ChallengeCard challengeCard = ChallengeCard.builder()
                 .challengeCardCategory(challengeCardCategory)
-                .image(s3File)
+                .image(file)
                 .assignScore(5)
                 .createDtm(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()))
                 .difficulty(5)

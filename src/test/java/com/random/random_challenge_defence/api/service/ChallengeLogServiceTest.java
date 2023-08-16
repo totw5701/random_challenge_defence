@@ -6,7 +6,7 @@ import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLogRepository;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLogStatus;
 import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoalRepository;
-import com.random.random_challenge_defence.domain.file.S3File;
+import com.random.random_challenge_defence.domain.file.File;
 import com.random.random_challenge_defence.domain.member.Member;
 import com.random.random_challenge_defence.domain.member.MemberRole;
 import com.random.random_challenge_defence.testtool.TestTools;
@@ -15,10 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,9 +39,9 @@ class ChallengeLogServiceTest {
 
         // Given
         Member member = testTools.createDummyMember(MemberRole.USER, 1L, "email@email.com");
-        S3File s3File = testTools.createDummyS3File();
+        File file = testTools.createDummyS3File();
         ChallengeCardCategory challengeCardCategory = testTools.createChallengeCardCategory();
-        ChallengeCard challengeCard = testTools.createDummyChallengeCard(s3File, challengeCardCategory);
+        ChallengeCard challengeCard = testTools.createDummyChallengeCard(file, challengeCardCategory);
         ChallengeLog challengeLog = testTools.createDummyChallengeLog(member, challengeCard);
 
 

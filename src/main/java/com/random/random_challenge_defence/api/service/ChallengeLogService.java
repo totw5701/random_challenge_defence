@@ -1,8 +1,6 @@
 package com.random.random_challenge_defence.api.service;
 
 import com.random.random_challenge_defence.advice.exception.CChallengeLogNotFoundException;
-import com.random.random_challenge_defence.advice.exception.CChallengeNotFoundException;
-import com.random.random_challenge_defence.advice.exception.CNotFoundException;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeLogSubGoalStatus;
@@ -88,7 +86,6 @@ public class ChallengeLogService {
     public boolean successValidate(ChallengeLog challengeLog) {
         boolean isPass = true;
 
-
         // 중간 목표 완료.
         List<ChallengeLogSubGoal> subGoals = challengeLogSubGoalRepository.getListByChallengeLogId(challengeLog.getId());
         for(ChallengeLogSubGoal subGoal: subGoals) {
@@ -99,7 +96,7 @@ public class ChallengeLogService {
         }
 
         // 인증 완료
-        if(challengeLog.getEvidence() == null) {
+        if(challengeLog.getEvidenceImages().size() == 0) {
             isPass = false;
         }
         return isPass;

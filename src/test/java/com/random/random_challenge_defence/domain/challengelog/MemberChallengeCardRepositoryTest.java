@@ -33,31 +33,6 @@ class MemberChallengeCardRepositoryTest {
 
     }
 
-    @Test
-    public void findByMemberIdAndChallengeId() {
-        // Given
-        Member member = testTools.createDummyMember(MemberRole.USER, 1L, "email@email.com");
-        ChallengeCard challenge = ChallengeCard.builder()
-                .id(1L)
-                .build();
-        memberRepository.save(member);
 
-        ChallengeLog memberChallenge = ChallengeLog.builder()
-                .id(1L)
-                .member(member)
-                .evidence("evidence")
-                .review("review")
-                .status(ChallengeLogStatus.READY)
-                .build();
-        challengeCardRepository.save(challenge);
-
-        memberChallengeRepository.save(memberChallenge);
-
-        // When
-        Optional<ChallengeLog> result = memberChallengeRepository.findByMemberIdAndChallengeId(member.getId(), challenge.getId());
-
-        // Then
-        Assertions.assertThat(result.get().getEvidence()).isEqualTo("evidence");
-    }
 
 }

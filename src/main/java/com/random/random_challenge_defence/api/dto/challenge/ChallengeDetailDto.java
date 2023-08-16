@@ -1,9 +1,7 @@
 package com.random.random_challenge_defence.api.dto.challenge;
 
-import com.random.random_challenge_defence.api.dto.file.S3DetailFileDto;
-import com.random.random_challenge_defence.api.dto.file.S3UploadFileDto;
+import com.random.random_challenge_defence.api.dto.file.EvidenceDetailDto;
 import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategory;
-import com.random.random_challenge_defence.domain.file.S3File;
 import lombok.Builder;
 import lombok.Data;
 
@@ -23,5 +21,5 @@ public class ChallengeDetailDto {
     private String createDtm;
     private List<ChallengeSubGoalDetailDto> challengeSubGoals;
     private ChallengeCardCategory challengeCardCategory;
-    private S3DetailFileDto image;
+    private EvidenceDetailDto image;
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class S3DetailFileDto {
+public class EvidenceDetailDto {
 
     private Long id;
     private String key;

@@ -2,10 +2,9 @@ package com.random.random_challenge_defence.api.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.random.random_challenge_defence.api.dto.file.S3DetailFileDto;
-import com.random.random_challenge_defence.api.dto.file.S3UploadFileDto;
-import com.random.random_challenge_defence.domain.file.S3File;
-import com.random.random_challenge_defence.domain.file.S3FileRepository;
+import com.random.random_challenge_defence.api.dto.file.EvidenceDetailDto;
+import com.random.random_challenge_defence.domain.file.File;
+import com.random.random_challenge_defence.domain.file.FileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,10 +23,10 @@ public class S3FileUploadService {
     private String bucket;
 
     private final AmazonS3Client amazonS3Client;
-    private final S3FileRepository s3FileRepository;
+    private final FileRepository fileRepository;
 
     @Transactional
-    public S3DetailFileDto uploadFile(String bucket, MultipartFile file, String dir) throws Exception {
+    public EvidenceDetailDto uploadFile(String bucket, MultipartFile file, String dir) throws Exception {
         String uuid = UUID.randomUUID().toString();
         ObjectMetadata metadata= new ObjectMetadata();
         metadata.setContentType(file.getContentType());
@@ -39,17 +38,17 @@ public class S3FileUploadService {
             throw new Exception("파일 업로드에 실패하였습니다.");
         }
 
-        S3File fileInfo = S3File.builder()
+        File fileInfo = File.builder()
                 .url(amazonS3Client.getUrl(bucket, key).toString())
                 .createDtm(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
                 .key(key).build();
 
-        s3FileRepository.save(fileInfo);
+        fileRepository.save(fileInfo);
         return fileInfo.toDto();
     }
 
     @Transactional
-    public S3DetailFileDto uploadFile(MultipartFile file, String dir) throws Exception {
+    public EvidenceDetailDto uploadFile(MultipartFile file, String dir) throws Exception {
         return uploadFile(bucket, file, dir);
     }
 

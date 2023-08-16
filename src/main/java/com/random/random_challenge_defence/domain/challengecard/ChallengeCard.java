@@ -7,7 +7,7 @@ import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
 import com.random.random_challenge_defence.api.dto.challenge.ChallengeSubGoalDetailDto;
 import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategory;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
-import com.random.random_challenge_defence.domain.file.S3File;
+import com.random.random_challenge_defence.domain.file.File;
 import lombok.*;
 
 import javax.persistence.*;
@@ -36,12 +36,13 @@ public class ChallengeCard {
     private String title;
     private String description;
     private String finalGoal;
-    private String evidenceType;
     private Integer difficulty;
     private Integer assignScore;
 
-    @OneToOne
-    private S3File image;
+    @OneToOne(mappedBy = "challengeCard")
+    @JoinColumn(name = "challenge_card_id")
+    private File image;
+
     private String createDtm;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -52,7 +53,6 @@ public class ChallengeCard {
         this.title = (form.getTitle() != null) ? form.getTitle() : this.title;
         this.description = (form.getDescription() != null) ? form.getDescription() : this.description;
         this.finalGoal = (form.getFinalGoal() != null) ? form.getFinalGoal() : this.finalGoal;
-        this.evidenceType = (form.getEvidenceType() != null) ? form.getEvidenceType() : this.evidenceType;
         this.difficulty = (form.getDifficulty() != null) ? form.getDifficulty() : this.difficulty;
         this.assignScore = (form.getAssignScore() != null) ? form.getAssignScore() : this.assignScore;
 
@@ -67,7 +67,7 @@ public class ChallengeCard {
 
     }
 
-    public void imageUpdate(S3File newImage) {
+    public void imageUpdate(File newImage) {
         this.image = newImage;
     }
 
@@ -80,12 +80,14 @@ public class ChallengeCard {
         if(this.challengeCardSubGoals != null) {
             subGoals = challengeCardSubGoals.stream().map((challengeSubGoal -> challengeSubGoal.toDto())).collect(Collectors.toList());
         }
+        if(this.image == null) {
+            this.image = new File();
+        }
         return ChallengeDetailDto.builder()
                 .id(this.id)
                 .title(this.title)
                 .description(this.description)
                 .finalGoal(this.finalGoal)
-                .evidenceType(this.evidenceType)
                 .difficulty(this.difficulty)
                 .assignScore(this.assignScore)
                 .createDtm(this.createDtm)

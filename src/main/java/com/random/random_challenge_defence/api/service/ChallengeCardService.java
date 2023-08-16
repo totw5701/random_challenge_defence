@@ -9,8 +9,8 @@ import com.random.random_challenge_defence.domain.challengecardcategory.Challeng
 import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategoryRepository;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoalRepository;
-import com.random.random_challenge_defence.domain.file.S3File;
-import com.random.random_challenge_defence.domain.file.S3FileRepository;
+import com.random.random_challenge_defence.domain.file.File;
+import com.random.random_challenge_defence.domain.file.FileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class ChallengeCardService {
     private final ChallengeCardRepository challengeCardRepository;
     private final ChallengeCardSubGoalRepository challengeCardSubGoalRepository;
     private final ChallengeCardCategoryRepository challengeCardCategoryRepository;
-    private final S3FileRepository s3FileRepository;
+    private final FileRepository fileRepository;
 
     public Page<ChallengeDetailDto> readPageList(Integer nowPage) {
         Pageable pageable = PageRequest.of(nowPage, 15, Sort.by("id").descending()); // 한 페이지에 15개씩 출력
@@ -49,14 +49,13 @@ public class ChallengeCardService {
     public ChallengeDetailDto create(ChallengePutReqDto form) {
 
         ChallengeCardCategory challengeCardCategory = challengeCardCategoryRepository.findById(form.getChallengeCardCategoryId()).get();
-        S3File image = s3FileRepository.findById(form.getId()).get();
+        File image = fileRepository.findById(form.getId()).get();
 
         ChallengeCard challenge = ChallengeCard.builder()
                 .assignScore(form.getAssignScore())
                 .title(form.getTitle())
                 .difficulty(form.getDifficulty())
                 .description(form.getDescription())
-                .evidenceType(form.getEvidenceType())
                 .finalGoal(form.getFinalGoal())
                 .createDtm(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
                 .challengeCardCategory(challengeCardCategory)
@@ -93,7 +92,7 @@ public class ChallengeCardService {
         challenge.update(form);
 
         if(form.getImage() != null) {
-            S3File image = s3FileRepository.findById(form.getImage()).get();
+            File image = fileRepository.findById(form.getImage()).get();
             challenge.imageUpdate(image);
         }
         return challenge;

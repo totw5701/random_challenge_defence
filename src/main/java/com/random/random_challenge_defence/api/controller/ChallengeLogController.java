@@ -34,6 +34,10 @@ public class ChallengeLogController {
     private final ResponseService responseService;
     private final ChallengeLogSubGoalService challengeLogSubGoalService;
 
+//    @ApiOperation(value = "챌린지 로그 인증 업로드", notes = "챌린지 인증을 업로드합니다.")
+//    @PostMapping("/evidence")
+//    public
+
     @ApiOperation(value = "챌린지 스킵하기", notes = "도전 중인 챌린지를 스킵합니다.")
     @PostMapping("/skip")
     public CommonResponse<ChallengeLogDetailDto> skipChallenge(@RequestBody Map<String, String> map) {

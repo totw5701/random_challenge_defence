@@ -1,23 +1,21 @@
 package com.random.random_challenge_defence.domain.file;
 
-import com.random.random_challenge_defence.api.dto.file.S3DetailFileDto;
-import com.random.random_challenge_defence.api.dto.file.S3UploadFileDto;
+import com.random.random_challenge_defence.api.dto.file.EvidenceDetailDto;
+import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
+import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class S3File {
+public class File {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +24,14 @@ public class S3File {
     private String url;
     private String createDtm;
 
-    public S3DetailFileDto toDto() {
-        return S3DetailFileDto.builder()
+    @ManyToOne
+    private ChallengeLog challengeLog;
+
+    @OneToOne
+    private ChallengeCard challengeCard;
+
+    public EvidenceDetailDto toDto() {
+        return EvidenceDetailDto.builder()
                 .id(this.id)
                 .key(this.key)
                 .createDtm(this.createDtm)
