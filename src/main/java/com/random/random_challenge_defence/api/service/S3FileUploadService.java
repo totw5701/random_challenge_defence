@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.random.random_challenge_defence.api.dto.file.FileDetailDto;
 import com.random.random_challenge_defence.domain.file.File;
 import com.random.random_challenge_defence.domain.file.FileRepository;
+import com.random.random_challenge_defence.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class S3FileUploadService {
     private final FileRepository fileRepository;
 
     @Transactional
-    public FileDetailDto uploadFile(String bucket, MultipartFile file, String dir) throws Exception {
+    public FileDetailDto uploadFile(Member member, String bucket, MultipartFile file, String dir) throws Exception {
         String uuid = UUID.randomUUID().toString();
         ObjectMetadata metadata= new ObjectMetadata();
         metadata.setContentType(file.getContentType());
@@ -40,6 +41,7 @@ public class S3FileUploadService {
 
         File fileInfo = File.builder()
                 .url(amazonS3Client.getUrl(bucket, key).toString())
+                .member(member)
                 .createDtm(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
                 .key(key).build();
 
@@ -48,8 +50,8 @@ public class S3FileUploadService {
     }
 
     @Transactional
-    public FileDetailDto uploadFile(MultipartFile file, String dir) throws Exception {
-        return uploadFile(bucket, file, dir);
+    public FileDetailDto uploadFile(Member member, MultipartFile file, String dir) throws Exception {
+        return uploadFile(member, bucket, file, dir);
     }
 
 }

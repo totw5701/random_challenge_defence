@@ -2,8 +2,10 @@ package com.random.random_challenge_defence.api.controller;
 
 import com.random.random_challenge_defence.api.dto.common.CommonResponse;
 import com.random.random_challenge_defence.api.dto.file.FileDetailDto;
+import com.random.random_challenge_defence.api.service.MemberService;
 import com.random.random_challenge_defence.api.service.ResponseService;
 import com.random.random_challenge_defence.api.service.S3FileUploadService;
+import com.random.random_challenge_defence.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,13 +23,16 @@ public class FileController {
 
     private final S3FileUploadService s3FileUploadService;
     private final ResponseService responseService;
+    private final MemberService memberService;
 
 
     @PostMapping
     @RequestMapping("/upload/challenge-card")
     public CommonResponse challengeCardFileUpload(@RequestParam("file")MultipartFile file) {
         try {
-            FileDetailDto s3UploadFileDto = s3FileUploadService.uploadFile(file, "challenge-card/");
+            String memberEmail = memberService.getLoginUserEmail();
+            Member member = memberService.findByEmail(memberEmail);
+            FileDetailDto s3UploadFileDto = s3FileUploadService.uploadFile(member, file, "challenge-card/");
             return responseService.getResult(s3UploadFileDto);
         } catch (Exception e) {
             e.printStackTrace();
@@ -39,8 +44,10 @@ public class FileController {
     @RequestMapping("/upload/challenge-log")
     public CommonResponse challengeLogFileUpload(@RequestParam("file")MultipartFile file) {
         try {
+            String memberEmail = memberService.getLoginUserEmail();
+            Member member = memberService.findByEmail(memberEmail);
             String today = new SimpleDateFormat("yyyyMMdd").format(new Date());
-            FileDetailDto s3UploadFileDto = s3FileUploadService.uploadFile(file, "challenge-log/" + today + "/");
+            FileDetailDto s3UploadFileDto = s3FileUploadService.uploadFile(member, file, "challenge-log/" + today + "/");
             return responseService.getResult(s3UploadFileDto);
         } catch (Exception e) {
             e.printStackTrace();
