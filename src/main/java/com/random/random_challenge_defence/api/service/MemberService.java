@@ -25,6 +25,10 @@ public class MemberService {
         return (String) SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
+    public Member getLoginMember() {
+        return findByEmail(getLoginUserEmail());
+    }
+
     public Member join(MemberPutReqDto form) {
         return memberRepository.save(
                 Member.builder()

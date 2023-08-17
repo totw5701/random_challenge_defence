@@ -30,8 +30,7 @@ public class FileController {
     @RequestMapping("/upload/challenge-card")
     public CommonResponse challengeCardFileUpload(@RequestParam("file")MultipartFile file) {
         try {
-            String memberEmail = memberService.getLoginUserEmail();
-            Member member = memberService.findByEmail(memberEmail);
+            Member member = memberService.getLoginMember();
             FileDetailDto s3UploadFileDto = s3FileUploadService.uploadFile(member, file, "challenge-card/");
             return responseService.getResult(s3UploadFileDto);
         } catch (Exception e) {
@@ -44,8 +43,7 @@ public class FileController {
     @RequestMapping("/upload/challenge-log")
     public CommonResponse challengeLogFileUpload(@RequestParam("file")MultipartFile file) {
         try {
-            String memberEmail = memberService.getLoginUserEmail();
-            Member member = memberService.findByEmail(memberEmail);
+            Member member = memberService.getLoginMember();
             String today = new SimpleDateFormat("yyyyMMdd").format(new Date());
             FileDetailDto s3UploadFileDto = s3FileUploadService.uploadFile(member, file, "challenge-log/" + today + "/");
             return responseService.getResult(s3UploadFileDto);
