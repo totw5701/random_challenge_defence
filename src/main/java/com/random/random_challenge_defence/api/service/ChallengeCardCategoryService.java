@@ -1,10 +1,9 @@
 package com.random.random_challenge_defence.api.service;
 
 import com.random.random_challenge_defence.advice.exception.CNotFoundException;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeCardCategoryDetailDto;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeCardCategoryReqDto;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeCardCategoryUpdateDto;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeCardCategoryDetailDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeCardCategoryReqDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeCardCategoryUpdateDto;
 import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategory;
 import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategoryRepository;
 import lombok.RequiredArgsConstructor;

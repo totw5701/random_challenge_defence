@@ -1,8 +1,9 @@
 package com.random.random_challenge_defence.domain.file;
 
-import com.random.random_challenge_defence.api.dto.file.EvidenceDetailDto;
+import com.random.random_challenge_defence.api.dto.file.FileDetailDto;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
+import com.random.random_challenge_defence.domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,11 +31,28 @@ public class File {
     @OneToOne
     private ChallengeCard challengeCard;
 
-    public EvidenceDetailDto toDto() {
-        return EvidenceDetailDto.builder()
+    @ManyToOne
+    private Member member;
+
+    public FileDetailDto toDto() {
+
+        Long challengeCardId = null;
+        Long challengeLogId = null;
+
+        if(this.challengeCard != null) {
+            challengeCardId = this.challengeCard.getId();
+        }
+        if(this.challengeLog != null) {
+            challengeLogId = this.challengeLog.getId();
+        }
+
+        return FileDetailDto.builder()
                 .id(this.id)
                 .key(this.key)
                 .createDtm(this.createDtm)
+                .memberId(this.member.getId())
+                .challengeCardId(challengeCardId)
+                .challengeLogId(challengeLogId)
                 .url(this.url).build();
     }
 

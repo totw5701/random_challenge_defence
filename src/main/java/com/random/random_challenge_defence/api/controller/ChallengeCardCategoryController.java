@@ -1,14 +1,13 @@
 package com.random.random_challenge_defence.api.controller;
 
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeCardCategoryDetailDto;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeCardCategoryReqDto;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeCardCategoryUpdateDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeCardCategoryDetailDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeCardCategoryReqDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeCardCategoryUpdateDto;
 import com.random.random_challenge_defence.api.dto.common.CommonResponse;
 import com.random.random_challenge_defence.api.service.ChallengeCardCategoryService;
 import com.random.random_challenge_defence.api.service.ResponseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

@@ -2,11 +2,7 @@ package com.random.random_challenge_defence.api.controller;
 
 import com.random.random_challenge_defence.advice.exception.CAccessDeniedException;
 import com.random.random_challenge_defence.advice.exception.CChallengeLogTringFailureException;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
-import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogDetailDto;
-import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogReqDto;
-import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogSubGoalDetailDto;
-import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogSubGoalUpdateDto;
+import com.random.random_challenge_defence.api.dto.challengelog.*;
 import com.random.random_challenge_defence.api.dto.common.CommonResponse;
 import com.random.random_challenge_defence.api.service.*;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
@@ -31,12 +27,24 @@ public class ChallengeLogController {
     private final ChallengeLogService challengeLogService;
     private final MemberService memberService;
     private final ChallengeCardService challengeCardService;
-    private final ResponseService responseService;
     private final ChallengeLogSubGoalService challengeLogSubGoalService;
+    private final S3FileUploadService s3FileUploadService;
 
-//    @ApiOperation(value = "챌린지 로그 인증 업로드", notes = "챌린지 인증을 업로드합니다.")
-//    @PostMapping("/evidence")
-//    public
+    private final ResponseService responseService;
+
+    @ApiOperation(value = "챌린지 로그 인증 업로드", notes = "챌린지 인증을 업로드합니다.")
+    @PostMapping("/evidence")
+    public void uploadChallengeEvidence(@RequestBody ChallengeLogEvidenceReqDto form) {
+        String memberEmail = memberService.getLoginUserEmail();
+        ChallengeLog challengeLog = challengeLogService.getChallengeLogById(form.getChallengeLogId());
+        if(!challengeLog.getMember().getEmail().equals(memberEmail)) {
+            throw new CAccessDeniedException();
+        }
+
+        for(Long id : form.getEvidenceIdList()) {
+            System.out.println(id);
+        }
+    }
 
     @ApiOperation(value = "챌린지 스킵하기", notes = "도전 중인 챌린지를 스킵합니다.")
     @PostMapping("/skip")

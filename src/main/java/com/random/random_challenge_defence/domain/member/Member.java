@@ -22,13 +22,13 @@ public class Member {
     private MemberRole memberRole;
 
     @Column(unique = true)
+
     private String email;
     private String password;
     private String nickname;
     private String picture;
     private String joinDtm;
     private String modifyDtm;
-
 
     public Member entityUpdate(String picture) {
         this.picture = picture;

@@ -1,7 +1,7 @@
 package com.random.random_challenge_defence.api.dto.challengelog;
 
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
-import com.random.random_challenge_defence.api.dto.file.EvidenceDetailDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeDetailDto;
+import com.random.random_challenge_defence.api.dto.file.FileDetailDto;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLogStatus;
 import lombok.*;
 
@@ -21,7 +21,7 @@ public class ChallengeLogDetailDto {
     private String review;
     private Long memberId;
     private List<ChallengeLogSubGoalDetailDto> challengeLogSubGoalDetailDtos;
-    private List<EvidenceDetailDto> evidenceDetailDto;
+    private List<FileDetailDto> fileDetailDto;
     private ChallengeDetailDto challengeCardDetailDto;
 
 }

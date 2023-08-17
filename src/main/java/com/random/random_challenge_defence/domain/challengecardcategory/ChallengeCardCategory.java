@@ -1,7 +1,7 @@
 package com.random.random_challenge_defence.domain.challengecardcategory;
 
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeCardCategoryDetailDto;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeCardCategoryUpdateDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeCardCategoryDetailDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeCardCategoryUpdateDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

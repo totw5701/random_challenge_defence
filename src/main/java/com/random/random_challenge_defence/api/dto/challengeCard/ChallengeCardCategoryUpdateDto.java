@@ -1,4 +1,4 @@
-package com.random.random_challenge_defence.api.dto.challenge;
+package com.random.random_challenge_defence.api.dto.challengeCard;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

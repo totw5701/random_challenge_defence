@@ -2,9 +2,9 @@ package com.random.random_challenge_defence.domain.challengecard;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeSubGoalDetailDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeDetailDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengePutReqDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeSubGoalDetailDto;
 import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategory;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import com.random.random_challenge_defence.domain.file.File;

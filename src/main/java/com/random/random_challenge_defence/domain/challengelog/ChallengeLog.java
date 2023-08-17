@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogDetailDto;
 import com.random.random_challenge_defence.api.dto.challengelog.ChallengeLogSubGoalDetailDto;
-import com.random.random_challenge_defence.api.dto.file.EvidenceDetailDto;
+import com.random.random_challenge_defence.api.dto.file.FileDetailDto;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoal;
 import com.random.random_challenge_defence.domain.file.File;
@@ -58,13 +58,13 @@ public class ChallengeLog {
     public ChallengeLogDetailDto toDetailDto() {
 
         List<ChallengeLogSubGoalDetailDto> collect = this.challengeLogSubGoals.stream().map((s) -> s.toDetail()).collect(Collectors.toList());
-        List<EvidenceDetailDto> evidences = new ArrayList<>();
+        List<FileDetailDto> evidences = new ArrayList<>();
         if (this.evidenceImages != null) {
             evidences = this.evidenceImages.stream().map(s -> s.toDto()).collect(Collectors.toList());
         }
         return ChallengeLogDetailDto.builder()
                 .id(this.id)
-                .evidenceDetailDto(evidences)
+                .fileDetailDto(evidences)
                 .status(this.status)
                 .review(this.review)
                 .memberId(this.member.getId())

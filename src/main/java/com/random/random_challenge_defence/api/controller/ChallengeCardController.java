@@ -1,8 +1,8 @@
 package com.random.random_challenge_defence.api.controller;
 
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeDetailDto;
 import com.random.random_challenge_defence.api.dto.common.CommonResponse;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengePutReqDto;
 import com.random.random_challenge_defence.api.service.ChallengeCardService;
 import com.random.random_challenge_defence.api.service.ResponseService;
 import io.swagger.annotations.ApiOperation;

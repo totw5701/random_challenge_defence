@@ -1,7 +1,7 @@
 package com.random.random_challenge_defence.api.controller;
 
 import com.random.random_challenge_defence.api.dto.common.CommonResponse;
-import com.random.random_challenge_defence.api.dto.file.EvidenceDetailDto;
+import com.random.random_challenge_defence.api.dto.file.FileDetailDto;
 import com.random.random_challenge_defence.api.service.ResponseService;
 import com.random.random_challenge_defence.api.service.S3FileUploadService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class FileController {
     @RequestMapping("/upload/challenge-card")
     public CommonResponse challengeCardFileUpload(@RequestParam("file")MultipartFile file) {
         try {
-            EvidenceDetailDto s3UploadFileDto = s3FileUploadService.uploadFile(file, "challenge-card/");
+            FileDetailDto s3UploadFileDto = s3FileUploadService.uploadFile(file, "challenge-card/");
             return responseService.getResult(s3UploadFileDto);
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,7 +40,7 @@ public class FileController {
     public CommonResponse challengeLogFileUpload(@RequestParam("file")MultipartFile file) {
         try {
             String today = new SimpleDateFormat("yyyyMMdd").format(new Date());
-            EvidenceDetailDto s3UploadFileDto = s3FileUploadService.uploadFile(file, "challenge-log/" + today + "/");
+            FileDetailDto s3UploadFileDto = s3FileUploadService.uploadFile(file, "challenge-log/" + today + "/");
             return responseService.getResult(s3UploadFileDto);
         } catch (Exception e) {
             e.printStackTrace();

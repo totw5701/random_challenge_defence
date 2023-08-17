@@ -1,10 +1,10 @@
 package com.random.random_challenge_defence.api.service;
 
 import com.random.random_challenge_defence.advice.exception.CChallengeNotFoundException;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengeDetailDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeDetailDto;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCardRepository;
-import com.random.random_challenge_defence.api.dto.challenge.ChallengePutReqDto;
+import com.random.random_challenge_defence.api.dto.challengeCard.ChallengePutReqDto;
 import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategory;
 import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategoryRepository;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
