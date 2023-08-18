@@ -8,6 +8,7 @@ import com.random.random_challenge_defence.api.service.*;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
 import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoal;
+import com.random.random_challenge_defence.domain.file.File;
 import com.random.random_challenge_defence.domain.member.Member;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -29,21 +30,31 @@ public class ChallengeLogController {
     private final ChallengeCardService challengeCardService;
     private final ChallengeLogSubGoalService challengeLogSubGoalService;
     private final S3FileUploadService s3FileUploadService;
+    private final FileService fileService;
 
     private final ResponseService responseService;
 
     @ApiOperation(value = "챌린지 로그 인증 업로드", notes = "챌린지 인증을 업로드합니다.")
     @PostMapping("/evidence")
-    public void uploadChallengeEvidence(@RequestBody ChallengeLogEvidenceReqDto form) {
+    public CommonResponse uploadChallengeEvidence(@RequestBody ChallengeLogEvidenceReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
         ChallengeLog challengeLog = challengeLogService.getChallengeLogById(form.getChallengeLogId());
         if(!challengeLog.getMember().getEmail().equals(memberEmail)) {
             throw new CAccessDeniedException();
         }
 
-        for(Long id : form.getEvidenceIdList()) {
-            System.out.println(id);
+        List<File> fileListByIds = fileService.getFileListByIds(form.getEvidenceIdList());
+        for(File file : fileListByIds) {
+            if(!file.getMember().getEmail().equals(memberEmail)) {
+                throw new CAccessDeniedException();
+            }
         }
+
+        for(File file : fileListByIds) {
+            fileService.assignChallengeLog(file, challengeLog);
+        }
+
+        return responseService.getSuccessResult();
     }
 
     @ApiOperation(value = "챌린지 스킵하기", notes = "도전 중인 챌린지를 스킵합니다.")

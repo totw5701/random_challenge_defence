@@ -25,13 +25,13 @@ public class File {
     private String url;
     private String createDtm;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ChallengeLog challengeLog;
 
     @OneToOne
     private ChallengeCard challengeCard;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     public FileDetailDto toDto() {
@@ -54,6 +54,14 @@ public class File {
                 .challengeCardId(challengeCardId)
                 .challengeLogId(challengeLogId)
                 .url(this.url).build();
+    }
+
+    public void assignChallengeLog(ChallengeLog challengeLog) {
+        this.challengeLog = challengeLog;
+    }
+
+    public void assignChallengeCard(ChallengeCard challengeCard) {
+        this.challengeCard = challengeCard;
     }
 
 }
