@@ -15,8 +15,8 @@ public class SwaggerConfig {
     public Docket swagger() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.random.random_challenge_defence.api"))
-                .paths(PathSelectors.ant("/*/**"))
+                .apis(RequestHandlerSelectors.basePackage("com.random.random_challenge_defence.api.controller"))
+                .paths(PathSelectors.ant("/challenge-log/**"))
                 .build();
     }
 

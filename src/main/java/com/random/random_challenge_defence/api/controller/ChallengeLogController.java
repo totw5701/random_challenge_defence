@@ -10,6 +10,7 @@ import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
 import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoal;
 import com.random.random_challenge_defence.domain.file.File;
 import com.random.random_challenge_defence.domain.member.Member;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,8 +35,8 @@ public class ChallengeLogController {
 
     private final ResponseService responseService;
 
-    @ApiOperation(value = "챌린지 로그 인증 업로드", notes = "챌린지 인증을 업로드합니다.")
-    @PostMapping("/evidence")
+    @ApiOperation(value = "챌린지 로그 인증 업로드", notes = "업로드한 인증 파일을 챌린지 로그에 할당합니다.")
+    @PutMapping("/evidence")
     public CommonResponse uploadChallengeEvidence(@RequestBody ChallengeLogEvidenceReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
         ChallengeLog challengeLog = challengeLogService.getChallengeLogById(form.getChallengeLogId());
@@ -58,10 +59,10 @@ public class ChallengeLogController {
     }
 
     @ApiOperation(value = "챌린지 스킵하기", notes = "도전 중인 챌린지를 스킵합니다.")
-    @PostMapping("/skip")
-    public CommonResponse<ChallengeLogDetailDto> skipChallenge(@RequestBody Map<String, String> map) {
+    @PutMapping("/skip")
+    public CommonResponse<ChallengeLogDetailDto> skipChallenge(@RequestBody ChallengeLogReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
-        ChallengeLog challengeLog = challengeLogService.getChallengeLogById(Long.valueOf(map.get("id")));
+        ChallengeLog challengeLog = challengeLogService.getChallengeLogById(Long.valueOf(form.getChallengeId()));
         if(!challengeLog.getMember().getEmail().equals(memberEmail)) {
             throw new CAccessDeniedException();
         }
@@ -69,7 +70,7 @@ public class ChallengeLogController {
         return responseService.getResult(challengeLog.toDetailDto());
     }
 
-    @ApiOperation(value = "챌린지 도전하기", notes = "챌린지에 도전합니다.")
+    @ApiOperation(value = "챌린지 도전하기", notes = "챌린지 이력 테이블을 생성합니다. (최대5개)")
     @PostMapping("/try")
     public CommonResponse<ChallengeLogDetailDto> tryChallenge(@RequestBody ChallengeLogReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
@@ -86,12 +87,14 @@ public class ChallengeLogController {
         return responseService.getResult(challengeLog.toDetailDto());
     }
 
+    @ApiOperation(value = "챌린지 상세 조회", notes = "챌린지 이력 상세 내용을 조회합니다.")
     @GetMapping("/detail/{id}")
     public CommonResponse<ChallengeLogDetailDto> challengeLogDetail(@PathVariable("id") Long id) {
         ChallengeLog challengeLogDetail = challengeLogService.getChallengeLogDetail(id);
         return responseService.getResult(challengeLogDetail.toDetailDto());
     }
 
+    @ApiOperation(value = "도전중인 챌린지 이력 조회", notes = "현재 도전중인 챌린지 이력 리스트를 조회합니다.")
     @GetMapping("/list/my-logs/trying")
     public CommonResponse<List<ChallengeLogDetailDto>> challengeLogDetailListTrying() {
         String memberEmail = memberService.getLoginUserEmail();
@@ -104,6 +107,7 @@ public class ChallengeLogController {
         return responseService.getResult(logDtos);
     }
 
+    @ApiOperation(value = "챌린지 이력 조회", notes = "현재 및 과거에 도전했던 챌린지 이력을 페이징하여 조회합니다.")
     @GetMapping("/list/my-logs/{nowPage}")
     public CommonResponse<Page<ChallengeLogDetailDto>> challengeLogDetailList(@PathVariable(name = "nowPage") Integer nowPage) {
         String memberEmail = memberService.getLoginUserEmail();
@@ -118,7 +122,8 @@ public class ChallengeLogController {
         return responseService.getResult(challengeDtoPage);
     }
 
-    @PostMapping("/sub-goal/update")
+    @ApiOperation(value = "중간 도전 상태 업데이트", notes = "챌린지 이력 중간 도전의 상태를 업데이트합니다.")
+    @PutMapping("/sub-goal/update")
     public CommonResponse<ChallengeLogSubGoalDetailDto> subGoalClear(@RequestBody ChallengeLogSubGoalUpdateDto reqDto) {
         String memberEmail = memberService.getLoginUserEmail();
         ChallengeLogSubGoal challengeLogSubGoal = challengeLogSubGoalService.getChallengeLogSubGoal(reqDto.getId());
@@ -131,10 +136,11 @@ public class ChallengeLogController {
         return responseService.getResult(result.toDetail());
     }
 
+    @ApiOperation(value = "챌린지 성공", notes = "챌린지 이력의 상태를 성공으로 업데이트합니다.")
     @PostMapping("/success")
-    public CommonResponse successChallenge(@RequestBody Map<String, Long> map) {
+    public CommonResponse successChallenge(@RequestBody ChallengeLogReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
-        Long challengeLogId = map.get("id");
+        Long challengeLogId = form.getChallengeId();
         ChallengeLog challengeLog = challengeLogService.findById(challengeLogId);
 
         if(!challengeLog.getMember().getEmail().equals(memberEmail)){
