@@ -90,8 +90,8 @@ public class ChallengeLogController {
     @ApiOperation(value = "챌린지 상세 조회", notes = "챌린지 이력 상세 내용을 조회합니다.")
     @GetMapping("/detail/{id}")
     public CommonResponse<ChallengeLogDetailDto> challengeLogDetail(@PathVariable("id") Long id) {
-        ChallengeLog challengeLogDetail = challengeLogService.getChallengeLogDetail(id);
-        return responseService.getResult(challengeLogDetail.toDetailDto());
+        ChallengeLog challengeLog = challengeLogService.getChallengeLogDetail(id);
+        return responseService.getResult(challengeLog.toDetailDto());
     }
 
     @ApiOperation(value = "도전중인 챌린지 이력 조회", notes = "현재 도전중인 챌린지 이력 리스트를 조회합니다.")

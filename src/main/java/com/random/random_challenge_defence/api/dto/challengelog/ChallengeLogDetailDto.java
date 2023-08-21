@@ -19,6 +19,8 @@ public class ChallengeLogDetailDto {
 
     @ApiModelProperty(example = "long, 챌린지 이력 id")
     private Long id;
+    @ApiModelProperty(example = "챌린지 카드 id")
+    private Long challengeCardId;
     @ApiModelProperty(example = "챌린지 상태, READY, SUCCESS, PASS, ACTION")
     private ChallengeLogStatus status;
     @ApiModelProperty(example = "사용자가 입력한 도전 후기")
@@ -27,6 +29,5 @@ public class ChallengeLogDetailDto {
     private Long memberId;
     private List<ChallengeLogSubGoalDetailDto> challengeLogSubGoalDetailDtos;
     private List<FileDetailDto> fileDetailDto;
-    private ChallengeDetailDto challengeCardDetailDto;
 
 }
