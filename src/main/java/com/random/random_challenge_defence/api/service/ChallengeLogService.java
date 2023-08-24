@@ -132,4 +132,13 @@ public class ChallengeLogService {
         }
         return byId.get();
     }
+
+    public Optional<ChallengeLog> getPausedChallengeLog(String memberEmail, Long challengeId) {
+        return challengeLogRepository.findPausedLogByMemberEmailAndChallengeId(memberEmail, challengeId);
+    }
+
+    @Transactional
+    public void restartChallengeLog(ChallengeLog pausedChallengeLog) {
+        pausedChallengeLog.challengeRetry();
+    }
 }

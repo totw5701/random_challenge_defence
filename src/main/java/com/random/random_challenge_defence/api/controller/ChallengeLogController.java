@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -75,12 +76,20 @@ public class ChallengeLogController {
     public CommonResponse<ChallengeLogDetailDto> tryChallenge(@RequestBody ChallengeLogReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
 
+        // 최대 동시 진행 도전 갯수 체크.
         Long numOfTrying = challengeLogService.getNumOfTrying(memberEmail);
-
         if(numOfTrying >= 5) {
             throw new CChallengeLogTringFailureException("최대 도전 갯수를 초과하였습니다.");
         }
 
+        // PAUSE 했던 같은 challenge card에 대하여 다시 도전 할 시 지난 이력을 재활용 한다.
+        Optional<ChallengeLog> opPausedChallengeLog = challengeLogService.getPausedChallengeLog(memberEmail, form.getChallengeId());
+        if(opPausedChallengeLog.isPresent()) {
+            ChallengeLog pausedChallengeLog = opPausedChallengeLog.get();
+            challengeLogService.restartChallengeLog(pausedChallengeLog);
+            return responseService.getResult(pausedChallengeLog.toDetailDto());
+        }
+        
         ChallengeCard challengeCard = challengeCardService.findById(form.getChallengeId());
         Member member = memberService.findByEmail(memberEmail);
         ChallengeLog challengeLog = challengeLogService.createChallengeLog(member, challengeCard);

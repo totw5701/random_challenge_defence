@@ -10,7 +10,7 @@ public enum ChallengeLogStatus {
     READY("R"),
     SUCCESS("S"),
     ACTION("A"),
-    PASS("P");
+    PAUSE("P");
 
     private final String code;
 
