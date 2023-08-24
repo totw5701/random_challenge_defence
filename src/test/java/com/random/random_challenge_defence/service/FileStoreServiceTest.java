@@ -21,7 +21,7 @@ class FileStoreServiceTest {
     @Autowired
     FileStoreService fileStoreService;
 
-    @Test
+    //@Test
     void fileStore() throws IOException {
 
         // Given

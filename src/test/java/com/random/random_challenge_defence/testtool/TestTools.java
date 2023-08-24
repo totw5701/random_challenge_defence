@@ -56,7 +56,6 @@ public class TestTools {
                 .assignScore(5)
                 .createDtm(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()))
                 .difficulty(5)
-                .evidenceType("PT")
                 .finalGoal("해발 1500m에 위치하기")
                 .id(1L).description("가장 높은곳에 위치해보자").build();
 

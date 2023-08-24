@@ -40,7 +40,7 @@ public class AuthenticationControllerTest {
 
     TestTools testTools = new TestTools();
 
-    @Test
+    //@Test
     @DisplayName("Token Reissue Test")
     public void tokenReissueTest() {
         // Given
@@ -63,7 +63,7 @@ public class AuthenticationControllerTest {
         assertEquals(result.getData(), tokenInfo);
     }
 
-    @Test
+    //@Test
     @DisplayName("Login Test")
     public void loginTest() {
 

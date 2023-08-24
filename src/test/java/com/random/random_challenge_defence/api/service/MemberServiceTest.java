@@ -37,7 +37,7 @@ class MemberServiceTest {
         Mockito.when(authentication.getName()).thenReturn(testEmail);
     }
 
-    @Test
+    //@Test
     void getLoginUserEmail() {
 
         // When

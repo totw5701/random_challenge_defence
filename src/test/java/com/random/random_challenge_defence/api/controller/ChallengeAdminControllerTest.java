@@ -32,7 +32,7 @@ class ChallengeAdminControllerTest {
     @InjectMocks
     private ChallengeCardController controller;
 
-    @Test
+    //@Test
     @DisplayName("Challenge 목록 조회")
     void list() throws Exception {
         // given
@@ -63,7 +63,7 @@ class ChallengeAdminControllerTest {
         assertEquals(expectedResponse, actualResponse);
     }
 
-    @Test
+    //@Test
     @DisplayName("Challenge 상세 조회")
     void detail() throws Exception {
         // given

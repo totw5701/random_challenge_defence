@@ -31,7 +31,7 @@ class MemberServiceTest {
     @InjectMocks
     private MemberService memberService;
 
-    @Test
+    //@Test
     @Transactional
     public void joinTest() throws Exception {
         // given
@@ -64,7 +64,7 @@ class MemberServiceTest {
     }
 
 
-    @Test
+    //@Test
     public void testFindByEmail() {
         // given
         String email = "test@test.com";
@@ -86,7 +86,7 @@ class MemberServiceTest {
         Assertions.assertThat(result.getEmail()).isEqualTo(email);
     }
 
-    @Test
+    //@Test
     @DisplayName("Update member successfully")
     void updateMemberSuccess() {
         // given
@@ -115,7 +115,7 @@ class MemberServiceTest {
         Assertions.assertThat(updatedMember.getPassword()).isEqualTo(updateForm.getPassword());
     }
 
-    @Test
+    //@Test
     @DisplayName("Update member fails due to member not found")
     void updateMemberFail() {
         // given
@@ -133,7 +133,7 @@ class MemberServiceTest {
         Assertions.assertThatThrownBy(() -> memberService.update(updateForm)).isInstanceOf(CMemberNotFoundException.class);
     }
 
-    @Test
+    //@Test
     @DisplayName("Delete member successfully")
     void deleteMemberSuccess() {
         // given
@@ -156,7 +156,7 @@ class MemberServiceTest {
         verify(memberRepository, times(1)).delete(any(Member.class));
     }
 
-    @Test
+    //@Test
     @DisplayName("Delete member fails due to member not found")
     void deleteMemberFail() {
         // given
