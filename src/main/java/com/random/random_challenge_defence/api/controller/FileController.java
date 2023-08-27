@@ -6,6 +6,8 @@ import com.random.random_challenge_defence.api.service.MemberService;
 import com.random.random_challenge_defence.api.service.ResponseService;
 import com.random.random_challenge_defence.api.service.S3FileUploadService;
 import com.random.random_challenge_defence.domain.member.Member;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +28,8 @@ public class FileController {
     private final MemberService memberService;
 
 
-    @PostMapping
-    @RequestMapping("/upload/challenge-card")
+    @PostMapping("/upload/challenge-card")
+    @ApiOperation(value = "챌린지 카드 이미지 파일 업로드", notes = "챌린지 카드의 이미지 파일을 업로드합니다.")
     public CommonResponse challengeCardFileUpload(@RequestParam("file")MultipartFile file) {
         try {
             Member member = memberService.getLoginMember();
@@ -39,8 +41,8 @@ public class FileController {
         return responseService.getFailResult("403", "파일 업로드에 실패했습니다.");
     }
 
-    @PostMapping
-    @RequestMapping("/upload/challenge-log")
+    @PostMapping("/upload/challenge-log")
+    @ApiOperation(value = "챌린지 로그 이미지 파일 업로드", notes = "챌린지 로그의 인증 이미지 파일을 업로드합니다.")
     public CommonResponse challengeLogFileUpload(@RequestParam("file")MultipartFile file) {
         try {
             Member member = memberService.getLoginMember();

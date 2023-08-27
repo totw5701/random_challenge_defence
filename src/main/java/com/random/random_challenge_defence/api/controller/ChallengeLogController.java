@@ -89,7 +89,7 @@ public class ChallengeLogController {
             challengeLogService.restartChallengeLog(pausedChallengeLog);
             return responseService.getResult(pausedChallengeLog.toDetailDto());
         }
-        
+
         ChallengeCard challengeCard = challengeCardService.findById(form.getChallengeId());
         Member member = memberService.findByEmail(memberEmail);
         ChallengeLog challengeLog = challengeLogService.createChallengeLog(member, challengeCard);
