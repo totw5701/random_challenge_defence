@@ -95,7 +95,7 @@ public class ChallengeCard {
                 .createDtm(this.createDtm)
                 .experience(this.experience)
                 .challengeSubGoals(subGoals)
-                .challengeCardCategory(this.challengeCardCategory)
+                .challengeCardCategory(this.challengeCardCategory.toDetailDto())
                 .image(this.image.toDto())
                 .build();
     }

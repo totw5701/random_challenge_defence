@@ -29,6 +29,6 @@ public class ChallengeDetailDto {
     @ApiModelProperty(example = "달성 경험치")
     private Integer experience;
     private List<ChallengeSubGoalDetailDto> challengeSubGoals;
-    private ChallengeCardCategory challengeCardCategory;
+    private ChallengeCardCategoryDetailDto challengeCardCategory;
     private FileDetailDto image;
 }
