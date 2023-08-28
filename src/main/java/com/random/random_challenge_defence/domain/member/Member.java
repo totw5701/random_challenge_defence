@@ -22,13 +22,13 @@ public class Member {
     private MemberRole memberRole;
 
     @Column(unique = true)
-
     private String email;
     private String password;
     private String nickname;
     private String picture;
     private String joinDtm;
     private String modifyDtm;
+    private Long experience;
 
     public Member entityUpdate(String picture) {
         this.picture = picture;
@@ -42,6 +42,7 @@ public class Member {
                 .nickname(this.nickname)
                 .memberRole(this.memberRole)
                 .joinDtm(this.joinDtm)
+                .experience(this.experience)
                 .modifyDtm(this.modifyDtm)
                 .build();
     }
@@ -57,5 +58,9 @@ public class Member {
             this.password = form.getPassword();
         }
         return this;
+    }
+
+    public void increaseExperience(Integer experience) {
+        this.experience += experience;
     }
 }

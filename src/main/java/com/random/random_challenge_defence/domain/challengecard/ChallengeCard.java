@@ -38,6 +38,7 @@ public class ChallengeCard {
     private String finalGoal;
     private Integer difficulty;
     private Integer assignScore;
+    private Integer experience;
 
     @OneToOne(mappedBy = "challengeCard")
     @JoinColumn(name = "challenge_card_id")
@@ -55,6 +56,7 @@ public class ChallengeCard {
         this.finalGoal = (form.getFinalGoal() != null) ? form.getFinalGoal() : this.finalGoal;
         this.difficulty = (form.getDifficulty() != null) ? form.getDifficulty() : this.difficulty;
         this.assignScore = (form.getAssignScore() != null) ? form.getAssignScore() : this.assignScore;
+        this.experience = (form.getExperience() != null) ? form.getExperience() : this.experience;
 
         this.challengeCardSubGoals = (form.getChallengeSubGoals() != null) ?
                     form.getChallengeSubGoals().stream()
@@ -91,6 +93,7 @@ public class ChallengeCard {
                 .difficulty(this.difficulty)
                 .assignScore(this.assignScore)
                 .createDtm(this.createDtm)
+                .experience(this.experience)
                 .challengeSubGoals(subGoals)
                 .challengeCardCategory(this.challengeCardCategory)
                 .image(this.image.toDto())

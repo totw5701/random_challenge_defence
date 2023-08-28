@@ -10,6 +10,7 @@ import com.random.random_challenge_defence.domain.challengelog.ChallengeLogStatu
 import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoal;
 import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoalRepository;
 import com.random.random_challenge_defence.domain.member.Member;
+import com.random.random_challenge_defence.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +31,7 @@ public class ChallengeLogService {
 
     private final ChallengeLogRepository challengeLogRepository;
     private final ChallengeLogSubGoalRepository challengeLogSubGoalRepository;
+    private final MemberRepository memberRepository;
 
     public List<ChallengeLog> readPageListTrying(String memberEmail) {
         List<ChallengeLog> challengeLogs = challengeLogRepository.findAllByEmailTrying(memberEmail);
@@ -84,26 +86,32 @@ public class ChallengeLogService {
      * @param challengeLog
      */
     public boolean successValidate(ChallengeLog challengeLog) {
-        boolean isPass = true;
+        // 이미 성공한 도전인지 확인.
+        if(ChallengeLogStatus.SUCCESS == challengeLog.getStatus()) {
+            return false;
+        }
 
         // 중간 목표 완료.
         List<ChallengeLogSubGoal> subGoals = challengeLogSubGoalRepository.getListByChallengeLogId(challengeLog.getId());
         for(ChallengeLogSubGoal subGoal: subGoals) {
             if(ChallengeLogSubGoalStatus.SUCCESS != subGoal.getChallengeLogSubGoalStatus()){
-                isPass = false;
-                break;
+                return false;
             };
         }
 
         // 인증 완료
         if(challengeLog.getEvidenceImages().size() == 0) {
-            isPass = false;
+            return false;
         }
-        return isPass;
+
+        return true;
     }
 
     @Transactional
     public void successChallengeLog(ChallengeLog challengeLog) {
+        Member member = challengeLog.getMember();
+        ChallengeCard challengeCard = challengeLog.getChallengeCard();
+        member.increaseExperience(challengeCard.getExperience());
         challengeLog.challengeSuccess();
     }
 

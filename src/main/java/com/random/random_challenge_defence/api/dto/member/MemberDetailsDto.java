@@ -15,5 +15,6 @@ public class MemberDetailsDto {
     private String picture;
     private String joinDtm;
     private String modifyDtm;
+    private Long experience;
 
 }

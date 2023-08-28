@@ -26,6 +26,8 @@ public class ChallengeDetailDto {
     private Integer assignScore;
     @ApiModelProperty(example = "챌린지 생성일")
     private String createDtm;
+    @ApiModelProperty(example = "달성 경험치")
+    private Integer experience;
     private List<ChallengeSubGoalDetailDto> challengeSubGoals;
     private ChallengeCardCategory challengeCardCategory;
     private FileDetailDto image;

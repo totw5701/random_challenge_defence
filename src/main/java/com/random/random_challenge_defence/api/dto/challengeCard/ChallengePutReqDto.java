@@ -22,4 +22,5 @@ public class ChallengePutReqDto {
     private List<String> challengeSubGoals;
     private Long challengeCardCategoryId;
     private Long image;
+    private Integer experience;
 }
