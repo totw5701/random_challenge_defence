@@ -1,6 +1,7 @@
 package com.random.random_challenge_defence.api.service;
 
 import com.random.random_challenge_defence.advice.exception.CChallengeNotFoundException;
+import com.random.random_challenge_defence.advice.exception.CNotFoundException;
 import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeDetailDto;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCardRepository;
@@ -49,9 +50,16 @@ public class ChallengeCardService {
     public ChallengeDetailDto create(ChallengePutReqDto form) {
 
         ChallengeCardCategory challengeCardCategory = challengeCardCategoryRepository.findById(form.getChallengeCardCategoryId()).get();
-        File image = fileRepository.findById(form.getId()).get();
+        Optional<File> opImage = fileRepository.findById(form.getImage());
 
-        ChallengeCard challenge = ChallengeCard.builder()
+        if(!opImage.isPresent()) {
+            throw new CNotFoundException("file이 존재하지 않습니다.");
+        }
+
+        File image = opImage.get();
+
+        // 챌린지 카드 생성
+        ChallengeCard challengeCard = ChallengeCard.builder()
                 .assignScore(form.getAssignScore())
                 .title(form.getTitle())
                 .difficulty(form.getDifficulty())
@@ -59,20 +67,24 @@ public class ChallengeCardService {
                 .finalGoal(form.getFinalGoal())
                 .createDtm(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
                 .challengeCardCategory(challengeCardCategory)
+                .experience(form.getExperience())
                 .image(image)
                 .build();
 
+        // 챌린지 카드 중간 도전 리스트 생성 및 할당
         List<ChallengeCardSubGoal> subGoals = form.getChallengeSubGoals().stream()
                 .map(subGoalDto -> ChallengeCardSubGoal.builder()
-                        .challengeCard(challenge)
+                        .challengeCard(challengeCard)
                         .subGoal(subGoalDto)
                         .build())
                 .collect(Collectors.toList());
-        challenge.assignSubGoals(subGoals);
+        challengeCard.assignSubGoals(subGoals);
 
+        ChallengeCard save = challengeCardRepository.save(challengeCard);
 
-        challengeCardRepository.save(challenge);
-        return challenge.toDetailDto();
+        // 이미지 할당
+        image.assignChallengeCard(save);
+        return challengeCard.toDetailDto();
     }
 
     public ChallengeDetailDto readOne(Long id){

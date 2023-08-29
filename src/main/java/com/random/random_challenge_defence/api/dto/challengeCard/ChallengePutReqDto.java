@@ -16,7 +16,6 @@ public class ChallengePutReqDto {
     private String title;
     private String description;
     private String finalGoal;
-    private String evidenceType;
     private Integer difficulty;
     private Integer assignScore;
     private List<String> challengeSubGoals;

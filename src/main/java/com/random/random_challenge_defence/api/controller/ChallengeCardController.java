@@ -23,7 +23,7 @@ public class ChallengeCardController {
     private final ChallengeCardService challengeCardService;
     private final ResponseService responseService;
 
-    @ApiOperation(value = "챌린지 생성", notes = "관리자 사용] 챌린지를 생성합니다.")
+    @ApiOperation(value = "챌린지 생성", notes = "챌린지를 생성합니다.")
     @PostMapping("/create")
     public CommonResponse<ChallengeDetailDto> create(@RequestBody ChallengePutReqDto form) {
         ChallengeDetailDto dto = challengeCardService.create(form);

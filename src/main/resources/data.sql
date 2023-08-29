@@ -19,3 +19,11 @@ insert into challenge_card_sub_goal (id, challenge_card_id, sub_goal) values (6L
 insert into challenge_card_sub_goal (id, challenge_card_id, sub_goal) values (7L, 35L, '중간 목표1');
 insert into challenge_card_sub_goal (id, challenge_card_id, sub_goal) values (8L, 35L, '중간 목표2');
 insert into challenge_card_sub_goal (id, challenge_card_id, sub_goal) values (9L, 35L, '중간 목표3');
+
+insert into challenge_card_category (id, title, description) values (1L, '괴짜', '엉뚱한 챌린지에 도전');
+insert into challenge_card_category (id, title, description) values (2L, '운동', '운동 챌린지에 도전');
+insert into challenge_card_category (id, title, description) values (3L, '마음 챙김', '마음 챙김에 도전');
+insert into challenge_card_category (id, title, description) values (4L, '문화 생활', '문화 생활 즐기기에 도전');
+insert into challenge_card_category (id, title, description) values (5L, '사람 챙김', '주변 사람 챙기기에 도전');
+insert into challenge_card_category (id, title, description) values (6L, '여행', '여행에 도전');
+insert into challenge_card_category (id, title, description) values (7L, '자기 개발', '자기개발에 도전');
