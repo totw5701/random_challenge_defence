@@ -95,26 +95,60 @@ public class ChallengeCardService {
         return opChallenge.get().toDetailDto();
     }
 
-    public ChallengeCard update(ChallengePutReqDto form) {
-        Optional<ChallengeCard> opChallenge = challengeCardRepository.findById(form.getId());
+    public ChallengeCard findById(Long id) {
+        Optional<ChallengeCard> opChallenge = challengeCardRepository.findById(id);
         if(!opChallenge.isPresent()) {
             throw new CChallengeNotFoundException();
         }
-        ChallengeCard challenge = opChallenge.get();
-        challenge.update(form);
-
-        if(form.getImage() != null) {
-            File image = fileRepository.findById(form.getImage()).get();
-            challenge.imageUpdate(image);
-        }
-        return challenge;
+        return opChallenge.get();
     }
 
-    public void updateCategory(Long cardId, Long categoryId) {
-        ChallengeCardCategory challengeCardCategory = challengeCardCategoryRepository.findById(categoryId).get();
-        ChallengeCard challengeCard = challengeCardRepository.findById(cardId).get();
-        challengeCard.updateChallengeCardCategory(challengeCardCategory);
+    public ChallengeCard update(ChallengePutReqDto form) {
+        ChallengeCard challenge = findById(form.getId());
+        challenge.update(form);
 
+        // 챌린지 카테고리 업데이트
+        if(form.getChallengeCardCategoryId() != null) {
+            Optional<ChallengeCardCategory> opChallengeCardCategory = challengeCardCategoryRepository.findById(form.getChallengeCardCategoryId());
+            if(!opChallengeCardCategory.isPresent()) {
+                throw new CNotFoundException("존재하지 않는 챌린지 카테고리입니다.");
+            }
+            challenge.updateChallengeCardCategory(opChallengeCardCategory.get());
+        }
+
+        // 챌린지 카드 중간목표 수정
+        if(form.getChallengeSubGoals() != null) {
+            List<ChallengeCardSubGoal> oldChallengeCardSubGoals = challenge.getChallengeCardSubGoals();
+
+            List<ChallengeCardSubGoal> newChallengeCardSubGoals = form.getChallengeSubGoals().stream()
+                    .map(subGoalDto -> ChallengeCardSubGoal.builder()
+                            .challengeCard(challenge)
+                            .subGoal(subGoalDto)
+                            .build())
+                    .collect(Collectors.toList());
+
+            // 이전 중간 목표 삭제
+            for(ChallengeCardSubGoal goal : oldChallengeCardSubGoals){
+                challengeCardSubGoalRepository.delete(goal);
+            }
+
+            challenge.assignSubGoals(newChallengeCardSubGoals);
+        }
+
+        // 파일 업데이트
+        if(form.getImage() != null && !form.getImage().equals(challenge.getImage().getId())) {
+            // 기존 이미지 파일 삭제 기능 추가 구현
+            fileRepository.delete(challenge.getImage()); //<<-- 삭제 해도 괜찮을까...?
+
+            // 새로운 이미지 할당
+            Optional<File> opImage = fileRepository.findById(form.getImage());
+            if(!opImage.isPresent()) {
+                throw new CNotFoundException("존재하지 않는 file 입니다.");
+            }
+            challenge.imageUpdate(opImage.get());
+            opImage.get().assignChallengeCard(challenge);
+        }
+        return challenge;
     }
 
     public void delete(Long id) {
@@ -125,11 +159,4 @@ public class ChallengeCardService {
         challengeCardRepository.delete(opChallenge.get());
     }
 
-    public ChallengeCard findById(Long id) {
-        Optional<ChallengeCard> opChallenge = challengeCardRepository.findById(id);
-        if(!opChallenge.isPresent()) {
-            throw new CChallengeNotFoundException();
-        }
-        return opChallenge.get();
-    }
 }

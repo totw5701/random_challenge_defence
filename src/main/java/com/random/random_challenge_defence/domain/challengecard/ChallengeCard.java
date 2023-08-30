@@ -58,15 +58,6 @@ public class ChallengeCard {
         this.assignScore = (form.getAssignScore() != null) ? form.getAssignScore() : this.assignScore;
         this.experience = (form.getExperience() != null) ? form.getExperience() : this.experience;
 
-        this.challengeCardSubGoals = (form.getChallengeSubGoals() != null) ?
-                    form.getChallengeSubGoals().stream()
-                    .map(subGoalDto -> ChallengeCardSubGoal.builder()
-                            .challengeCard(this)
-                            .subGoal(subGoalDto)
-                            .build())
-                    .collect(Collectors.toList())
-                : this.challengeCardSubGoals;
-
     }
 
     public void imageUpdate(File newImage) {

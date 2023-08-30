@@ -5,6 +5,7 @@ import com.random.random_challenge_defence.api.dto.common.CommonResponse;
 import com.random.random_challenge_defence.api.dto.challengeCard.ChallengePutReqDto;
 import com.random.random_challenge_defence.api.service.ChallengeCardService;
 import com.random.random_challenge_defence.api.service.ResponseService;
+import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -47,14 +48,9 @@ public class ChallengeCardController {
 
     @ApiOperation(value = "챌린지 수정", notes = "챌린지를 수정합니다.")
     @PutMapping("/update")
-    public CommonResponse put(@RequestBody ChallengePutReqDto form) {
-        challengeCardService.update(form);
-        return responseService.getSuccessResult();
+    public CommonResponse<ChallengeDetailDto> put(@RequestBody ChallengePutReqDto form) {
+        ChallengeCard update = challengeCardService.update(form);
+        return responseService.getResult(update.toDetailDto());
     }
-
-//    @PutMapping("/update/image")
-//    public CommonResponse putImage(@RequestBody ) {
-//
-//    }
 
 }
