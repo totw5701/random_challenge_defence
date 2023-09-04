@@ -33,6 +33,7 @@ public class ChallengeCardService {
     private final ChallengeCardCategoryRepository challengeCardCategoryRepository;
     private final FileRepository fileRepository;
 
+
     public Page<ChallengeDetailDto> readPageList(Integer nowPage) {
         Pageable pageable = PageRequest.of(nowPage, 15, Sort.by("id").descending()); // 한 페이지에 15개씩 출력
         Page<ChallengeCard> challenges = challengeCardRepository.findAll(pageable);
@@ -156,7 +157,8 @@ public class ChallengeCardService {
         if(!opChallenge.isPresent()) {
             throw new CChallengeNotFoundException();
         }
-        challengeCardRepository.delete(opChallenge.get());
+        ChallengeCard challengeCard = opChallenge.get();
+        challengeCardRepository.delete(challengeCard);
     }
 
 }

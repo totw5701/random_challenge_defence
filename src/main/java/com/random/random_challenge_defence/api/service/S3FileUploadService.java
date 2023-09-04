@@ -54,4 +54,8 @@ public class S3FileUploadService {
         return uploadFile(member, bucket, file, dir);
     }
 
+    public void deleteFile(File image) {
+        amazonS3Client.deleteObject(bucket, image.getKey());
+        fileRepository.delete(image);
+    }
 }

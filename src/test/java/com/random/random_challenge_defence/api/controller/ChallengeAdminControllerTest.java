@@ -5,7 +5,6 @@ import com.random.random_challenge_defence.api.dto.common.CommonResponse;
 import com.random.random_challenge_defence.api.service.ChallengeCardService;
 import com.random.random_challenge_defence.api.service.ResponseService;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

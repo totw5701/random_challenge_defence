@@ -10,7 +10,6 @@ import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
 import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoal;
 import com.random.random_challenge_defence.domain.file.File;
 import com.random.random_challenge_defence.domain.member.Member;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
