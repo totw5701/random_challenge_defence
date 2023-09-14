@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AvailableRandomReqDto {
+public class ChallengeCardCategoryRandomReqDto {
 
     private Integer memberLevel;
+    private Long challengeCardCategory;
 }
