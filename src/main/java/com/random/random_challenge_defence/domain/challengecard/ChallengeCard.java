@@ -6,8 +6,10 @@ import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeDetail
 import com.random.random_challenge_defence.api.dto.challengeCard.ChallengePutReqDto;
 import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeSubGoalDetailDto;
 import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategory;
+import com.random.random_challenge_defence.domain.challengecardmemberpersonality.ChallengeCardMemberPersonality;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import com.random.random_challenge_defence.domain.file.File;
+import com.random.random_challenge_defence.domain.membermemberpersonality.MemberMemberPersonality;
 import lombok.*;
 
 import javax.persistence.*;
@@ -49,6 +51,9 @@ public class ChallengeCard {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "challenge_card_id")
     private List<ChallengeCardSubGoal> challengeCardSubGoals;
+
+    @OneToMany(mappedBy = "challengeCard")
+    private List<ChallengeCardMemberPersonality> challengeCardMemberPersonalities;
 
     public void update(ChallengePutReqDto form) {
         this.title = (form.getTitle() != null) ? form.getTitle() : this.title;

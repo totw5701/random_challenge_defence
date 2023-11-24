@@ -2,6 +2,8 @@ package com.random.random_challenge_defence.api.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.random.random_challenge_defence.advice.ExceptionCode;
+import com.random.random_challenge_defence.advice.exception.StackTraceCustomException;
 import com.random.random_challenge_defence.api.dto.file.FileDetailDto;
 import com.random.random_challenge_defence.domain.file.File;
 import com.random.random_challenge_defence.domain.file.FileRepository;
@@ -36,14 +38,14 @@ public class S3FileUploadService {
         try{
             amazonS3Client.putObject(bucket, key, file.getInputStream(), metadata);
         } catch (Exception e){
-            throw new Exception("파일 업로드에 실패하였습니다.");
+            throw new StackTraceCustomException(ExceptionCode.FILE_UPLOAD_FAIL, e);
         }
 
         File fileInfo = File.builder()
                 .url(amazonS3Client.getUrl(bucket, key).toString())
                 .member(member)
                 .createDtm(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
-                .key(key).build();
+                .fileKey(key).build();
 
         fileRepository.save(fileInfo);
         return fileInfo.toDto();
@@ -56,7 +58,7 @@ public class S3FileUploadService {
 
     @Transactional
     public void deleteFile(File image) {
-        amazonS3Client.deleteObject(bucket, image.getKey());
+        amazonS3Client.deleteObject(bucket, image.getFileKey());
         fileRepository.delete(image);
     }
 }

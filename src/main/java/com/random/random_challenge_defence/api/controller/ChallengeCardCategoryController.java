@@ -18,26 +18,14 @@ public class ChallengeCardCategoryController {
     private final ChallengeCardCategoryService challengeCardCategoryService;
     private final ResponseService responseService;
 
-    @PostMapping("/create")
-    public CommonResponse create(@RequestBody ChallengeCardCategoryReqDto form) {
-        challengeCardCategoryService.createCategory(form);
-        return responseService.getSuccessResult();
-    }
-
     @GetMapping("/list")
-    public CommonResponse list(@RequestParam(name = "nowPage", defaultValue = "0") Integer nowPage) {
+    public CommonResponse<Page<ChallengeCardCategoryDetailDto>> list(@RequestParam(name = "nowPage", defaultValue = "0") Integer nowPage) {
         Page<ChallengeCardCategoryDetailDto> challengeCardCategoryDetailDtos = challengeCardCategoryService.readPageList(nowPage);
         return responseService.getResult(challengeCardCategoryDetailDtos);
     }
 
-    @PostMapping("/update")
-    public CommonResponse update(@RequestBody ChallengeCardCategoryUpdateDto form) {
-        challengeCardCategoryService.updateCategory(form);
-        return responseService.getSuccessResult();
-    }
-
     @GetMapping("/{id}")
-    public CommonResponse getOne(@PathVariable String id) {
+    public CommonResponse<ChallengeCardCategoryDetailDto> getOne(@PathVariable String id) {
         ChallengeCardCategoryDetailDto challengeCardCategoryDetailDto = challengeCardCategoryService.readOne(id);
         return responseService.getResult(challengeCardCategoryDetailDto);
     }

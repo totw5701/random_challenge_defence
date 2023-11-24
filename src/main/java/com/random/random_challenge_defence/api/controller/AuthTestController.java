@@ -1,21 +1,30 @@
 package com.random.random_challenge_defence.api.controller;
 
-import com.random.random_challenge_defence.api.dto.TokenInfo;
+import com.random.random_challenge_defence.api.dto.common.CommonResponse;
+import com.random.random_challenge_defence.api.service.ResponseService;
 import com.random.random_challenge_defence.config.auth.JwtTokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import com.random.random_challenge_defence.domain.member.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@RequiredArgsConstructor
 public class AuthTestController {
 
-    @Autowired
-    JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final MemberRepository memberRepository;
+
+    private final ResponseService responseService;
+
+    @GetMapping("/config-test")
+    public String configTest() {
+
+        return "config test";
+    }
+
 
     @GetMapping("/permit-all")
     public String permitAll() {
@@ -30,6 +39,14 @@ public class AuthTestController {
     @GetMapping("/admin-only")
     public String adminOnly() {
         return "admin-only";
+    }
+
+
+    @GetMapping("/redirect-url")
+    public CommonResponse redirectUrl(@RequestParam String code){
+        System.out.println("redirect-url");
+        System.out.println("code: " + code);
+        return null;
     }
 
     @GetMapping("/")

@@ -1,8 +1,5 @@
 package com.random.random_challenge_defence.config.auth;
 
-import com.random.random_challenge_defence.config.auth.oauth2.CustomOAuth2FailureHandler;
-import com.random.random_challenge_defence.config.auth.oauth2.CustomOAuth2SuccessHandler;
-import com.random.random_challenge_defence.config.auth.oauth2.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,9 +26,6 @@ import java.io.IOException;
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
-    private final CustomOAuth2FailureHandler customOAuth2FailureHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -49,19 +43,12 @@ public class SecurityConfig {
                     .antMatchers("/admin-only").hasRole("ADMIN")
                     .anyRequest().permitAll()
                     //.anyRequest().authenticated()
-            .and()
-                .oauth2Login()
-                .userInfoEndpoint()
-                .userService(customOAuth2UserService)
-            .and()
-                .successHandler(customOAuth2SuccessHandler)
-                .failureHandler(customOAuth2FailureHandler)
 
             .and()
                 //.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-//                .exceptionHandling()
-//                .accessDeniedHandler(new CustomAccessDeniedHandler())
-//                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .exceptionHandling()
+                .accessDeniedHandler(new CustomAccessDeniedHandler())
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
 
         ;
         http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
@@ -73,12 +60,12 @@ public class SecurityConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+    /**
+     * 권한 없음.
+     */
     public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         @Override
-        public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exception) throws IOException,
-                ServletException {
-            // 권한 없음
-            System.out.println(exception.toString());
+        public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exception) throws IOException {
             response.sendRedirect("/auth/access-denied");
         }
     }
@@ -88,9 +75,7 @@ public class SecurityConfig {
      */
     public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
         @Override
-        public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException,
-                ServletException {
-            System.out.println(exception.toString());
+        public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
             response.sendRedirect("/auth/login-fail");
         }
     }

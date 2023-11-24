@@ -1,7 +1,7 @@
 package com.random.random_challenge_defence.api.controller;
 
-import com.random.random_challenge_defence.advice.exception.CAccessDeniedException;
-import com.random.random_challenge_defence.advice.exception.CChallengeLogTringFailureException;
+import com.random.random_challenge_defence.advice.ExceptionCode;
+import com.random.random_challenge_defence.advice.exception.CustomException;
 import com.random.random_challenge_defence.api.dto.challengelog.*;
 import com.random.random_challenge_defence.api.dto.common.CommonResponse;
 import com.random.random_challenge_defence.api.service.*;
@@ -38,18 +38,22 @@ public class ChallengeLogController {
     @PutMapping("/evidence")
     public CommonResponse uploadChallengeEvidence(@RequestBody ChallengeLogEvidenceReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
+
+        // 로그인 사용자 본인의 challenge card가 아닐 경우 실패처리
         ChallengeLog challengeLog = challengeLogService.getChallengeLogById(form.getChallengeLogId());
         if(!challengeLog.getMember().getEmail().equals(memberEmail)) {
-            throw new CAccessDeniedException();
+            throw new CustomException(ExceptionCode.ACCESS_DENIED);
         }
 
+        // 로그인 사용자 본인이 올린 file이 아닌 경우 실패처리
         List<File> fileListByIds = fileService.getFileListByIds(form.getEvidenceIdList());
         for(File file : fileListByIds) {
             if(!file.getMember().getEmail().equals(memberEmail)) {
-                throw new CAccessDeniedException();
+                throw new CustomException(ExceptionCode.ACCESS_DENIED);
             }
         }
 
+        // 파일 할당
         for(File file : fileListByIds) {
             fileService.assignChallengeLog(file, challengeLog);
         }
@@ -61,10 +65,14 @@ public class ChallengeLogController {
     @PutMapping("/skip")
     public CommonResponse<ChallengeLogDetailDto> skipChallenge(@RequestBody ChallengeLogReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
+
+        // 본인의 challenge log가 아닐 경우 실패처리
         ChallengeLog challengeLog = challengeLogService.getChallengeLogById(Long.valueOf(form.getChallengeId()));
         if(!challengeLog.getMember().getEmail().equals(memberEmail)) {
-            throw new CAccessDeniedException();
+            throw new CustomException(ExceptionCode.ACCESS_DENIED);
         }
+
+        // 챌린지 로그 스킵
         challengeLogService.skipChallengeLog(challengeLog);
         return responseService.getResult(challengeLog.toDetailDto());
     }
@@ -74,10 +82,10 @@ public class ChallengeLogController {
     public CommonResponse<ChallengeLogDetailDto> tryChallenge(@RequestBody ChallengeLogReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
 
-        // 최대 동시 진행 도전 갯수 체크.
+        // 한번에 하나의 챌린지만 도전 가능
         Long numOfTrying = challengeLogService.getNumOfTrying(memberEmail);
-        if(numOfTrying >= 5) {
-            throw new CChallengeLogTringFailureException("최대 도전 갯수를 초과하였습니다.");
+        if(numOfTrying >= 2) {
+            throw new CustomException(ExceptionCode.SERVICE_USAGE_LIMIT_EXCEEDED);
         }
 
         // PAUSE 했던 같은 challenge card에 대하여 다시 도전 할 시 지난 이력을 재활용 한다.
@@ -136,7 +144,7 @@ public class ChallengeLogController {
         ChallengeLogSubGoal challengeLogSubGoal = challengeLogSubGoalService.getChallengeLogSubGoal(reqDto.getId());
 
         if(!challengeLogSubGoal.getChallengeLog().getMember().getEmail().equals(memberEmail)) {
-            throw new CAccessDeniedException("권한 없는 요청입니다.");
+            throw new CustomException(ExceptionCode.ACCESS_DENIED);
         }
 
         ChallengeLogSubGoal result = challengeLogSubGoalService.updateSubGoal(challengeLogSubGoal, reqDto.getStatus());
@@ -151,12 +159,12 @@ public class ChallengeLogController {
         ChallengeLog challengeLog = challengeLogService.findById(challengeLogId);
 
         if(!challengeLog.getMember().getEmail().equals(memberEmail)){
-            throw new CAccessDeniedException("권한 없는 접근입니다.");
+            throw new CustomException(ExceptionCode.ACCESS_DENIED);
         }
 
         boolean isPass = challengeLogService.successValidate(challengeLog);
         if(!isPass) {
-            return responseService.getStringResult("result", "성공 요구조건을 만족하지 못하였습니다.");
+            throw new CustomException(ExceptionCode.SUCCESS_REQUIREMENTS_NOT_MET);
         }
         challengeLogService.successChallengeLog(challengeLog);
         return responseService.getSuccessResult();

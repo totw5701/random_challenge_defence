@@ -15,9 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
-/**
- * 프론트 단에서 페이지 지원받고 얘도 api로 개발 할 것.
- */
 @RestController
 @RequestMapping("/challenge-card")
 @RequiredArgsConstructor
@@ -26,13 +23,6 @@ public class ChallengeCardController {
     private final ChallengeCardService challengeCardService;
     private final S3FileUploadService s3FileUploadService;
     private final ResponseService responseService;
-
-    @ApiOperation(value = "챌린지 카드 생성", notes = "챌린지를 생성합니다.")
-    @PostMapping("/create")
-    public CommonResponse<ChallengeDetailDto> create(@RequestBody ChallengePutReqDto form) {
-        ChallengeDetailDto dto = challengeCardService.create(form);
-        return responseService.getResult(dto);
-    }
 
     @ApiOperation(value = "챌린지 카드 리스트 페이징 조회", notes = "챌린지 리스트를 15건씩 페이징하여 조회합니다.")
     @GetMapping("/list")
@@ -46,23 +36,6 @@ public class ChallengeCardController {
     public CommonResponse<ChallengeDetailDto> detail(@PathVariable Long id, Model model){
         ChallengeDetailDto challenge = challengeCardService.readOne(id);
         return responseService.getResult(challenge);
-    }
-
-
-    @ApiOperation(value = "챌린지 카드 수정", notes = "챌린지를 수정합니다.")
-    @PutMapping("/update")
-    public CommonResponse<ChallengeDetailDto> put(@RequestBody ChallengePutReqDto form) {
-        ChallengeCard update = challengeCardService.update(form);
-        return responseService.getResult(update.toDetailDto());
-    }
-
-    @ApiOperation(value = "챌린지 카드 삭제", notes = "챌린지 카드를 삭제합니다.")
-    @DeleteMapping("/delete")
-    public CommonResponse deleteChallengeCard(@RequestBody ChallengeCardDeleteReqDto form) {
-        ChallengeCard challengeCard = challengeCardService.findById(form.getChallengeCardId());
-        s3FileUploadService.deleteFile(challengeCard.getImage());
-        challengeCardService.delete(challengeCard.getId());
-        return responseService.getSuccessResult();
     }
 
 }

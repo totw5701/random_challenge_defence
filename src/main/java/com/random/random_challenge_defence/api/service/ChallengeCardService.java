@@ -1,7 +1,7 @@
 package com.random.random_challenge_defence.api.service;
 
-import com.random.random_challenge_defence.advice.exception.CChallengeNotFoundException;
-import com.random.random_challenge_defence.advice.exception.CNotFoundException;
+import com.random.random_challenge_defence.advice.ExceptionCode;
+import com.random.random_challenge_defence.advice.exception.CustomException;
 import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeDetailDto;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCardRepository;
@@ -54,7 +54,7 @@ public class ChallengeCardService {
         Optional<File> opImage = fileRepository.findById(form.getImage());
 
         if(!opImage.isPresent()) {
-            throw new CNotFoundException("file이 존재하지 않습니다.");
+            throw new CustomException(ExceptionCode.NOT_FOUND_FILE);
         }
 
         File image = opImage.get();
@@ -91,7 +91,7 @@ public class ChallengeCardService {
     public ChallengeDetailDto readOne(Long id){
         Optional<ChallengeCard> opChallenge = challengeCardRepository.findById(id);
         if(!opChallenge.isPresent()) {
-            throw new CChallengeNotFoundException();
+            throw new CustomException(ExceptionCode.NOT_FOUND_CHALLENGE_CARD);
         }
         return opChallenge.get().toDetailDto();
     }
@@ -99,7 +99,7 @@ public class ChallengeCardService {
     public ChallengeCard findById(Long id) {
         Optional<ChallengeCard> opChallenge = challengeCardRepository.findById(id);
         if(!opChallenge.isPresent()) {
-            throw new CChallengeNotFoundException();
+            throw new CustomException(ExceptionCode.NOT_FOUND_CHALLENGE_CARD);
         }
         return opChallenge.get();
     }
@@ -112,7 +112,7 @@ public class ChallengeCardService {
         if(form.getChallengeCardCategoryId() != null) {
             Optional<ChallengeCardCategory> opChallengeCardCategory = challengeCardCategoryRepository.findById(form.getChallengeCardCategoryId());
             if(!opChallengeCardCategory.isPresent()) {
-                throw new CNotFoundException("존재하지 않는 챌린지 카테고리입니다.");
+                throw new CustomException(ExceptionCode.NOT_FOUND_CHALLENGE_CATEGORY);
             }
             challenge.updateChallengeCardCategory(opChallengeCardCategory.get());
         }
@@ -144,7 +144,7 @@ public class ChallengeCardService {
             // 새로운 이미지 할당
             Optional<File> opImage = fileRepository.findById(form.getImage());
             if(!opImage.isPresent()) {
-                throw new CNotFoundException("존재하지 않는 file 입니다.");
+                throw new CustomException(ExceptionCode.NOT_FOUND_FILE);
             }
             challenge.imageUpdate(opImage.get());
             opImage.get().assignChallengeCard(challenge);
@@ -155,7 +155,7 @@ public class ChallengeCardService {
     public void delete(Long id) {
         Optional<ChallengeCard> opChallenge = challengeCardRepository.findById(id);
         if(!opChallenge.isPresent()) {
-            throw new CChallengeNotFoundException();
+            throw new CustomException(ExceptionCode.NOT_FOUND_CHALLENGE_CARD);
         }
         ChallengeCard challengeCard = opChallenge.get();
         challengeCardRepository.delete(challengeCard);

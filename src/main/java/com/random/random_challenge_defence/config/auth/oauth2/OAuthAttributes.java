@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.Map;
 
 @Getter
-
 public class OAuthAttributes {
 
     private Map<String, Object> attributes;
@@ -28,13 +27,13 @@ public class OAuthAttributes {
         this.picture = picture;
     }
 
-    public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
+    public static OAuthAttributes of(String registrationId, Map<String, Object> attributes) {
         if("naver".equals(registrationId)) {
             return ofNaver("id", attributes);
         } else if ("kakao".equals(registrationId)){
             return ofKakao("id", attributes);
         }
-        return ofGoogle(userNameAttributeName, attributes);
+        return ofGoogle("sub", attributes);
     }
 
     private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {

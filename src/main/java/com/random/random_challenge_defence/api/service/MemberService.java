@@ -1,7 +1,9 @@
 package com.random.random_challenge_defence.api.service;
 
-import com.random.random_challenge_defence.advice.exception.CMemberNotFoundException;
+import com.random.random_challenge_defence.advice.ExceptionCode;
+import com.random.random_challenge_defence.advice.exception.CustomException;
 import com.random.random_challenge_defence.api.dto.member.MemberPutReqDto;
+import com.random.random_challenge_defence.config.auth.oauth2.OAuthAttributes;
 import com.random.random_challenge_defence.domain.member.Member;
 import com.random.random_challenge_defence.domain.member.MemberRepository;
 import com.random.random_challenge_defence.domain.member.MemberRole;
@@ -25,6 +27,13 @@ public class MemberService {
         return (String) SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
+    public Member saveOrUpdate(OAuthAttributes attributes) {
+        Member member = memberRepository.findByEmail(attributes.getEmail())
+                .map(entity -> entity.entityUpdate(attributes.getPicture()))
+                .orElse(attributes.toEntity());
+        return memberRepository.save(member);
+    }
+
     public Member getLoginMember() {
         return findByEmail(getLoginUserEmail());
     }
@@ -45,7 +54,7 @@ public class MemberService {
     public Member findByEmail(String memberEmail) {
         Optional<Member> opMember = memberRepository.findByEmail(memberEmail);
         if(!opMember.isPresent()) {
-            throw new CMemberNotFoundException();
+            throw new CustomException(ExceptionCode.NOT_FOUND_MEMBER);
         }
         return opMember.get();
     }
@@ -53,7 +62,7 @@ public class MemberService {
     public Member update(MemberPutReqDto form) {
         Optional<Member> opMember = memberRepository.findById(form.getId());
         if(!opMember.isPresent()) {
-            throw new CMemberNotFoundException();
+            throw new CustomException(ExceptionCode.NOT_FOUND_MEMBER);
         }
         return opMember.get().update(form);
     }
@@ -61,7 +70,7 @@ public class MemberService {
     public void delete(Long memberId) {
         Optional<Member> opMember = memberRepository.findById(memberId);
         if(!opMember.isPresent()) {
-            throw new CMemberNotFoundException();
+            throw new CustomException(ExceptionCode.NOT_FOUND_MEMBER);
         }
         memberRepository.delete(opMember.get());
     }
@@ -69,7 +78,7 @@ public class MemberService {
     public Member findById(Long memberId) {
         Optional<Member> opMember = memberRepository.findById(memberId);
         if(!opMember.isPresent()) {
-            throw new CMemberNotFoundException();
+            throw new CustomException(ExceptionCode.NOT_FOUND_MEMBER);
         }
         return opMember.get();
     }

@@ -1,50 +1,133 @@
 package com.random.random_challenge_defence.api.service;
 
+import com.random.random_challenge_defence.advice.ExceptionCode;
+import com.random.random_challenge_defence.advice.exception.CustomException;
+import com.random.random_challenge_defence.advice.exception.StackTraceCustomException;
 import com.random.random_challenge_defence.api.dto.TokenInfo;
 import com.random.random_challenge_defence.config.auth.JwtTokenProvider;
+import com.random.random_challenge_defence.config.auth.oauth2.OAuthAttributes;
+import com.random.random_challenge_defence.config.auth.oauth2.OAuthConfigProvider;
+import com.random.random_challenge_defence.config.auth.oauth2.OAuthConfigProviderFactory;
+import com.random.random_challenge_defence.domain.member.Member;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.*;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService {
 
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final OAuthConfigProviderFactory oAuthConfigProviderFactory;
 
-    @Transactional
-    public TokenInfo login(String email, String password) {
+    private final RestTemplate restTemplate = new RestTemplate();
 
-        // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
-        // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
+    public OAuthAttributes getOAuthAttribute(String social, String code) {
+        // 인가 코드를 사용하여 accessToken 조회
+        Map<String, Object> token = getAccessToken(social, code);
 
-        // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
-        // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        // accessToken을 사용하여 사용자 정보 조회
+        Map<String, Object> attributes = getUserInfo(social, (String) token.get("access_token"));
 
-        // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
-
-        return tokenInfo;
+        // 사용자 정보를 이용하여 oAuthAttribute 객체 생성
+        return OAuthAttributes.of(social, attributes);
     }
 
-    public TokenInfo generateToken(Authentication authentication) {
-        return jwtTokenProvider.generateToken(authentication);
+    public TokenInfo getTokenInfo(Member member) {
+        String authority = member.getMemberRole().getKey();
+        return jwtTokenProvider.generateTokenWithAuthAndEmail(authority, member.getEmail());
     }
 
-    public String resolveToken(HttpServletRequest request) {
-        return jwtTokenProvider.resolveToken(request);
+
+    public String resolveEmail(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+        if(token == null) {
+            throw new CustomException(ExceptionCode.TOKEN_IS_NULL);
+        }
+        return jwtTokenProvider.getClaimValue(token, "email");
     }
 
-    public String resolveSubject(String token){
-        return jwtTokenProvider.getClaimValue(token, "sub");
+
+    public TokenInfo generateToken(Member member) {
+        return jwtTokenProvider.generateTokenWithAuthAndEmail(
+                new SimpleGrantedAuthority(member.getMemberRole().getKey()).toString(),
+                member.getEmail()
+        );
+    }
+
+    private Map<String, Object> getAccessToken(String social, String code) {
+
+        String authorizeCode = null;
+        try {
+            authorizeCode = URLDecoder.decode(code, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new StackTraceCustomException(ExceptionCode.UNKNOWN_EXCEPTION, e);
+        }
+
+        OAuthConfigProvider provider = oAuthConfigProviderFactory.getProvider(social);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", provider.getClientId());
+        params.add("client_secret", provider.getClientSecret());
+        params.add("redirect_uri", provider.getRedirectUri());
+        params.add("code", authorizeCode);
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+        try {
+            ResponseEntity<Map> response = restTemplate.postForEntity(provider.getTokenUrl(), request, Map.class);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            } else {
+                log.error("Failed to retrieve user information: HTTP status {}", response.getStatusCode());
+                throw new CustomException(ExceptionCode.SOCIAL_LOGIN_ERROR);
+            }
+        } catch (HttpClientErrorException e) {
+            log.error("An error occurred while trying to retrieve the access token: {}", e.getMessage());
+            throw new StackTraceCustomException(ExceptionCode.UNKNOWN_EXCEPTION, e);
+        }
+    }
+
+    private Map<String, Object> getUserInfo(String social, String accessToken) {
+        OAuthConfigProvider provider = oAuthConfigProviderFactory.getProvider(social);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        HttpEntity<?> requestEntity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(
+                    provider.getUserInfoUrl(),
+                    HttpMethod.GET,
+                    requestEntity,
+                    Map.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return response.getBody();
+            } else {
+                log.error("Failed to retrieve user information: HTTP status {}", response.getStatusCode());
+                throw new CustomException(ExceptionCode.SOCIAL_LOGIN_ERROR);
+            }
+        } catch (HttpClientErrorException e) {
+            log.error("An error occurred while trying to retrieve the user information: {}", e.getMessage());
+            throw new StackTraceCustomException(ExceptionCode.UNKNOWN_EXCEPTION, e);
+        }
     }
 }

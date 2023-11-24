@@ -21,7 +21,7 @@ public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String key;
+    private String fileKey;
     private String url;
     private String createDtm;
 
@@ -48,7 +48,7 @@ public class File {
 
         return FileDetailDto.builder()
                 .id(this.id)
-                .key(this.key)
+                .key(this.fileKey)
                 .createDtm(this.createDtm)
                 .memberId(this.member.getId())
                 .challengeCardId(challengeCardId)

@@ -6,12 +6,15 @@ import com.random.random_challenge_defence.api.dto.member.MemberPutReqDto;
 import com.random.random_challenge_defence.domain.member.Member;
 import com.random.random_challenge_defence.api.service.MemberService;
 import com.random.random_challenge_defence.api.service.ResponseService;
+import com.random.random_challenge_defence.domain.membermemberpersonality.MemberMemberPersonality;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/members")
@@ -21,14 +24,7 @@ public class MemberController {
     private final MemberService memberService;
     private final ResponseService responseService;
 
-    @ApiOperation(value = "회원가입", notes = "새로운 사용자를 등록합니다.")
-    @PostMapping
-    public CommonResponse<MemberDetailsDto> join(@Valid @RequestBody MemberPutReqDto form) {
-        Member member = memberService.join(form);
-        return responseService.getResult(member.toDetailDto());
-    }
-
-    @ApiOperation(value = "user info 조회", notes = "사용자 정보를 조회합니다.")
+    @ApiOperation(value = "사용자 정보 조회", notes = "사용자 정보를 조회합니다.")
     @GetMapping("/{email}")
     public CommonResponse<MemberDetailsDto> userInfo(@PathVariable("email") String email) {
         Member member = memberService.findByEmail(email);
@@ -49,6 +45,7 @@ public class MemberController {
         return responseService.getSuccessResult();
     }
 
+    @ApiOperation(value = "로그인 사용자 정보 조회", notes = "로그인 한 사용자의 정보를 조회합니다.")
     @GetMapping("/my-info")
     public CommonResponse<MemberDetailsDto> myInfo() {
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getName();

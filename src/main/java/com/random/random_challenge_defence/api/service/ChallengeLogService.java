@@ -1,6 +1,7 @@
 package com.random.random_challenge_defence.api.service;
 
-import com.random.random_challenge_defence.advice.exception.CChallengeLogNotFoundException;
+import com.random.random_challenge_defence.advice.ExceptionCode;
+import com.random.random_challenge_defence.advice.exception.CustomException;
 import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeLogSubGoalStatus;
@@ -123,7 +124,7 @@ public class ChallengeLogService {
     public ChallengeLog getChallengeLogById(Long id) {
         Optional<ChallengeLog> byId = challengeLogRepository.findById(id);
         if(!byId.isPresent()) {
-            throw new CChallengeLogNotFoundException("도전 이력이 없습니다.");
+            throw new CustomException(ExceptionCode.NOT_FOUND_CHALLENGE_LOG);
         }
         return byId.get();
     }
@@ -136,7 +137,7 @@ public class ChallengeLogService {
     public ChallengeLog findById(Long challengeLogId) {
         Optional<ChallengeLog> byId = challengeLogRepository.findById(challengeLogId);
         if(!byId.isPresent()) {
-            throw new CChallengeLogNotFoundException("챌린지 이력이 존재하지 않습니다.");
+            throw new CustomException(ExceptionCode.NOT_FOUND_CHALLENGE_LOG);
         }
         return byId.get();
     }

@@ -21,7 +21,11 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.random.random_challenge_defence.api.controller"))
                 .paths(Predicates.or(
                         PathSelectors.ant("/challenge-log/**"),
-                        PathSelectors.ant("/file/**")
+                        PathSelectors.ant("/file/**"),
+                        PathSelectors.ant("/recommend/**"),
+                        PathSelectors.ant("/member-personality/**"),
+                        PathSelectors.ant("/members/**"),
+                        PathSelectors.ant("/auth/**")
                         )
                 )
                 //.paths(PathSelectors.ant("/challenge-log/**"))

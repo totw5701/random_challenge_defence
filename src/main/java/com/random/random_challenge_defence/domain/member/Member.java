@@ -1,12 +1,12 @@
 package com.random.random_challenge_defence.domain.member;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.random.random_challenge_defence.api.dto.member.MemberDetailsDto;
 import com.random.random_challenge_defence.api.dto.member.MemberPutReqDto;
+import com.random.random_challenge_defence.domain.membermemberpersonality.MemberMemberPersonality;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Builder
@@ -29,6 +29,9 @@ public class Member {
     private String joinDtm;
     private String modifyDtm;
     private Long experience;
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberMemberPersonality> memberMemberPersonalities;
 
     public Member entityUpdate(String picture) {
         this.picture = picture;
