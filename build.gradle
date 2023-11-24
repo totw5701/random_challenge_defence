@@ -14,12 +14,8 @@ configurations {
     }
 }
 
-sourceSets {
-    main {
-        resources {
-            //exclude '**/*.yml'
-        }
-    }
+jar {
+    exclude '**/*.yml'
 }
 
 repositories {

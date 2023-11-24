@@ -40,3 +40,5 @@ out/
 application-oauth.yml
 application-s3.yml
 application-jwt.yml
+
+.DS_Store

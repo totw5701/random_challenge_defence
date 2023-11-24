@@ -96,7 +96,7 @@ public class ChallengeLogController {
             return responseService.getResult(pausedChallengeLog.toDetailDto());
         }
 
-        ChallengeCard challengeCard = challengeCardService.findById(form.getChallengeId());
+        ChallengeCard challengeCard = challengeCardService.getEntityById(form.getChallengeId());
         Member member = memberService.findByEmail(memberEmail);
         ChallengeLog challengeLog = challengeLogService.createChallengeLog(member, challengeCard);
         return responseService.getResult(challengeLog.toDetailDto());
