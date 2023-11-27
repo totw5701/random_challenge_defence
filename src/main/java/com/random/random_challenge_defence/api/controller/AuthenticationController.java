@@ -34,7 +34,7 @@ public class AuthenticationController {
             @RequestBody Map<String, String> form) {
         OAuthAttributes oAuthAttributes = authenticationService.getOAuthAttribute(form.get("social"), form.get("code"));
         Member member = memberService.saveOrUpdate(oAuthAttributes);
-        TokenInfo tokenInfo = authenticationService.getTokenInfo(member);
+        TokenInfo tokenInfo = authenticationService.generateTokenInfo(member);
         return responseService.getResult(tokenInfo);
     }
 
@@ -42,11 +42,10 @@ public class AuthenticationController {
     @ApiOperation(value = "토큰 재발급", notes = "만료되지 않은 토큰으로 사용가능한 토큰을 발급 받습니다.")
     @GetMapping("/token-reissue")
     public CommonResponse<TokenInfo> tokenReissue(
-            @ApiParam(value = "Header: Authorization=RTK", required = true)
-            HttpServletRequest request) {
+            @ApiParam(value = "Header: Authorization=RTK", required = true) HttpServletRequest request) {
         String email = authenticationService.resolveEmail(request);
         Member member = memberService.findByEmail(email);
-        TokenInfo tokenInfo = authenticationService.generateToken(member);
+        TokenInfo tokenInfo = authenticationService.generateTokenInfo(member);
         return responseService.getResult(tokenInfo);
     }
 

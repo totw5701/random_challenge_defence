@@ -12,7 +12,6 @@ import com.random.random_challenge_defence.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -47,7 +46,7 @@ public class AuthenticationService {
         return OAuthAttributes.of(social, attributes);
     }
 
-    public TokenInfo getTokenInfo(Member member) {
+    public TokenInfo generateTokenInfo(Member member) {
         String authority = member.getMemberRole().getKey();
         return jwtTokenProvider.generateTokenWithAuthAndEmail(authority, member.getEmail());
     }
@@ -59,14 +58,6 @@ public class AuthenticationService {
             throw new CustomException(ExceptionCode.TOKEN_IS_NULL);
         }
         return jwtTokenProvider.getClaimValue(token, "email");
-    }
-
-
-    public TokenInfo generateToken(Member member) {
-        return jwtTokenProvider.generateTokenWithAuthAndEmail(
-                new SimpleGrantedAuthority(member.getMemberRole().getKey()).toString(),
-                member.getEmail()
-        );
     }
 
     private Map<String, Object> getAccessToken(String social, String code) {
