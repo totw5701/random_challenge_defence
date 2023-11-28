@@ -11,7 +11,6 @@ import com.random.random_challenge_defence.domain.challengelog.ChallengeLogStatu
 import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoal;
 import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoalRepository;
 import com.random.random_challenge_defence.domain.member.Member;
-import com.random.random_challenge_defence.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,7 +31,6 @@ public class ChallengeLogService {
 
     private final ChallengeLogRepository challengeLogRepository;
     private final ChallengeLogSubGoalRepository challengeLogSubGoalRepository;
-    private final MemberRepository memberRepository;
 
     public List<ChallengeLog> readPageListTrying(String memberEmail) {
         List<ChallengeLog> challengeLogs = challengeLogRepository.findAllByEmailTrying(memberEmail);
@@ -76,10 +74,6 @@ public class ChallengeLogService {
         return logSubGoals;
     }
 
-    public ChallengeLog getChallengeLogDetail(Long id) {
-        return challengeLogRepository.getById(id);
-    }
-
     /**
      * 성공 가능 유효성 체크.
      * 1. 중간 목표 완료.
@@ -121,7 +115,7 @@ public class ChallengeLogService {
         return challengeLogRepository.getNumOfTrying(memberEmail);
     }
 
-    public ChallengeLog getChallengeLogById(Long id) {
+    public ChallengeLog getEntityById(Long id) {
         Optional<ChallengeLog> byId = challengeLogRepository.findById(id);
         if(!byId.isPresent()) {
             throw new CustomException(ExceptionCode.NOT_FOUND_CHALLENGE_LOG);
@@ -134,13 +128,6 @@ public class ChallengeLogService {
         challengeLog.challengeSkip();
     }
 
-    public ChallengeLog findById(Long challengeLogId) {
-        Optional<ChallengeLog> byId = challengeLogRepository.findById(challengeLogId);
-        if(!byId.isPresent()) {
-            throw new CustomException(ExceptionCode.NOT_FOUND_CHALLENGE_LOG);
-        }
-        return byId.get();
-    }
 
     public Optional<ChallengeLog> getPausedChallengeLog(String memberEmail, Long challengeId) {
         return challengeLogRepository.findPausedLogByMemberEmailAndChallengeId(memberEmail, challengeId);

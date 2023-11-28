@@ -29,7 +29,6 @@ public class ChallengeLogController {
     private final MemberService memberService;
     private final ChallengeCardService challengeCardService;
     private final ChallengeLogSubGoalService challengeLogSubGoalService;
-    private final S3FileUploadService s3FileUploadService;
     private final FileService fileService;
 
     private final ResponseService responseService;
@@ -40,13 +39,13 @@ public class ChallengeLogController {
         String memberEmail = memberService.getLoginUserEmail();
 
         // 로그인 사용자 본인의 challenge card가 아닐 경우 실패처리
-        ChallengeLog challengeLog = challengeLogService.getChallengeLogById(form.getChallengeLogId());
+        ChallengeLog challengeLog = challengeLogService.getEntityById(form.getChallengeLogId());
         if(!challengeLog.getMember().getEmail().equals(memberEmail)) {
             throw new CustomException(ExceptionCode.ACCESS_DENIED);
         }
 
         // 로그인 사용자 본인이 올린 file이 아닌 경우 실패처리
-        List<File> fileListByIds = fileService.getFileListByIds(form.getEvidenceIdList());
+        List<File> fileListByIds = fileService.getEntityListByIds(form.getEvidenceIdList());
         for(File file : fileListByIds) {
             if(!file.getMember().getEmail().equals(memberEmail)) {
                 throw new CustomException(ExceptionCode.ACCESS_DENIED);
@@ -67,7 +66,7 @@ public class ChallengeLogController {
         String memberEmail = memberService.getLoginUserEmail();
 
         // 본인의 challenge log가 아닐 경우 실패처리
-        ChallengeLog challengeLog = challengeLogService.getChallengeLogById(Long.valueOf(form.getChallengeId()));
+        ChallengeLog challengeLog = challengeLogService.getEntityById(Long.valueOf(form.getChallengeId()));
         if(!challengeLog.getMember().getEmail().equals(memberEmail)) {
             throw new CustomException(ExceptionCode.ACCESS_DENIED);
         }
@@ -97,7 +96,7 @@ public class ChallengeLogController {
         }
 
         ChallengeCard challengeCard = challengeCardService.getEntityById(form.getChallengeId());
-        Member member = memberService.findByEmail(memberEmail);
+        Member member = memberService.getEntityById(memberEmail);
         ChallengeLog challengeLog = challengeLogService.createChallengeLog(member, challengeCard);
         return responseService.getResult(challengeLog.toDetailDto());
     }
@@ -105,7 +104,7 @@ public class ChallengeLogController {
     @ApiOperation(value = "챌린지 상세 조회", notes = "챌린지 이력 상세 내용을 조회합니다.")
     @GetMapping("/detail/{id}")
     public CommonResponse<ChallengeLogDetailDto> challengeLogDetail(@PathVariable("id") Long id) {
-        ChallengeLog challengeLog = challengeLogService.getChallengeLogDetail(id);
+        ChallengeLog challengeLog = challengeLogService.getEntityById(id);
         return responseService.getResult(challengeLog.toDetailDto());
     }
 
@@ -141,7 +140,7 @@ public class ChallengeLogController {
     @PutMapping("/sub-goal/update")
     public CommonResponse<ChallengeLogSubGoalDetailDto> subGoalClear(@RequestBody ChallengeLogSubGoalUpdateDto reqDto) {
         String memberEmail = memberService.getLoginUserEmail();
-        ChallengeLogSubGoal challengeLogSubGoal = challengeLogSubGoalService.getChallengeLogSubGoal(reqDto.getId());
+        ChallengeLogSubGoal challengeLogSubGoal = challengeLogSubGoalService.getEntityById(reqDto.getId());
 
         if(!challengeLogSubGoal.getChallengeLog().getMember().getEmail().equals(memberEmail)) {
             throw new CustomException(ExceptionCode.ACCESS_DENIED);
@@ -156,7 +155,7 @@ public class ChallengeLogController {
     public CommonResponse successChallenge(@RequestBody ChallengeLogReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
         Long challengeLogId = form.getChallengeId();
-        ChallengeLog challengeLog = challengeLogService.findById(challengeLogId);
+        ChallengeLog challengeLog = challengeLogService.getEntityById(challengeLogId);
 
         if(!challengeLog.getMember().getEmail().equals(memberEmail)){
             throw new CustomException(ExceptionCode.ACCESS_DENIED);

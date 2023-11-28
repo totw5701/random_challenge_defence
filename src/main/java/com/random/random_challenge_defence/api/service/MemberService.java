@@ -35,7 +35,7 @@ public class MemberService {
     }
 
     public Member getLoginMember() {
-        return findByEmail(getLoginUserEmail());
+        return getEntityById(getLoginUserEmail());
     }
 
     public Member join(MemberPutReqDto form) {
@@ -51,7 +51,7 @@ public class MemberService {
                         .build());
     }
 
-    public Member findByEmail(String memberEmail) {
+    public Member getEntityById(String memberEmail) {
         Optional<Member> opMember = memberRepository.findByEmail(memberEmail);
         if(!opMember.isPresent()) {
             throw new CustomException(ExceptionCode.NOT_FOUND_MEMBER);

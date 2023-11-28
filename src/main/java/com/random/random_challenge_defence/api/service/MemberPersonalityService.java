@@ -22,7 +22,7 @@ public class MemberPersonalityService {
     private final MemberPersonalityRepository memberPersonalityRepository;
     private final MemberMemberPersonalityRepository memberMemberPersonalityRepository;
 
-    public MemberPersonality readOne(Long id) {
+    public MemberPersonality getEntityById(Long id) {
         Optional<MemberPersonality> byId = memberPersonalityRepository.findById(id);
         if(!byId.isPresent()) {
             throw new CustomException(ExceptionCode.NOT_FOUND_CHALLENGE_CATEGORY);

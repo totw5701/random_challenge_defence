@@ -15,7 +15,7 @@ public class FileService {
 
     private final FileRepository fileRepository;
 
-    public List<File> getFileListByIds(List<Long> fileIds) {
+    public List<File> getEntityListByIds(List<Long> fileIds) {
         return fileRepository.findByIdIn(fileIds);
     }
 

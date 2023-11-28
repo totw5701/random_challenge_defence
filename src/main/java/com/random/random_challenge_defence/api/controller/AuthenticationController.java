@@ -44,7 +44,7 @@ public class AuthenticationController {
     public CommonResponse<TokenInfo> tokenReissue(
             @ApiParam(value = "Header: Authorization=RTK", required = true) HttpServletRequest request) {
         String email = authenticationService.resolveEmail(request);
-        Member member = memberService.findByEmail(email);
+        Member member = memberService.getEntityById(email);
         TokenInfo tokenInfo = authenticationService.generateTokenInfo(member);
         return responseService.getResult(tokenInfo);
     }

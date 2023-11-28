@@ -35,11 +35,11 @@ public class ChallengeCardCategoryService {
 
     }
 
-    public ChallengeCardCategoryDetailDto readOne(String id) {
+    public ChallengeCardCategory getEntityById(String id) {
         Optional<ChallengeCardCategory> byId = challengeCardCategoryRepository.findById(Long.valueOf(id));
         if(!byId.isPresent()) {
             throw new CustomException(ExceptionCode.NOT_FOUND_CHALLENGE_CATEGORY);
         }
-        return byId.get().toDetailDto();
+        return byId.get();
     }
 }

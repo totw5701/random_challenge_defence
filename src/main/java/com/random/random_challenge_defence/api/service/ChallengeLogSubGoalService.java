@@ -23,7 +23,7 @@ public class ChallengeLogSubGoalService {
         return challengeLogSubGoal;
     }
 
-    public ChallengeLogSubGoal getChallengeLogSubGoal(Long id) {
+    public ChallengeLogSubGoal getEntityById(Long id) {
         Optional<ChallengeLogSubGoal> byId = challengeLogSubGoalRepository.findById(id);
         if(!byId.isPresent()) {
             throw new CustomException(ExceptionCode.NOT_FOUND_CHALLENGE_SUB_GOAL);

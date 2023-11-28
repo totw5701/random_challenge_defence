@@ -41,7 +41,7 @@ public class MemberPersonalityController {
     @PostMapping("/member-assign")
     public CommonResponse assign(@RequestBody MemberPersonalityAssignDto form) {
         String memberEmail = memberService.getLoginUserEmail();
-        Member loginMember = memberService.findByEmail(memberEmail);
+        Member loginMember = memberService.getEntityById(memberEmail);
 
         memberPersonalityService.updatePersonalities(loginMember, form.getIds());
         return responseService.getSuccessResult();
@@ -59,7 +59,7 @@ public class MemberPersonalityController {
     @ApiOperation(value = "사용자 특성 조회", notes = "사용자 특성을 조회합니다.")
     @GetMapping("/{id}")
     public CommonResponse<MemberPersonalityDetailDto> readOne(@PathVariable Long id) {
-        MemberPersonalityDetailDto dto = memberPersonalityService.readOne(id).toDetailDto();
+        MemberPersonalityDetailDto dto = memberPersonalityService.getEntityById(id).toDetailDto();
         return responseService.getResult(dto);
     }
 }
