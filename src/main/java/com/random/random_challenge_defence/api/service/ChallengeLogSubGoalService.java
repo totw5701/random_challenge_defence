@@ -13,11 +13,19 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ChallengeLogSubGoalService {
 
     private final ChallengeLogSubGoalRepository challengeLogSubGoalRepository;
 
-    @Transactional
+    public ChallengeLogSubGoal validateOwner(Long subGoalId, String memberEmail) {
+        ChallengeLogSubGoal subGoal = getEntityById(subGoalId);
+        if(!subGoal.getChallengeLog().getMember().getEmail().equals(memberEmail)) {
+            throw new CustomException(ExceptionCode.ACCESS_DENIED);
+        }
+        return subGoal;
+    }
+
     public ChallengeLogSubGoal updateSubGoal(ChallengeLogSubGoal challengeLogSubGoal, ChallengeLogSubGoalStatus status) {
         challengeLogSubGoal.statusChange(status);
         return challengeLogSubGoal;

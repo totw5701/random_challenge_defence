@@ -4,6 +4,7 @@ import com.random.random_challenge_defence.advice.ExceptionCode;
 import com.random.random_challenge_defence.advice.exception.CustomException;
 import com.random.random_challenge_defence.api.dto.member.MemberPutReqDto;
 import com.random.random_challenge_defence.config.auth.oauth2.OAuthAttributes;
+import com.random.random_challenge_defence.domain.challengelog.ChallengeLogRepository;
 import com.random.random_challenge_defence.domain.member.Member;
 import com.random.random_challenge_defence.domain.member.MemberRepository;
 import com.random.random_challenge_defence.domain.member.MemberRole;
@@ -22,9 +23,17 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final ChallengeLogRepository challengeLogRepository;
 
     public String getLoginUserEmail() {
         return (String) SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    public void verifyChallengeLogAvailability(String memberEmail) {
+        Long numOfTrying = challengeLogRepository.getNumOfTrying(memberEmail);
+        if(numOfTrying >= 2) {
+            throw new CustomException(ExceptionCode.SERVICE_USAGE_LIMIT_EXCEEDED);
+        }
     }
 
     public Member saveOrUpdate(OAuthAttributes attributes) {

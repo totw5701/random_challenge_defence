@@ -10,5 +10,5 @@ import lombok.*;
 @NoArgsConstructor
 public class ChallengeLogReqDto {
 
-    private Long challengeId;
+    private Long challengeCardId;
 }

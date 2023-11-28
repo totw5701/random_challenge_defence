@@ -1,15 +1,11 @@
 package com.random.random_challenge_defence.api.controller;
 
-import com.random.random_challenge_defence.advice.ExceptionCode;
-import com.random.random_challenge_defence.advice.exception.CustomException;
 import com.random.random_challenge_defence.api.dto.challengelog.*;
 import com.random.random_challenge_defence.api.dto.common.CommonResponse;
 import com.random.random_challenge_defence.api.service.*;
-import com.random.random_challenge_defence.domain.challengecard.ChallengeCard;
 import com.random.random_challenge_defence.domain.challengelog.ChallengeLog;
 import com.random.random_challenge_defence.domain.challengelogsubgoal.ChallengeLogSubGoal;
 import com.random.random_challenge_defence.domain.file.File;
-import com.random.random_challenge_defence.domain.member.Member;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,7 +13,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -27,7 +22,6 @@ public class ChallengeLogController {
 
     private final ChallengeLogService challengeLogService;
     private final MemberService memberService;
-    private final ChallengeCardService challengeCardService;
     private final ChallengeLogSubGoalService challengeLogSubGoalService;
     private final FileService fileService;
 
@@ -38,24 +32,13 @@ public class ChallengeLogController {
     public CommonResponse uploadChallengeEvidence(@RequestBody ChallengeLogEvidenceReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
 
-        // 로그인 사용자 본인의 challenge card가 아닐 경우 실패처리
-        ChallengeLog challengeLog = challengeLogService.getEntityById(form.getChallengeLogId());
-        if(!challengeLog.getMember().getEmail().equals(memberEmail)) {
-            throw new CustomException(ExceptionCode.ACCESS_DENIED);
-        }
+        ChallengeLog challengeLog = challengeLogService.validateOwner(form.getChallengeLogId(), memberEmail);
 
         // 로그인 사용자 본인이 올린 file이 아닌 경우 실패처리
-        List<File> fileListByIds = fileService.getEntityListByIds(form.getEvidenceIdList());
-        for(File file : fileListByIds) {
-            if(!file.getMember().getEmail().equals(memberEmail)) {
-                throw new CustomException(ExceptionCode.ACCESS_DENIED);
-            }
-        }
+        List<File> files = fileService.validateOwner(form.getEvidenceIdList(), memberEmail);
 
         // 파일 할당
-        for(File file : fileListByIds) {
-            fileService.assignChallengeLog(file, challengeLog);
-        }
+        challengeLogService.assignEvidence(challengeLog, files);
 
         return responseService.getSuccessResult();
     }
@@ -65,14 +48,11 @@ public class ChallengeLogController {
     public CommonResponse<ChallengeLogDetailDto> skipChallenge(@RequestBody ChallengeLogReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
 
-        // 본인의 challenge log가 아닐 경우 실패처리
-        ChallengeLog challengeLog = challengeLogService.getEntityById(Long.valueOf(form.getChallengeId()));
-        if(!challengeLog.getMember().getEmail().equals(memberEmail)) {
-            throw new CustomException(ExceptionCode.ACCESS_DENIED);
-        }
+        ChallengeLog challengeLog = challengeLogService.validateOwner(form.getChallengeCardId(), memberEmail);
 
         // 챌린지 로그 스킵
         challengeLogService.skipChallengeLog(challengeLog);
+
         return responseService.getResult(challengeLog.toDetailDto());
     }
 
@@ -81,23 +61,10 @@ public class ChallengeLogController {
     public CommonResponse<ChallengeLogDetailDto> tryChallenge(@RequestBody ChallengeLogReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
 
-        // 한번에 하나의 챌린지만 도전 가능
-        Long numOfTrying = challengeLogService.getNumOfTrying(memberEmail);
-        if(numOfTrying >= 2) {
-            throw new CustomException(ExceptionCode.SERVICE_USAGE_LIMIT_EXCEEDED);
-        }
+        memberService.verifyChallengeLogAvailability(memberEmail);
 
         // PAUSE 했던 같은 challenge card에 대하여 다시 도전 할 시 지난 이력을 재활용 한다.
-        Optional<ChallengeLog> opPausedChallengeLog = challengeLogService.getPausedChallengeLog(memberEmail, form.getChallengeId());
-        if(opPausedChallengeLog.isPresent()) {
-            ChallengeLog pausedChallengeLog = opPausedChallengeLog.get();
-            challengeLogService.restartChallengeLog(pausedChallengeLog);
-            return responseService.getResult(pausedChallengeLog.toDetailDto());
-        }
-
-        ChallengeCard challengeCard = challengeCardService.getEntityById(form.getChallengeId());
-        Member member = memberService.getEntityById(memberEmail);
-        ChallengeLog challengeLog = challengeLogService.createChallengeLog(member, challengeCard);
+        ChallengeLog challengeLog = challengeLogService.startChallenge(form.getChallengeCardId(), memberEmail);
         return responseService.getResult(challengeLog.toDetailDto());
     }
 
@@ -112,7 +79,7 @@ public class ChallengeLogController {
     @GetMapping("/list/my-logs/trying")
     public CommonResponse<List<ChallengeLogDetailDto>> challengeLogDetailListTrying() {
         String memberEmail = memberService.getLoginUserEmail();
-        List<ChallengeLog> challengeLogs = challengeLogService.readPageListTrying(memberEmail);
+        List<ChallengeLog> challengeLogs = challengeLogService.getTryingEntityList(memberEmail);
 
         List<ChallengeLogDetailDto> logDtos = challengeLogs.stream()
                 .map(log -> log.toDetailDto())
@@ -138,15 +105,12 @@ public class ChallengeLogController {
 
     @ApiOperation(value = "중간 도전 상태 업데이트", notes = "챌린지 이력 중간 도전의 상태를 업데이트합니다.")
     @PutMapping("/sub-goal/update")
-    public CommonResponse<ChallengeLogSubGoalDetailDto> subGoalClear(@RequestBody ChallengeLogSubGoalUpdateDto reqDto) {
+    public CommonResponse<ChallengeLogSubGoalDetailDto> subGoalClear(@RequestBody ChallengeLogSubGoalUpdateDto form) {
         String memberEmail = memberService.getLoginUserEmail();
-        ChallengeLogSubGoal challengeLogSubGoal = challengeLogSubGoalService.getEntityById(reqDto.getId());
 
-        if(!challengeLogSubGoal.getChallengeLog().getMember().getEmail().equals(memberEmail)) {
-            throw new CustomException(ExceptionCode.ACCESS_DENIED);
-        }
+        ChallengeLogSubGoal challengeLogSubGoal = challengeLogSubGoalService.validateOwner(form.getId(), memberEmail);
 
-        ChallengeLogSubGoal result = challengeLogSubGoalService.updateSubGoal(challengeLogSubGoal, reqDto.getStatus());
+        ChallengeLogSubGoal result = challengeLogSubGoalService.updateSubGoal(challengeLogSubGoal, form.getStatus());
         return responseService.getResult(result.toDetail());
     }
 
@@ -154,18 +118,13 @@ public class ChallengeLogController {
     @PostMapping("/success")
     public CommonResponse successChallenge(@RequestBody ChallengeLogReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
-        Long challengeLogId = form.getChallengeId();
-        ChallengeLog challengeLog = challengeLogService.getEntityById(challengeLogId);
 
-        if(!challengeLog.getMember().getEmail().equals(memberEmail)){
-            throw new CustomException(ExceptionCode.ACCESS_DENIED);
-        }
+        ChallengeLog challengeLog = challengeLogService.validateOwner(form.getChallengeCardId(), memberEmail);
 
-        boolean isPass = challengeLogService.successValidate(challengeLog);
-        if(!isPass) {
-            throw new CustomException(ExceptionCode.SUCCESS_REQUIREMENTS_NOT_MET);
-        }
+        challengeLogService.successValidate(challengeLog);
+
         challengeLogService.successChallengeLog(challengeLog);
+
         return responseService.getSuccessResult();
     }
 
