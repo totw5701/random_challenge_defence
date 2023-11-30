@@ -39,10 +39,6 @@ public class ChallengeCard {
     private Integer assignScore;
     private Integer experience;
 
-    @OneToOne(mappedBy = "challengeCard")
-    @JoinColumn(name = "challenge_card_id")
-    private File image;
-
     private String createDtm;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -57,9 +53,6 @@ public class ChallengeCard {
         if(this.challengeCardSubGoals != null) {
             subGoals = challengeCardSubGoals.stream().map((challengeSubGoal -> challengeSubGoal.toDto())).collect(Collectors.toList());
         }
-        if(this.image == null) {
-            this.image = new File();
-        }
         return ChallengeDetailDto.builder()
                 .id(this.id)
                 .title(this.title)
@@ -71,7 +64,6 @@ public class ChallengeCard {
                 .experience(this.experience)
                 .challengeSubGoals(subGoals)
                 .challengeCardCategory(this.challengeCardCategory.toDetailDto())
-                .image(this.image.toDto())
                 .build();
     }
 }

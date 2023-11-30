@@ -1,7 +1,5 @@
 package com.random.random_challenge_defence.api.dto.challengeCard;
 
-import com.random.random_challenge_defence.api.dto.file.FileDetailDto;
-import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategory;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
@@ -30,5 +28,4 @@ public class ChallengeDetailDto {
     private Integer experience;
     private List<ChallengeSubGoalDetailDto> challengeSubGoals;
     private ChallengeCardCategoryDetailDto challengeCardCategory;
-    private FileDetailDto image;
 }

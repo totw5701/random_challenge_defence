@@ -28,9 +28,6 @@ public class File {
     @ManyToOne(fetch = FetchType.LAZY)
     private ChallengeLog challengeLog;
 
-    @OneToOne
-    private ChallengeCard challengeCard;
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
@@ -39,9 +36,6 @@ public class File {
         Long challengeCardId = null;
         Long challengeLogId = null;
 
-        if(this.challengeCard != null) {
-            challengeCardId = this.challengeCard.getId();
-        }
         if(this.challengeLog != null) {
             challengeLogId = this.challengeLog.getId();
         }
