@@ -23,11 +23,6 @@ public class ChallengeCardCategory {
     private String title;
     private String description;
 
-    public void update(ChallengeCardCategoryUpdateDto form) {
-        this.title = form.getTitle();
-        this.description = form.getDescription();
-    }
-
     public ChallengeCardCategoryDetailDto toDetailDto() {
         return ChallengeCardCategoryDetailDto.builder()
                 .id(this.id)

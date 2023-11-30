@@ -33,13 +33,4 @@ public class MemberPersonality {
                 .description(this.description)
                 .build();
     }
-
-    public void update(String title, String description) {
-        if(title != null) {
-            this.title = title;
-        }
-        if(description != null) {
-            this.description = description;
-        }
-    }
 }

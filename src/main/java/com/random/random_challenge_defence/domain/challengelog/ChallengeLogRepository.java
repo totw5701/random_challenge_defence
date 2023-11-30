@@ -11,9 +11,6 @@ import java.util.Optional;
 
 public interface ChallengeLogRepository extends JpaRepository<ChallengeLog, Long> {
 
-    @Query("select cl from ChallengeLog cl where cl.member.id = :memberId and cl.challengeCard.id = :challengeId")
-    Optional<ChallengeLog> findByMemberIdAndChallengeId (@Param("memberId") Long memberId, @Param("challengeId") Long challengeId);
-
     @Query("select cl from ChallengeLog cl where cl.member.email = :memberEmail")
     Page<ChallengeLog> findAllByEmail(@Param("memberEmail") String memberEmail, Pageable pageable);
 

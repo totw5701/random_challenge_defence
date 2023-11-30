@@ -15,8 +15,6 @@ public class ChallengeCardSubGoal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "challenge_sub_goal_seq")
-    //@SequenceGenerator(name = "challenge_sub_goal_seq", sequenceName = "challenge_sub_goal_seq", initialValue = 10)
     private Long id;
 
     @ManyToOne

@@ -11,11 +11,6 @@ import java.util.List;
 @Repository
 public interface ChallengeCardRepository extends JpaRepository<ChallengeCard, Long> {
 
-    Long countBy();
-
-    @Query("select c.id from ChallengeCard c where c.difficulty <= :memberLevel")
-    List<Long> findAllUnderMemberLever(@Param("memberLevel") Integer memberLevel);
-
     @Query("select new com.random.random_challenge_defence.api.dto.recommend.ChallengeCardAssignScoreDto(c.id, c.assignScore) " +
             "from ChallengeCard c " +
             "where c.difficulty <= :memberLevel and c.challengeCardCategory.id = :challengeCardCategoryId")
@@ -23,7 +18,6 @@ public interface ChallengeCardRepository extends JpaRepository<ChallengeCard, Lo
             @Param("memberLevel") Integer memberLevel,
             @Param("challengeCardCategoryId") Long challengeCardCategoryId
     );
-
 
     @Query("SELECT DISTINCT new com.random.random_challenge_defence.api.dto.recommend.ChallengeCardAssignScoreDto(cc.id, cc.assignScore) " +
             "FROM ChallengeCard cc " +

@@ -9,7 +9,6 @@ import com.random.random_challenge_defence.domain.challengecardcategory.Challeng
 import com.random.random_challenge_defence.domain.challengecardmemberpersonality.ChallengeCardMemberPersonality;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
 import com.random.random_challenge_defence.domain.file.File;
-import com.random.random_challenge_defence.domain.membermemberpersonality.MemberMemberPersonality;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,8 +26,6 @@ public class ChallengeCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "challenge_seq")
-    //@SequenceGenerator(name = "challenge_seq", sequenceName = "challenge_seq", initialValue = 500)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -55,24 +52,6 @@ public class ChallengeCard {
     @OneToMany(mappedBy = "challengeCard")
     private List<ChallengeCardMemberPersonality> challengeCardMemberPersonalities;
 
-    public void update(ChallengePutReqDto form) {
-        this.title = (form.getTitle() != null) ? form.getTitle() : this.title;
-        this.description = (form.getDescription() != null) ? form.getDescription() : this.description;
-        this.finalGoal = (form.getFinalGoal() != null) ? form.getFinalGoal() : this.finalGoal;
-        this.difficulty = (form.getDifficulty() != null) ? form.getDifficulty() : this.difficulty;
-        this.assignScore = (form.getAssignScore() != null) ? form.getAssignScore() : this.assignScore;
-        this.experience = (form.getExperience() != null) ? form.getExperience() : this.experience;
-
-    }
-
-    public void imageUpdate(File newImage) {
-        this.image = newImage;
-    }
-
-    public void updateChallengeCardCategory(ChallengeCardCategory challengeCardCategory) {
-        this.challengeCardCategory = challengeCardCategory;
-    }
-
     public ChallengeDetailDto toDetailDto() {
         List<ChallengeSubGoalDetailDto> subGoals = new ArrayList<>();
         if(this.challengeCardSubGoals != null) {
@@ -94,9 +73,5 @@ public class ChallengeCard {
                 .challengeCardCategory(this.challengeCardCategory.toDetailDto())
                 .image(this.image.toDto())
                 .build();
-    }
-
-    public void assignSubGoals(List<ChallengeCardSubGoal> subGoals){
-        this.challengeCardSubGoals = subGoals;
     }
 }

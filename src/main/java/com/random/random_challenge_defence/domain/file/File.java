@@ -59,9 +59,4 @@ public class File {
     public void assignChallengeLog(ChallengeLog challengeLog) {
         this.challengeLog = challengeLog;
     }
-
-    public void assignChallengeCard(ChallengeCard challengeCard) {
-        this.challengeCard = challengeCard;
-    }
-
 }
