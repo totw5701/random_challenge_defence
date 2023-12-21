@@ -26,9 +26,11 @@ public class File {
     private String createDtm;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "challenge_log_id")
     private ChallengeLog challengeLog;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     public FileDetailDto toDto() {

@@ -30,7 +30,7 @@ public class Member {
     private String modifyDtm;
     private Long experience;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<MemberMemberPersonality> memberMemberPersonalities;
 
     public Member entityUpdate(String picture) {

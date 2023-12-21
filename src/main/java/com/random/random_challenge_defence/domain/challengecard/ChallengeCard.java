@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeDetailDto;
 import com.random.random_challenge_defence.api.dto.challengeCard.ChallengePutReqDto;
 import com.random.random_challenge_defence.api.dto.challengeCard.ChallengeSubGoalDetailDto;
+import com.random.random_challenge_defence.api.dto.memberpersonality.MemberPersonalityDetailDto;
 import com.random.random_challenge_defence.domain.challengecardcategory.ChallengeCardCategory;
 import com.random.random_challenge_defence.domain.challengecardmemberpersonality.ChallengeCardMemberPersonality;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeCardSubGoal;
@@ -29,6 +30,7 @@ public class ChallengeCard {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "challenge_card_category_id")
     private ChallengeCardCategory challengeCardCategory;
 
     @Column(unique = true)
@@ -41,17 +43,20 @@ public class ChallengeCard {
 
     private String createDtm;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "challenge_card_id")
+    @OneToMany(mappedBy = "challengeCard", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<ChallengeCardSubGoal> challengeCardSubGoals;
 
-    @OneToMany(mappedBy = "challengeCard")
+    @OneToMany(mappedBy = "challengeCard", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<ChallengeCardMemberPersonality> challengeCardMemberPersonalities;
 
     public ChallengeDetailDto toDetailDto() {
         List<ChallengeSubGoalDetailDto> subGoals = new ArrayList<>();
         if(this.challengeCardSubGoals != null) {
             subGoals = challengeCardSubGoals.stream().map((challengeSubGoal -> challengeSubGoal.toDto())).collect(Collectors.toList());
+        }
+        List<MemberPersonalityDetailDto> personalities = new ArrayList<>();
+        if(this.challengeCardMemberPersonalities != null) {
+            personalities = this.challengeCardMemberPersonalities.stream().map(entity -> entity.getMemberPersonality().toDetailDto()).collect(Collectors.toList());
         }
         return ChallengeDetailDto.builder()
                 .id(this.id)
@@ -64,6 +69,7 @@ public class ChallengeCard {
                 .experience(this.experience)
                 .challengeSubGoals(subGoals)
                 .challengeCardCategory(this.challengeCardCategory.toDetailDto())
+                .personalities(personalities)
                 .build();
     }
 }

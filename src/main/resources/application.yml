@@ -1,36 +1,24 @@
-
 file:
   dir: "D:/NAS/rcd/evidence"
 
 spring:
   config:
     import: application-oauth.yml, application-s3.yml, application-jwt.yml
-#  sql:
-#    init:
-#      mode: embedded
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-      settings:
-        web-allow-others: true
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rcd?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 89940775
 
   jpa:
-    defer-datasource-initialization: true # embededDB에 data.sql 사용하기 위함
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: create-drop
     properties:
       hibernate:
-        #dialect: org.hibernate.dialect.MariaDBDialect
-        dialect: org.hibernate.dialect.H2Dialect
-        format_sql: true #To beautify or pretty print the SQL
-        show_sql: true #show sql
+        dialect: org.hibernate.dialect.MySQL5Dialect # MySQL 사용
+        format_sql: true
+        show_sql: true
   web:
     resources:
       static-locations: classpath:/static/
-

@@ -17,8 +17,10 @@ public class ChallengeCardSubGoal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "challenge_card_id")
     private ChallengeCard challengeCard;
+
     private String subGoal;
 
     public ChallengeSubGoalDetailDto toDto() {

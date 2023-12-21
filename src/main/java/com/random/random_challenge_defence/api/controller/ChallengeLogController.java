@@ -118,13 +118,9 @@ public class ChallengeLogController {
     @PostMapping("/success")
     public CommonResponse successChallenge(@RequestBody ChallengeLogReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
-
         ChallengeLog challengeLog = challengeLogService.validateOwner(form.getChallengeCardId(), memberEmail);
-
         challengeLogService.successValidate(challengeLog);
-
         challengeLogService.successChallengeLog(challengeLog);
-
         return responseService.getSuccessResult();
     }
 

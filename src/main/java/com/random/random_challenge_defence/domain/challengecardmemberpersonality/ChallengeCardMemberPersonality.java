@@ -20,8 +20,11 @@ public class ChallengeCardMemberPersonality {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "challenge_card_id")
     private ChallengeCard challengeCard;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_personality_id")
     private MemberPersonality memberPersonality;
 }

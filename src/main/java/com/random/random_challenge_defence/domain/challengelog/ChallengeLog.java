@@ -29,26 +29,26 @@ public class ChallengeLog {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Enumerated(EnumType.STRING)
     private ChallengeLogStatus status;
 
     private String review;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "challenge_card")
     private ChallengeCard challengeCard;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "challenge_log_id")
+    @OneToMany(mappedBy = "challengeLog", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<File> evidenceImages = new ArrayList<>();
 
     private String startDtm;
     private String endDtm;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "challengeLog", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<ChallengeLogSubGoal> challengeLogSubGoals;
 
     public void setChallengeLogSubGoals(List<ChallengeLogSubGoal> subGoals) {
