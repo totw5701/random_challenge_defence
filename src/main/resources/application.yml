@@ -3,13 +3,7 @@ file:
 
 spring:
   config:
-    import: application-oauth.yml, application-s3.yml, application-jwt.yml
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/rcd?useSSL=false&serverTimezone=UTC
-    username: root
-    password: 89940775
-
+    import: application-oauth.yml, application-s3.yml, application-jwt.yml, application-db.yml
   jpa:
     defer-datasource-initialization: true
     hibernate:
