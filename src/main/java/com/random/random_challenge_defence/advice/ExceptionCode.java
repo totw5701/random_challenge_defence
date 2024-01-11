@@ -24,6 +24,7 @@ public enum ExceptionCode {
     NOT_FOUND_CHALLENGE_SUB_GOAL("4009", "중간도전을 찾을 수 없습니다"),
     NOT_FOUND_PERSONALITY("4010", "사용자 특성을 찾을 수 없습니다."),
     NOT_FOUND_MEMBER("4011", "사용자를 찾을 수 없습니다."),
+    NOT_FOUND_FEEDBACK("4012", "챌린지 카드 평가를 찾을 수 없습니다."),
     UNSUPPORTED_SOCIAL_LOGIN("5001", "제공하지 않는 소셜 로그인 플랫폼 입니다."),
     SOCIAL_LOGIN_ERROR("5002", "소셜 로그인 과정에서 오류가 발생하였습니다."),
     SOCIAL_LOGIN_FAIL("5003", "소셜 로그인에 실패하였습니다."),

@@ -25,7 +25,8 @@ public class SwaggerConfig {
                         PathSelectors.ant("/recommend/**"),
                         PathSelectors.ant("/member-personality/**"),
                         PathSelectors.ant("/members/**"),
-                        PathSelectors.ant("/auth/**")
+                        PathSelectors.ant("/auth/**"),
+                        PathSelectors.ant("/challenge-card-feedback/**")
                         )
                 )
                 //.paths(PathSelectors.ant("/challenge-log/**"))
