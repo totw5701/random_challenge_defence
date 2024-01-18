@@ -1,6 +1,6 @@
 package com.random.random_challenge_defence.domain.challengecard.repository;
 
-import com.random.random_challenge_defence.domain.challengelog.dto.ChallengeCardAssignScoreDto;
+import com.random.random_challenge_defence.domain.challengecard.dto.ChallengeCardAssignScoreDto;
 import com.random.random_challenge_defence.domain.challengecard.entity.ChallengeCard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface ChallengeCardRepository extends JpaRepository<ChallengeCard, Long> {
 
-    @Query("select new com.random.random_challenge_defence.domain.challengelog.dto.ChallengeCardAssignScoreDto(c.id, c.assignScore) " +
+    @Query("select new com.random.random_challenge_defence.domain.challengecard.dto.ChallengeCardAssignScoreDto(c.id, c.assignScore) " +
             "from ChallengeCard c " +
             "where c.difficulty <= :memberLevel and c.challengeCardCategory.id = :challengeCardCategoryId")
     List<ChallengeCardAssignScoreDto> findIdAndAssignScoreUnderMemberLeverByChallengeCardCategory(
@@ -20,7 +20,7 @@ public interface ChallengeCardRepository extends JpaRepository<ChallengeCard, Lo
             @Param("challengeCardCategoryId") Long challengeCardCategoryId
     );
 
-    @Query("SELECT DISTINCT new com.random.random_challenge_defence.domain.challengelog.dto.ChallengeCardAssignScoreDto(cc.id, cc.assignScore) " +
+    @Query("SELECT DISTINCT new com.random.random_challenge_defence.domain.challengecard.dto.ChallengeCardAssignScoreDto(cc.id, cc.assignScore) " +
             "FROM ChallengeCard cc " +
             "JOIN cc.challengeCardMemberPersonalities ccp " +
             "JOIN ccp.memberPersonality mp " +

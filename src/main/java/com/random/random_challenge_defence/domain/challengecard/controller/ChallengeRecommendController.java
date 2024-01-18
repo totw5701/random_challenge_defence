@@ -1,10 +1,10 @@
-package com.random.random_challenge_defence.domain.challengelog.controller;
+package com.random.random_challenge_defence.domain.challengecard.controller;
 
 import com.random.random_challenge_defence.global.result.CommonResponse;
-import com.random.random_challenge_defence.domain.challengelog.dto.ChallengeCardCategoryRandomReqDto;
-import com.random.random_challenge_defence.domain.challengelog.dto.ChallengeCardPersonalityRandomReqDto;
-import com.random.random_challenge_defence.domain.challengelog.dto.ChallengeCardWholeRandomReqDto;
-import com.random.random_challenge_defence.domain.challengelog.service.RecommendService;
+import com.random.random_challenge_defence.domain.challengecard.dto.ChallengeCardCategoryRandomReqDto;
+import com.random.random_challenge_defence.domain.challengecard.dto.ChallengeCardPersonalityRandomReqDto;
+import com.random.random_challenge_defence.domain.challengecard.dto.ChallengeCardWholeRandomReqDto;
+import com.random.random_challenge_defence.domain.challengecard.service.RecommendService;
 import com.random.random_challenge_defence.global.result.ResponseService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

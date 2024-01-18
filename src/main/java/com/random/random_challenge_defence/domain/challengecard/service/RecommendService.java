@@ -1,6 +1,6 @@
-package com.random.random_challenge_defence.domain.challengelog.service;
+package com.random.random_challenge_defence.domain.challengecard.service;
 
-import com.random.random_challenge_defence.domain.challengelog.dto.ChallengeCardAssignScoreDto;
+import com.random.random_challenge_defence.domain.challengecard.dto.ChallengeCardAssignScoreDto;
 import com.random.random_challenge_defence.domain.challengecard.repository.ChallengeCardRepository;
 import com.random.random_challenge_defence.domain.challengecardcategory.repository.ChallengeCardCategoryRepository;
 import lombok.RequiredArgsConstructor;
