@@ -32,7 +32,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(CustomException.class)
     public CommonResponse customException(CustomException e) {
         // CustomException은 일부러 발생시킨 에러로 stackTrace 로그를 찍지 않는다.
-        log.error("code={}, errMsg={}", e.getCode(), e.getMessage());
+        log.info("code={}, errMsg={}", e.getCode(), e.getMessage());
         return responseService.getFailResult(e.getCode(), e.getMessage());
     }
 }

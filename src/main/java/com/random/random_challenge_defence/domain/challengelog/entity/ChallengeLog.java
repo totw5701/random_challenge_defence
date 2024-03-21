@@ -40,7 +40,7 @@ public class ChallengeLog {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "challenge_card")
+    @JoinColumn(name = "challenge_card_id")
     private ChallengeCard challengeCard;
 
     @OneToMany(mappedBy = "challengeLog", fetch = FetchType.LAZY, orphanRemoval = true)

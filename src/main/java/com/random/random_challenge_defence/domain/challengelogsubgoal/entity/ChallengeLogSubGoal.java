@@ -19,11 +19,11 @@ public class ChallengeLogSubGoal {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "challnege_card_sub_goal_id")
+    @JoinColumn(name = "challenge_card_sub_goal_id")
     private ChallengeCardSubGoal challengeCardSubGoal;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "challenge_card_id")
+    @JoinColumn(name = "challenge_log_id")
     private ChallengeLog challengeLog;
 
     @Enumerated(EnumType.STRING)

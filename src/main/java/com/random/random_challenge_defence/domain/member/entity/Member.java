@@ -65,6 +65,9 @@ public class Member {
     }
 
     public void increaseExperience(Integer experience) {
+        if(this.experience == null) {
+            this.experience = 0L;
+        }
         this.experience += experience;
     }
 }
