@@ -30,12 +30,14 @@ import java.util.Map;
 @Slf4j
 public class AuthenticationService {
 
+    private final MemberService memberService;
+
     private final JwtTokenProvider jwtTokenProvider;
     private final OAuthConfigProviderFactory oAuthConfigProviderFactory;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public OAuthAttributes getOAuthAttribute(String social, String code) {
+    public TokenInfo issueToken(String social, String code) {
         // 인가 코드를 사용하여 accessToken 조회
         Map<String, Object> token = getAccessToken(social, code);
 
@@ -43,10 +45,18 @@ public class AuthenticationService {
         Map<String, Object> attributes = getUserInfo(social, (String) token.get("access_token"));
 
         // 사용자 정보를 이용하여 oAuthAttribute 객체 생성
-        return OAuthAttributes.of(social, attributes);
+        OAuthAttributes oAuthAttributes = OAuthAttributes.of(social, attributes);
+
+        return generateTokenInfo(memberService.saveOrUpdate(oAuthAttributes));
     }
 
-    public TokenInfo generateTokenInfo(Member member) {
+    public TokenInfo reIssueToken(String email) {
+        Member member = memberService.getEntityById(email);
+        return generateTokenInfo(member);
+    }
+
+
+    private TokenInfo generateTokenInfo(Member member) {
         String authority = member.getMemberRole().getKey();
         return jwtTokenProvider.generateTokenWithAuthAndEmail(authority, member.getEmail());
     }

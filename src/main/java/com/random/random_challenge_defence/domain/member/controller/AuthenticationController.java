@@ -4,8 +4,6 @@ import com.random.random_challenge_defence.global.advice.ExceptionCode;
 import com.random.random_challenge_defence.global.advice.exception.CustomException;
 import com.random.random_challenge_defence.domain.member.dto.TokenInfo;
 import com.random.random_challenge_defence.global.result.CommonResponse;
-import com.random.random_challenge_defence.global.config.auth.oauth2.OAuthAttributes;
-import com.random.random_challenge_defence.domain.member.entity.Member;
 import com.random.random_challenge_defence.domain.member.service.AuthenticationService;
 import com.random.random_challenge_defence.domain.member.service.MemberService;
 import com.random.random_challenge_defence.global.result.ResponseService;
@@ -32,9 +30,7 @@ public class AuthenticationController {
     public CommonResponse authToken(
             @ApiParam(value = "ex: {\"social\":\"naver\",\"code\":\"12345\"}", required = true)
             @RequestBody Map<String, String> form) {
-        OAuthAttributes oAuthAttributes = authenticationService.getOAuthAttribute(form.get("social"), form.get("code"));
-        Member member = memberService.saveOrUpdate(oAuthAttributes);
-        TokenInfo tokenInfo = authenticationService.generateTokenInfo(member);
+        TokenInfo tokenInfo = authenticationService.issueToken(form.get("social"), form.get("code"));
         return responseService.getResult(tokenInfo);
     }
 
@@ -44,8 +40,7 @@ public class AuthenticationController {
     public CommonResponse<TokenInfo> tokenReissue(
             @ApiParam(value = "Header: Authorization=RTK", required = true) HttpServletRequest request) {
         String email = authenticationService.resolveEmail(request);
-        Member member = memberService.getEntityById(email);
-        TokenInfo tokenInfo = authenticationService.generateTokenInfo(member);
+        TokenInfo tokenInfo = authenticationService.reIssueToken(email);
         return responseService.getResult(tokenInfo);
     }
 

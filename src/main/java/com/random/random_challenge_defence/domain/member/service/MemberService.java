@@ -7,14 +7,11 @@ import com.random.random_challenge_defence.global.config.auth.oauth2.OAuthAttrib
 import com.random.random_challenge_defence.domain.challengelog.repository.ChallengeLogRepository;
 import com.random.random_challenge_defence.domain.member.entity.Member;
 import com.random.random_challenge_defence.domain.member.repository.MemberRepository;
-import com.random.random_challenge_defence.domain.member.MemberRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -47,19 +44,6 @@ public class MemberService {
         return getEntityById(getLoginUserEmail());
     }
 
-    public Member join(MemberPutReqDto form) {
-        return memberRepository.save(
-                Member.builder()
-                        .joinDtm(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()))
-                        .modifyDtm(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()))
-                        .email(form.getEmail())
-                        .memberRole(MemberRole.USER)
-                        .nickname(form.getNickname())
-                        .picture(form.getPicture())
-                        .password(form.getPassword())
-                        .build());
-    }
-
     public Member getEntityById(String memberEmail) {
         Optional<Member> opMember = memberRepository.findByEmail(memberEmail);
         if(!opMember.isPresent()) {
@@ -83,13 +67,4 @@ public class MemberService {
         }
         memberRepository.delete(opMember.get());
     }
-
-    public Member findById(Long memberId) {
-        Optional<Member> opMember = memberRepository.findById(memberId);
-        if(!opMember.isPresent()) {
-            throw new CustomException(ExceptionCode.NOT_FOUND_MEMBER);
-        }
-        return opMember.get();
-    }
-
 }

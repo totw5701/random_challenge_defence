@@ -44,11 +44,8 @@ public class MemberController {
     @ApiOperation(value = "로그인 사용자 정보 조회", notes = "로그인 한 사용자의 정보를 조회합니다.")
     @GetMapping("/my-info")
     public CommonResponse<MemberDetailsDto> myInfo() {
-        String email = memberService.getLoginUserEmail();
-        Member member = memberService.getEntityById(email);
+        Member member =  memberService.getLoginMember();
         return responseService.getResult(member.toDetailDto());
 
     }
-
-
 }

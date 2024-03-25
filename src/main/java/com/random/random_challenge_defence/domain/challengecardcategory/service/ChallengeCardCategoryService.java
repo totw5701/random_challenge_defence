@@ -24,15 +24,12 @@ public class ChallengeCardCategoryService {
         Page<ChallengeCardCategory> challengeCardCategories = challengeCardCategoryRepository.findAll(pageable);
 
         List<ChallengeCardCategoryDetailDto> challengeCardCategoryDtoList = challengeCardCategories.stream()
-                .map(cardCategory -> cardCategory.toDetailDto())
+                .map(ChallengeCardCategory::toDetailDto)
                 .collect(Collectors.toList());
 
-        Page<ChallengeCardCategoryDetailDto> challengeDtoPage = new PageImpl<>(challengeCardCategoryDtoList,
+        return new PageImpl<>(challengeCardCategoryDtoList,
                 challengeCardCategories.getPageable(),
                 challengeCardCategories.getTotalElements());
-
-        return challengeDtoPage;
-
     }
 
     public ChallengeCardCategory getEntityById(String id) {

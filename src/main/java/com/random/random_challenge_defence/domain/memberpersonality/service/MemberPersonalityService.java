@@ -1,5 +1,8 @@
 package com.random.random_challenge_defence.domain.memberpersonality.service;
 
+import com.random.random_challenge_defence.domain.member.service.MemberService;
+import com.random.random_challenge_defence.domain.memberpersonality.dto.MemberPersonalityAssignDto;
+import com.random.random_challenge_defence.domain.memberpersonality.dto.MemberPersonalityDetailDto;
 import com.random.random_challenge_defence.global.advice.ExceptionCode;
 import com.random.random_challenge_defence.global.advice.exception.CustomException;
 import com.random.random_challenge_defence.domain.member.entity.Member;
@@ -17,7 +20,10 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberPersonalityService {
+
+    private final MemberService memberService;
 
     private final MemberPersonalityRepository memberPersonalityRepository;
     private final MemberMemberPersonalityRepository memberMemberPersonalityRepository;
@@ -30,8 +36,20 @@ public class MemberPersonalityService {
         return byId.get();
     }
 
-    @Transactional
-    public void updatePersonalities(Member loginMember, List<Long> ids) {
+    public List<Long> getMemberPersonalities() {
+        Member loginMember = memberService.getLoginMember();
+        List<MemberMemberPersonality> memberMemberPersonalities = loginMember.getMemberMemberPersonalities();
+        return memberMemberPersonalities.stream().map(e -> e.getMemberPersonality().getId()).collect(Collectors.toList());
+    }
+
+    public void assignPersonalities(MemberPersonalityAssignDto form) {
+        String memberEmail = memberService.getLoginUserEmail();
+        Member loginMember = memberService.getEntityById(memberEmail);
+
+        updatePersonalities(loginMember, form.getIds());
+    }
+
+    private void updatePersonalities(Member loginMember, List<Long> ids) {
 
         deleteAllPersonalities(loginMember);
 
@@ -53,13 +71,14 @@ public class MemberPersonalityService {
         }
     }
 
-    public List<MemberPersonality> findAll() {
-        return memberPersonalityRepository.findAll();
+    private void deleteAllPersonalities(Member loginMember) {
+        List<MemberMemberPersonality> memberMemberPersonalities = memberMemberPersonalityRepository.findAllByMemberId(loginMember.getId());
+        List<Long> memberMemberPersonalityIds = memberMemberPersonalities.stream().map(MemberMemberPersonality::getId).collect(Collectors.toList());
+        memberMemberPersonalityRepository.deleteAllById(memberMemberPersonalityIds);
     }
 
-    public void deleteAllPersonalities(Member loginMember) {
-        List<MemberMemberPersonality> memberMemberPersonalities = memberMemberPersonalityRepository.findAllByMemberId(loginMember.getId());
-        List<Long> memberMemberPersonalityIds = memberMemberPersonalities.stream().map(e -> e.getId()).collect(Collectors.toList());
-        memberMemberPersonalityRepository.deleteAllById(memberMemberPersonalityIds);
+    public List<MemberPersonalityDetailDto> getPersonalities() {
+        List<MemberPersonality> all = memberPersonalityRepository.findAll();
+        return all.stream().map(MemberPersonality::toDetailDto).collect(Collectors.toList());
     }
 }
