@@ -1,9 +1,6 @@
 package com.random.random_challenge_defence.domain.challengelog.service;
 
-import com.random.random_challenge_defence.domain.challengelog.dto.ChallengeLogDetailDto;
-import com.random.random_challenge_defence.domain.challengelog.dto.ChallengeLogEvidenceReqDto;
-import com.random.random_challenge_defence.domain.challengelog.dto.ChallengeLogReqDto;
-import com.random.random_challenge_defence.domain.challengelog.dto.ChallengeLogSubGoalUpdateDto;
+import com.random.random_challenge_defence.domain.challengelog.dto.*;
 import com.random.random_challenge_defence.domain.challengelogsubgoal.service.ChallengeLogSubGoalService;
 import com.random.random_challenge_defence.domain.file.service.FileService;
 import com.random.random_challenge_defence.domain.member.service.MemberService;
@@ -89,18 +86,15 @@ public class ChallengeLogService {
         challengeLog.setChallengeLogSubGoals(logSubGoals);
     }
 
-    public void uploadChallengeEvidence(ChallengeLogEvidenceReqDto form) {
+    public void uploadEvidence(ChallengeLogEvidenceReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
-
         ChallengeLog challengeLog = validateOwner(form.getChallengeLogId(), memberEmail);
 
         // 로그인 사용자 본인이 올린 file이 아닌 경우 실패처리
         List<File> files = fileService.validateOwner(form.getEvidenceIdList(), memberEmail);
 
         // 파일 할당
-        for(File file : files) {
-            file.assignChallengeLog(challengeLog);
-        }
+        files.forEach((file) -> file.assignChallengeLog(challengeLog));
     }
 
     private ChallengeLog validateOwner(Long challengeLogId, String memberEmail) {
@@ -116,7 +110,6 @@ public class ChallengeLogService {
         ChallengeLog challengeLog = validateOwner(form.getChallengeCardId(), memberEmail);
         challengeLog.challengeSkip();
         return challengeLog;
-
     }
 
     public ChallengeLog tryChallenge(ChallengeLogReqDto form) {
@@ -162,9 +155,11 @@ public class ChallengeLogService {
         return challengeLogRepository.findAllByEmailTrying(memberEmail);
     }
 
-    public Page<ChallengeLogDetailDto> getChallengeLogDetailList(Integer nowPage) {
+    public Page<ChallengeLogDetailDto> getChallengeLogDetailList(ChallengeLogDetailPagingReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
-        Page<ChallengeLog> challengeLogs = readPageList(nowPage, memberEmail);
+
+        Pageable pageable = PageRequest.of(form.getCurrentPage(), form.getPageSize(), Sort.by("id").descending()); // 한 페이지에 15개씩 출력
+        Page<ChallengeLog> challengeLogs = challengeLogRepository.findAllByEmail(memberEmail, pageable);
 
         List<ChallengeLogDetailDto> logDtos = challengeLogs.stream()
                 .map(ChallengeLog::toDetailDto)
@@ -173,8 +168,8 @@ public class ChallengeLogService {
         return new PageImpl<>(logDtos, challengeLogs.getPageable(), challengeLogs.getTotalElements());
     }
 
-    private Page<ChallengeLog> readPageList(Integer nowPage, String memberEmail) {
-        Pageable pageable = PageRequest.of(nowPage, 15, Sort.by("id").descending()); // 한 페이지에 15개씩 출력
+    private Page<ChallengeLog> readPageList(Integer currentPage, String memberEmail) {
+        Pageable pageable = PageRequest.of(currentPage, 15, Sort.by("id").descending()); // 한 페이지에 15개씩 출력
         return challengeLogRepository.findAllByEmail(memberEmail, pageable);
     }
 

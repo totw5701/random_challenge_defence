@@ -24,8 +24,8 @@ public class ChallengeLogController {
 
     @ApiOperation(value = "챌린지 로그 인증 업로드", notes = "업로드한 인증 파일을 챌린지 로그에 할당합니다.")
     @PutMapping("/evidence")
-    public CommonResponse uploadChallengeEvidence(@RequestBody ChallengeLogEvidenceReqDto form) {
-        challengeLogService.uploadChallengeEvidence(form);
+    public CommonResponse uploadEvidence(@RequestBody ChallengeLogEvidenceReqDto form) {
+        challengeLogService.uploadEvidence(form);
         return responseService.getSuccessResult();
     }
 
@@ -58,9 +58,9 @@ public class ChallengeLogController {
     }
 
     @ApiOperation(value = "챌린지 이력 조회", notes = "현재 및 과거에 도전했던 챌린지 이력을 페이징하여 조회합니다.")
-    @GetMapping("/list/my-logs/{nowPage}")
-    public CommonResponse<Page<ChallengeLogDetailDto>> challengeLogDetailList(@PathVariable(name = "nowPage") Integer nowPage) {
-        Page<ChallengeLogDetailDto> challengeDtoPage = challengeLogService.getChallengeLogDetailList(nowPage);
+    @GetMapping("/list/my-logs")
+    public CommonResponse<Page<ChallengeLogDetailDto>> challengeLogDetailList(@RequestBody ChallengeLogDetailPagingReqDto form) {
+        Page<ChallengeLogDetailDto> challengeDtoPage = challengeLogService.getChallengeLogDetailList(form);
         return responseService.getResult(challengeDtoPage);
     }
 
