@@ -1,5 +1,6 @@
 package com.random.random_challenge_defence.domain.challengelog.service;
 
+import com.random.random_challenge_defence.domain.challengecard.service.ChallengeCardService;
 import com.random.random_challenge_defence.domain.challengelog.dto.*;
 import com.random.random_challenge_defence.domain.challengelogsubgoal.service.ChallengeLogSubGoalService;
 import com.random.random_challenge_defence.domain.file.service.FileService;
@@ -7,7 +8,6 @@ import com.random.random_challenge_defence.domain.member.service.MemberService;
 import com.random.random_challenge_defence.global.advice.ExceptionCode;
 import com.random.random_challenge_defence.global.advice.exception.CustomException;
 import com.random.random_challenge_defence.domain.challengecard.entity.ChallengeCard;
-import com.random.random_challenge_defence.domain.challengecard.repository.ChallengeCardRepository;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.entity.ChallengeCardSubGoal;
 import com.random.random_challenge_defence.domain.challengecardsubgoal.ChallengeLogSubGoalStatus;
 import com.random.random_challenge_defence.domain.challengelog.entity.ChallengeLog;
@@ -17,7 +17,6 @@ import com.random.random_challenge_defence.domain.challengelogsubgoal.entity.Cha
 import com.random.random_challenge_defence.domain.challengelogsubgoal.repository.ChallengeLogSubGoalRepository;
 import com.random.random_challenge_defence.domain.file.entity.File;
 import com.random.random_challenge_defence.domain.member.entity.Member;
-import com.random.random_challenge_defence.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -38,11 +37,10 @@ public class ChallengeLogService {
     private final MemberService memberService;
     private final FileService fileService;
     private final ChallengeLogSubGoalService challengeLogSubGoalService;
+    private final ChallengeCardService challengeCardService;
 
     private final ChallengeLogRepository challengeLogRepository;
     private final ChallengeLogSubGoalRepository challengeLogSubGoalRepository;
-    private final ChallengeCardRepository challengeCardRepository;
-    private final MemberRepository memberRepository;
 
     public ChallengeLog getEntityById(Long id) {
         Optional<ChallengeLog> byId = challengeLogRepository.findById(id);
@@ -50,10 +48,6 @@ public class ChallengeLogService {
             throw new CustomException(ExceptionCode.NOT_FOUND_CHALLENGE_LOG);
         }
         return byId.get();
-    }
-
-    private Optional<ChallengeLog> getPausedChallengeLog(String memberEmail, Long challengeId) {
-        return challengeLogRepository.findPausedLogByMemberEmailAndChallengeId(memberEmail, challengeId);
     }
 
     private ChallengeLog createChallengeLog(Member member, ChallengeCard challengeCard) {
@@ -115,31 +109,22 @@ public class ChallengeLogService {
     public ChallengeLog tryChallenge(ChallengeLogReqDto form) {
         String memberEmail = memberService.getLoginUserEmail();
         memberService.verifyChallengeLogAvailability(memberEmail);
-
         return startChallenge(form.getChallengeCardId(), memberEmail);
     }
 
     private ChallengeLog startChallenge(Long challengeCardId, String memberEmail) {
 
         // 스킵했던 도전 이력이 존재하면 재도전 처리.
-        Optional<ChallengeLog> opPausedChallengeLog = getPausedChallengeLog(memberEmail, challengeCardId);
+        Optional<ChallengeLog> opPausedChallengeLog = challengeLogRepository.findPausedLogByMemberEmailAndChallengeId(memberEmail, challengeCardId);
         if(opPausedChallengeLog.isPresent()) {
             ChallengeLog pausedChallengeLog = opPausedChallengeLog.get();
             pausedChallengeLog.challengeRetry();
             return pausedChallengeLog;
+        } else {
+            ChallengeCard challengeCard = challengeCardService.getEntityById(challengeCardId);
+            Member member = memberService.getEntityById(memberEmail);
+            return createChallengeLog(member, challengeCard);
         }
-
-        Optional<ChallengeCard> opChallengeCard = challengeCardRepository.findById(challengeCardId);
-        if(!opChallengeCard.isPresent()) {
-            throw new CustomException(ExceptionCode.NOT_FOUND_CHALLENGE_CARD);
-        }
-
-        Optional<Member> opMember = memberRepository.findByEmail(memberEmail);
-        if(!opMember.isPresent()) {
-            throw new CustomException(ExceptionCode.NOT_FOUND_MEMBER);
-        }
-
-        return createChallengeLog(opMember.get(), opChallengeCard.get());
     }
 
     public List<ChallengeLogDetailDto> getTryingChallengeLogDetailList() {
@@ -166,11 +151,6 @@ public class ChallengeLogService {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(logDtos, challengeLogs.getPageable(), challengeLogs.getTotalElements());
-    }
-
-    private Page<ChallengeLog> readPageList(Integer currentPage, String memberEmail) {
-        Pageable pageable = PageRequest.of(currentPage, 15, Sort.by("id").descending()); // 한 페이지에 15개씩 출력
-        return challengeLogRepository.findAllByEmail(memberEmail, pageable);
     }
 
     public ChallengeLogSubGoal changeSubGoalStatus(ChallengeLogSubGoalUpdateDto form) {

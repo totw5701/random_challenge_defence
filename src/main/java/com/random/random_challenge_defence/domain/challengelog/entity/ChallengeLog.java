@@ -58,10 +58,10 @@ public class ChallengeLog {
 
     public ChallengeLogDetailDto toDetailDto() {
 
-        List<ChallengeLogSubGoalDetailDto> collect = this.challengeLogSubGoals.stream().map((s) -> s.toDetail()).collect(Collectors.toList());
+        List<ChallengeLogSubGoalDetailDto> collect = this.challengeLogSubGoals.stream().map(ChallengeLogSubGoal::toDetail).collect(Collectors.toList());
         List<FileDetailDto> evidences = new ArrayList<>();
         if (this.evidenceImages != null) {
-            evidences = this.evidenceImages.stream().map(s -> s.toDto()).collect(Collectors.toList());
+            evidences = this.evidenceImages.stream().map(File::toDto).collect(Collectors.toList());
         }
         return ChallengeLogDetailDto.builder()
                 .id(this.id)

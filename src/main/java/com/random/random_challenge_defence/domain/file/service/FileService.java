@@ -18,17 +18,12 @@ public class FileService {
     private final FileRepository fileRepository;
 
     public List<File> validateOwner(List<Long> fileIds, String memberEmail) {
-        List<File> fileList = getEntityListByIds(fileIds);
-        for(File file : fileList) {
+        List<File> fileList = fileRepository.findByIdIn(fileIds);
+        fileList.forEach((file) -> {
             if(!file.getMember().getEmail().equals(memberEmail)) {
                 throw new CustomException(ExceptionCode.ACCESS_DENIED);
             }
-        }
+        });
         return fileList;
     }
-
-    public List<File> getEntityListByIds(List<Long> fileIds) {
-        return fileRepository.findByIdIn(fileIds);
-    }
-
 }

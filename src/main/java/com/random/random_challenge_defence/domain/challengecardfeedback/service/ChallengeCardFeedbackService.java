@@ -1,10 +1,10 @@
 package com.random.random_challenge_defence.domain.challengecardfeedback.service;
 
+import com.random.random_challenge_defence.domain.challengecard.service.ChallengeCardService;
 import com.random.random_challenge_defence.global.advice.ExceptionCode;
 import com.random.random_challenge_defence.global.advice.exception.CustomException;
 import com.random.random_challenge_defence.domain.challengecardfeedback.dto.ChallengeCardFeedbackReqDto;
 import com.random.random_challenge_defence.domain.challengecard.entity.ChallengeCard;
-import com.random.random_challenge_defence.domain.challengecard.repository.ChallengeCardRepository;
 import com.random.random_challenge_defence.domain.challengecardfeedback.entity.ChallengeCardFeedback;
 import com.random.random_challenge_defence.domain.challengecardfeedback.repository.ChallengeCardFeedbackRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,19 +17,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ChallengeCardFeedbackService {
 
-    private final ChallengeCardRepository challengeCardRepository;
+    private final ChallengeCardService challengeCardService;
+
     private final ChallengeCardFeedbackRepository challengeCardFeedbackRepository;
 
     @Transactional
     public ChallengeCardFeedback create(ChallengeCardFeedbackReqDto form) {
 
-        Optional<ChallengeCard> opChallengeCard = challengeCardRepository.findById(form.getChallengeCardId());
-        if(!opChallengeCard.isPresent()) {
-            throw new CustomException(ExceptionCode.NOT_FOUND_CHALLENGE_CARD);
-        }
+        ChallengeCard challengeCard = challengeCardService.getEntityById(form.getChallengeCardId());
 
         ChallengeCardFeedback feedback = ChallengeCardFeedback.builder()
-                .challengeCard(opChallengeCard.get())
+                .challengeCard(challengeCard)
                 .review(form.getReview())
                 .rating(form.getRating())
                 .build();

@@ -8,6 +8,7 @@ import com.random.random_challenge_defence.domain.challengelog.repository.Challe
 import com.random.random_challenge_defence.domain.member.entity.Member;
 import com.random.random_challenge_defence.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,11 @@ public class MemberService {
     private final ChallengeLogRepository challengeLogRepository;
 
     public String getLoginUserEmail() {
-        return (String) SecurityContextHolder.getContext().getAuthentication().getName();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(StringUtils.isBlank(email)) {
+            throw new CustomException(ExceptionCode.NOT_FOUND_MEMBER);
+        }
+        return email;
     }
 
     public void verifyChallengeLogAvailability(String memberEmail) {
